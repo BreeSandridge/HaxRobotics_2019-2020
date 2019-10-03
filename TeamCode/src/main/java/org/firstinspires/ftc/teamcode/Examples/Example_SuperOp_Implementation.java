@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.SuperOp;
 public class Example_SuperOp_Implementation extends SuperOp {
     @Override
     public void init() {
+        super.init();
         // initialize variables here. (Hint, they've already been declared)
     }
 
