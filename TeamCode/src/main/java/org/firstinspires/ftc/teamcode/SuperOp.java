@@ -5,6 +5,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.AreshPourkavoos.Accel_Drive;
+import org.firstinspires.ftc.teamcode.AreshPourkavoos.Example_Trap_Drive;
+
 // extend OpMode so future classes will extend SuperOp Instead
 // implements is for interfaces
 public abstract class SuperOp extends OpMode implements SuperOp_Interface {
@@ -47,6 +50,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     @Override
     public void t_drive(double x, double y, double w, double t) {
         // write method that drives for t amount of time
+        /*
         final double TRANSITION_TIME = 0.1*t;       // accelerating, decelerating time amount
         final int STEPS = 5;    // separating the time to 5 gradations, changing the speed every gradation
 
@@ -66,6 +70,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
             drive(x*ratio, y*ratio, w*ratio);
             sleep_secs(TRANSITION_TIME/STEPS);
         }
+         */
     }
 
 
