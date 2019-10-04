@@ -8,6 +8,7 @@ public class Accel_Drive{
     private double x, y, w, t;
     private boolean running;
     private enum State {STOP, ACCEL, CONST, DECEL};
+    private State driveState;
     public ElapsedTime elapsedTime;
     DcMotor FrontLeftDrive, FrontRightDrive;
     DcMotor  BackLeftDrive,  BackRightDrive;
@@ -28,7 +29,7 @@ public class Accel_Drive{
         this.y = y;
         this.w = w;
         this.t = t;
-        State s = State.ACCEL;
+        driveState = State.ACCEL;
         elapsedTime.reset();
     }
 
@@ -40,6 +41,7 @@ public class Accel_Drive{
     }
 
     public void update() {
+        /*
         if (running) {
             double s = elapsedTime.seconds() / t;
             if (s < 0.1)
@@ -50,6 +52,25 @@ public class Accel_Drive{
                 drive(x * (1 - s) * 10, y * (1 - s) * 10, w * (1 - s) * 10);
             else
                 running = false;
+        }
+         */
+        double portion = elapsedTime.seconds() / t;
+        switch (driveState){
+            case ACCEL:
+                drive(x * portion * 10, y * portion * 10, w * portion * 10);
+                if (portion > 0.1)
+                    driveState = State.CONST;
+                break;
+            case CONST:
+                drive(x, y, w);
+                if (portion > 0.9)
+                    driveState = State.DECEL;
+                break;
+            case DECEL:
+                drive(x * (1 - portion) * 10, y * (1 - portion) * 10, w * (1 - portion) * 10);
+                if (portion > 0.9)
+                    driveState = State.STOP;
+                break;
         }
     }
 }
