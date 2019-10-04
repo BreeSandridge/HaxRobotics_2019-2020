@@ -41,35 +41,28 @@ public class Accel_Drive{
     }
 
     public void update() {
-        /*
-        if (running) {
-            double s = elapsedTime.seconds() / t;
-            if (s < 0.1)
-                drive(x * s * 10, y * s * 10, w * s * 10);
-            else if (s < 0.9)
-                drive(x, y, w);
-            else if (s < 1)
-                drive(x * (1 - s) * 10, y * (1 - s) * 10, w * (1 - s) * 10);
-            else
-                running = false;
-        }
-         */
+
         double portion = elapsedTime.seconds() / t;
         switch (driveState){
             case ACCEL:
-                drive(x * portion * 10, y * portion * 10, w * portion * 10);
-                if (portion > 0.1)
+                if (portion < 0.1)
+                    drive(x * portion * 10, y * portion * 10, w * portion * 10);
+                else{
+                    drive(x, y, w);
                     driveState = State.CONST;
+                }
                 break;
             case CONST:
-                drive(x, y, w);
                 if (portion > 0.9)
                     driveState = State.DECEL;
                 break;
             case DECEL:
-                drive(x * (1 - portion) * 10, y * (1 - portion) * 10, w * (1 - portion) * 10);
-                if (portion > 0.9)
+                if (portion < 1)
+                    drive(x * (1 - portion) * 10, y * (1 - portion) * 10, w * (1 - portion) * 10);
+                else{
                     driveState = State.STOP;
+                    drive(0, 0, 0);
+                }
                 break;
         }
     }
