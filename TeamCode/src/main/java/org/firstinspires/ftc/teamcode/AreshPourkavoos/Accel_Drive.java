@@ -7,7 +7,7 @@ public class Accel_Drive{
 
     private double x, y, w, t;
     private boolean running;
-    private enum state {STOP, ACCEL, CONST, DECEL};
+    private enum State {STOP, ACCEL, CONST, DECEL};
     public ElapsedTime elapsedTime;
     DcMotor FrontLeftDrive, FrontRightDrive;
     DcMotor  BackLeftDrive,  BackRightDrive;
@@ -28,7 +28,7 @@ public class Accel_Drive{
         this.y = y;
         this.w = w;
         this.t = t;
-        state = ;
+        State s = State.ACCEL;
         elapsedTime.reset();
     }
 
