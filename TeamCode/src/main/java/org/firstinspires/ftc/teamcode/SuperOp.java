@@ -62,8 +62,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
         for (int j=STEPS-1; j>-1; j--){         //decelerating gradation cycles
 
-            double e = (double)j/STEPS;
-            drive(x*e, y*e, w*e);
+            double ratio = (double)j/STEPS;
+            drive(x*ratio, y*ratio, w*ratio);
             sleep_secs(TRANSITION_TIME/STEPS);
         }
     }
