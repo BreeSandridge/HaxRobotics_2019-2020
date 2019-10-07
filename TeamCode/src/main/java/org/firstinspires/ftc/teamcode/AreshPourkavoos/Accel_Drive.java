@@ -9,8 +9,16 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
+/*
+Accel_Drive class
+The Accel_Drive class implements the trapezoid drive,
+along with the ability to process multiple commands in a queue
+The SuperOp class contains an Accel_Drive object to maintain abstraction
+ */
+
 public class Accel_Drive{
 
+    // Variable declarations
     private double x, y, w, t;
     private enum State {STOP, ACCEL, CONST, DECEL};
     private State driveState;
@@ -30,10 +38,17 @@ public class Accel_Drive{
         commands = new LinkedList<>();
     }
 
+    // Called by SuperOp.t_drive()
+    // Pushes a new DriveParams object onto the queue
     public void pushCommand(DriveParams newCommand){
         commands.add(newCommand);
     }
 
+    // Begin executing a new command
+    // this.x, y, w, t are the values of the current command
+    // but will (probably) later be replaced by a DriveParams object
+    // Makes sure that robot is stopped,
+    // but should only be called under those circumstances anyway
     public void set(DriveParams state){
         if (driveState != State.STOP)
             return;
@@ -45,6 +60,7 @@ public class Accel_Drive{
         elapsedTime.reset();
     }
 
+    // Copy of SuperOp.drive()
     public void drive(double x, double y, double w) {
         FrontLeftDrive.setPower(x+y+w);
         FrontRightDrive.setPower(x+y-w);
@@ -52,6 +68,8 @@ public class Accel_Drive{
         BackRightDrive.setPower(x+y-w);
     }
 
+    // This is the bread and butter of the trapezoid drive implementation
+    // driveState variable can be one of ACCEL, CONST, DECEL, or STOP
     public void update() {
         double portion = elapsedTime.seconds() / t;
         switch (driveState){
