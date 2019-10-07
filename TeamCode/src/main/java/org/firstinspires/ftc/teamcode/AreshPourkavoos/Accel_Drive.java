@@ -12,6 +12,7 @@ public class Accel_Drive{
     public ElapsedTime elapsedTime;
     DcMotor FrontLeftDrive, FrontRightDrive;
     DcMotor  BackLeftDrive,  BackRightDrive;
+    Queue<DriveParams> commands;
 
     public Accel_Drive(DcMotor FrontLeftDrive, DcMotor FrontRightDrive,
                        DcMotor  BackLeftDrive, DcMotor  BackRightDrive) {
@@ -25,6 +26,8 @@ public class Accel_Drive{
     }
 
     public void set(double x, double y, double w, double t){
+        if (driveState != State.STOP)
+            return;
         this.x = x;
         this.y = y;
         this.w = w;

@@ -5,13 +5,10 @@ import org.firstinspires.ftc.teamcode.SuperOp;
 
 public class Example_SuperOp_Implementation extends SuperOp {
 
-
-    Accel_Drive accelDrive;
     @Override
     public void init() {
         super.init();
         // initialize variables here. (Hint, they've already been declared)
-        accelDrive = new Accel_Drive();
     }
 
     @Override

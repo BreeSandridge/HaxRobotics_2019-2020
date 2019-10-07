@@ -2,11 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AreshPourkavoos.Accel_Drive;
-import org.firstinspires.ftc.teamcode.AreshPourkavoos.Example_Trap_Drive;
 
 // extend OpMode so future classes will extend SuperOp Instead
 // implements is for interfaces
@@ -16,6 +14,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     DcMotor FrontRightDrive = null;
     DcMotor BackLeftDrive = null;
     DcMotor BackRightDrive = null;
+    Accel_Drive accelDrive;
 
     @Override
     public void init() {
@@ -29,6 +28,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         FrontRightDrive.setDirection(DcMotor.Direction.REVERSE);
         BackLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        accelDrive = new Accel_Drive();
     }
 
     @Override
@@ -49,28 +50,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
     @Override
     public void t_drive(double x, double y, double w, double t) {
-        // write method that drives for t amount of time
-        /*
-        final double TRANSITION_TIME = 0.1*t;       // accelerating, decelerating time amount
-        final int STEPS = 5;    // separating the time to 5 gradations, changing the speed every gradation
-
-        for (int i=0; i<STEPS; i++){
-
-            double ratio = (double)i/STEPS;     // @param ratio: ratio of speed 1 that is changed into in each gradation cycle
-            drive(x*ratio, y*ratio, w*ratio);
-            sleep_secs(TRANSITION_TIME/STEPS);      // sleeping for one piece of the transition time each gradation cycle
-        }
-
-        drive(x, y, w);
-        sleep_secs(t-2*TRANSITION_TIME);        // sleeping for the max speed time
-
-        for (int j=STEPS-1; j>-1; j--){         //decelerating gradation cycles
-
-            double ratio = (double)j/STEPS;
-            drive(x*ratio, y*ratio, w*ratio);
-            sleep_secs(TRANSITION_TIME/STEPS);
-        }
-         */
     }
 
 
