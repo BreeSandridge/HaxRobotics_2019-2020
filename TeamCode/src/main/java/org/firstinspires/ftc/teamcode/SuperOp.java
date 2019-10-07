@@ -14,7 +14,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     DcMotor FrontRightDrive = null;
     DcMotor BackLeftDrive = null;
     DcMotor BackRightDrive = null;
-    Accel_Drive accelDrive;
+    protected Accel_Drive accelDrive;
 
     @Override
     public void init() {
@@ -29,7 +29,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        accelDrive = new Accel_Drive();
+        accelDrive = new Accel_Drive(FrontLeftDrive, FrontRightDrive,
+                                      BackLeftDrive,  BackRightDrive);
     }
 
     @Override
@@ -50,6 +51,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
     @Override
     public void t_drive(double x, double y, double w, double t) {
+        DriveParams newParams = new DriveParams(x, y, w, t);
+        accelDrive.pushCommand(newParams);
     }
 
 

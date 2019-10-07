@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 public class DriveParams {
-    double x, y, w, t;
+    public double x, y, w, t;
     DriveParams(double x, double y, double w, double t){
         this.x=x;
         this.y=y;

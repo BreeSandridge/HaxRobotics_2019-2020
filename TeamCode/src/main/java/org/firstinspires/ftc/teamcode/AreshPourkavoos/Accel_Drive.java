@@ -3,10 +3,15 @@ package org.firstinspires.ftc.teamcode.AreshPourkavoos;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.DriveParams;
+
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
+import java.util.Queue;
+
 public class Accel_Drive{
 
     private double x, y, w, t;
-    private boolean running;
     private enum State {STOP, ACCEL, CONST, DECEL};
     private State driveState;
     public ElapsedTime elapsedTime;
@@ -22,16 +27,20 @@ public class Accel_Drive{
         this.BackRightDrive  = BackRightDrive;
         elapsedTime = new ElapsedTime();
         elapsedTime.reset();
-        running = false;
+        commands = new LinkedList<>();
     }
 
-    public void set(double x, double y, double w, double t){
+    public void pushCommand(DriveParams newCommand){
+        commands.add(newCommand);
+    }
+
+    public void set(DriveParams state){
         if (driveState != State.STOP)
             return;
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.t = t;
+        this.x = state.x;
+        this.y = state.y;
+        this.w = state.w;
+        this.t = state.t;
         driveState = State.ACCEL;
         elapsedTime.reset();
     }
@@ -44,7 +53,6 @@ public class Accel_Drive{
     }
 
     public void update() {
-
         double portion = elapsedTime.seconds() / t;
         switch (driveState){
             case ACCEL:
@@ -67,6 +75,15 @@ public class Accel_Drive{
                     drive(0, 0, 0);
                 }
                 break;
+            case STOP:
+                DriveParams nextCommand;
+                try{
+                    nextCommand = commands.remove();
+                }
+                catch (NoSuchElementException e){
+                    break;
+                }
+                set(nextCommand);
         }
     }
 }
