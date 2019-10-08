@@ -42,6 +42,7 @@ public class VuforiaTest extends LinearOpMode {
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             initTfod();
         } else {
+            // if phone isnt compatible with tensorflow
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
 
