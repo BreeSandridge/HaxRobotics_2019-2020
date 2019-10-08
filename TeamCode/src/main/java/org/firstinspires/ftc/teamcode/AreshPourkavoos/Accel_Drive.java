@@ -70,6 +70,9 @@ public class Accel_Drive{
 
     // This is the bread and butter of the trapezoid drive implementation
     // driveState variable can be one of ACCEL, CONST, DECEL, or STOP
+    // If accel/decel, sets the drive appropriately
+    // If const, does nothing (motors set once at the end of accel period)
+    // If stopped, checks the queue for the next command
     public void update() {
         double portion = elapsedTime.seconds() / t;
         switch (driveState){
