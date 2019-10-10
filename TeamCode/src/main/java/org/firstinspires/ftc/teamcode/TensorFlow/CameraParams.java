@@ -9,6 +9,14 @@ public class CameraParams {
     private double offset_y = 0;
     private double offset_z = 0;
 
+    public double[] undoPerspective(float x_left, float y_top, float x_right, float y_bottom){
+        float h = 200; // Distance of the horizon below the top of the screen in pixels
+        float w = 500; // Width of the screen in pixels
+        float px = (x_left+x_right)/2, py = (y_top+y_bottom)/2;
+        px -= w/2;
+        py -= h;
+        float y = -h/py, x = y*px; // Perspective transformation
+    }
 
     public CameraParams(double offset_x, double offset_y, double offset_z){
         this.offset_x=offset_x;
