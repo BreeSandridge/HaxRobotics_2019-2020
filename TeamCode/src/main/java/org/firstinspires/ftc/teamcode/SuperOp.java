@@ -2,17 +2,29 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.AreshPourkavoos.Accel_Drive;
 
 // extend OpMode so future classes will extend SuperOp Instead
 // implements is for interfaces
+
+/*
+SuperOp class
+The SuperOp class is the OpMode of the robot,
+containing the motors and an AccelDrive through which
+the robot can accelerate and decelerate
+in a trapezoid drive pattern.
+(See AreshPourkavoos/Accel_Drive.java)
+ */
+
 public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
     DcMotor FrontLeftDrive = null;
     DcMotor FrontRightDrive = null;
     DcMotor BackLeftDrive = null;
     DcMotor BackRightDrive = null;
+    protected Accel_Drive accelDrive;
 
     @Override
     public void init() {
@@ -22,12 +34,21 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackLeftDrive  = hardwareMap.get(DcMotor.class, "BackLeftDrive");
         BackRightDrive = hardwareMap.get(DcMotor.class, "BackRightDrive");
 
+        // Reverse directions on the right motors
+        // so that "forward" and "backward" are the same number for both sides
         FrontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         FrontRightDrive.setDirection(DcMotor.Direction.REVERSE);
         BackLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        // Pass the motors to the AccelDrive so it can access them
+        // (may later be bundled into a class or lookup table)
+        accelDrive = new Accel_Drive(FrontLeftDrive, FrontRightDrive,
+                                      BackLeftDrive,  BackRightDrive);
     }
 
+    // Mechanum wheel implementation
+    // Accepts amount to move left/right (x), move up/down (y), and rotate (w)
     @Override
     public void drive(double x, double y, double w) {
         FrontLeftDrive.setPower(x+y+w);
@@ -36,6 +57,10 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackRightDrive.setPower(x+y-w);
     }
 
+    // Wait for a given number of seconds (t)
+    // Is currently deprecated and will likely remain that way,
+    // as this function would halt all data collection, etc.
+    // until the wait time is over
     public void sleep_secs(double t){
         try {
             Thread.sleep((long)(t*1000));
@@ -44,29 +69,12 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         }
     }
 
+    // Perform a trapezoid drive with a max translational velocity of (x, y)
+    // and max rotation of w lasting t seconds
+    // Would be called by implementation, is not yet
     @Override
     public void t_drive(double x, double y, double w, double t) {
-        // write method that drives for t amount of time
-        final double TRANSITION_TIME = 0.1*t;       // accelerating, decelerating time amount
-        final int STEPS = 5;    // separating the time to 5 gradations, changing the speed every gradation
-
-        for (int i=0; i<STEPS; i++){
-
-            double ratio = (double)i/STEPS;     // @param ratio: ratio of speed 1 that is changed into in each gradation cycle
-            drive(x*ratio, y*ratio, w*ratio);
-            sleep_secs(TRANSITION_TIME/STEPS);      // sleeping for one piece of the transition time each gradation cycle
-        }
-
-        drive(x, y, w);
-        sleep_secs(t-2*TRANSITION_TIME);        // sleeping for the max speed time
-
-        for (int j=STEPS-1; j>-1; j--){         //decelerating gradation cycles
-
-            double e = (double)j/STEPS;
-            drive(x*e, y*e, w*e);
-            sleep_secs(TRANSITION_TIME/STEPS);
-        }
+        DriveParams newParams = new DriveParams(x, y, w, t);
+        accelDrive.pushCommand(newParams);
     }
-
-
 }
