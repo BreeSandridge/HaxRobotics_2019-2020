@@ -117,6 +117,7 @@ public class VuforiaTest extends LinearOpMode {
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
+}
 
     // calculating the relative location of the item in relation to the camera
     // @param x, y, z are the coordinates for the location
