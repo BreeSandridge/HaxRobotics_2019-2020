@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.Examples;
 
+import org.firstinspires.ftc.teamcode.AreshPourkavoos.Accel_Drive;
 import org.firstinspires.ftc.teamcode.SuperOp;
 
 public class Example_SuperOp_Implementation extends SuperOp {
+
     @Override
     public void init() {
         super.init();
@@ -12,5 +14,7 @@ public class Example_SuperOp_Implementation extends SuperOp {
     @Override
     public void loop() {
         // write code to execute here
+        super.accelDrive.update();
+
     }
 }
