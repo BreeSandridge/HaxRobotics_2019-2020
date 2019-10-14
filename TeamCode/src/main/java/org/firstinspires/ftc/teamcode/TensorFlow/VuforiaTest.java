@@ -59,6 +59,8 @@ public class VuforiaTest extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
+        CameraParams cameraParams = new CameraParams(0, 0, 0,1836, 3264, 2565);
+
         if (opModeIsActive()) {
             while (opModeIsActive()) {
                 if (tfod != null) {
@@ -71,11 +73,16 @@ public class VuforiaTest extends LinearOpMode {
                         // step through the list of recognitions and display boundary info.
                         int i = 0;
                         for (Recognition recognition : updatedRecognitions) {
+                            float left = recognition.getLeft(), top = recognition.getTop();
+                            float right = recognition.getRight(), bottom = recognition.getBottom();
                             telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
                             telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-                                    recognition.getLeft(), recognition.getTop());
+                                    left, top);
                             telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-                                    recognition.getRight(), recognition.getBottom());
+                                    right, bottom);
+                            double[] blockPos = cameraParams.undoPerspectiveOnRect(left, top, right, bottom);
+                            telemetry.addData(String.format("  position (%d)", i), "%.03f , %.03f, %.03f",
+                                    (float)blockPos[0], (float)blockPos[1], (float)blockPos[2]);
                         }
                         telemetry.update();
                     }
