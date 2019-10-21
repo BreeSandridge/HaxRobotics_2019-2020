@@ -25,6 +25,17 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     DcMotor BackLeftDrive = null;
     DcMotor BackRightDrive = null;
     protected Accel_Drive accelDrive;
+    boolean encoder;
+
+
+
+    static final double COUNTS_PER_MOTOR_REV = 1440;            // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double     DRIVE_SPEED             = 0.6;
+    static final double     TURN_SPEED              = 0.5;
 
     @Override
     public void init() {
@@ -45,6 +56,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         // (may later be bundled into a class or lookup table)
         accelDrive = new Accel_Drive(FrontLeftDrive, FrontRightDrive,
                                       BackLeftDrive,  BackRightDrive);
+
+        encoder = false;
     }
 
     // Mechanum wheel implementation
@@ -76,5 +89,53 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public void t_drive(double x, double y, double w, double t) {
         DriveParams newParams = new DriveParams(x, y, w, t);
         accelDrive.pushCommand(newParams);
+    }
+
+
+    /*public void setEncoder(boolean on) {
+        encoder = on;
+        if (on) {
+
+            telemetry.addData("Setting encoders", 0);
+            FrontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            FrontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            BackLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            BackRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+
+            telemetry.addData("Set encoders", 0);
+        }
+    }*/
+
+    public void basicEncoderDrive(double speed, double leftInches, double rightInches) {
+        int newFrontLeftTarget, newFrontRightTarget, newBackLeftTarget, newBackRightTarget;
+
+
+
+        // Determine new target position, and pass to motor controller
+        newFrontLeftTarget = FrontLeftDrive.getCurrentPosition() - (int) (leftInches * COUNTS_PER_INCH);
+        newFrontRightTarget = FrontRightDrive.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+        newBackLeftTarget = BackLeftDrive.getCurrentPosition() - (int) (leftInches * COUNTS_PER_INCH);
+        newBackRightTarget = BackRightDrive.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+
+        FrontLeftDrive.setTargetPosition(newFrontLeftTarget);
+        BackLeftDrive.setTargetPosition(newBackLeftTarget);
+        FrontRightDrive.setTargetPosition(newFrontRightTarget);
+        BackRightDrive.setTargetPosition(newBackRightTarget);
+
+
+
+        BackRightDrive.setPower(speed);
+        BackLeftDrive.setPower(speed);
+        FrontRightDrive.setPower(speed);
+        FrontLeftDrive.setPower(speed);
+
+        FrontLeftDrive.setMode (DcMotor.RunMode.RUN_TO_POSITION);
+        FrontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BackLeftDrive.setMode  (DcMotor.RunMode.RUN_TO_POSITION);
+        BackRightDrive.setMode (DcMotor.RunMode.RUN_TO_POSITION);
+
+
     }
 }
