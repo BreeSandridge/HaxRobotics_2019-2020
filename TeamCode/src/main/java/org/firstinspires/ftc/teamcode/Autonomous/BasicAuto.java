@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.SuperOp;
 
-@TeleOp(name="BasicAuto", group="Test")
+@TeleOp(name="Basic Auto", group="Test")
 public class BasicAuto extends SuperOp {
 
     public void rightTurn () {
@@ -19,6 +19,7 @@ public class BasicAuto extends SuperOp {
     }
 
     boolean running = true;
+
     @Override
     public void loop() {
 
