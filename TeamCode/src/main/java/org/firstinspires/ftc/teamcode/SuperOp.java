@@ -108,34 +108,58 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         }
     }*/
 
-    public void basicEncoderDrive(double speed, double leftInches, double rightInches) {
+    public void basicEncoderDrive(double straightInches, double strafeInches) {
         int newFrontLeftTarget, newFrontRightTarget, newBackLeftTarget, newBackRightTarget;
 
-
-
         // Determine new target position, and pass to motor controller
-        newFrontLeftTarget = FrontLeftDrive.getCurrentPosition() - (int) (leftInches * COUNTS_PER_INCH);
-        newFrontRightTarget = FrontRightDrive.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-        newBackLeftTarget = BackLeftDrive.getCurrentPosition() - (int) (leftInches * COUNTS_PER_INCH);
-        newBackRightTarget = BackRightDrive.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+        newFrontLeftTarget = FrontLeftDrive.getCurrentPosition() - (int) (straightInches * COUNTS_PER_INCH);
+        newFrontRightTarget = FrontRightDrive.getCurrentPosition() + (int) (straightInches * COUNTS_PER_INCH);
+        newBackLeftTarget = BackLeftDrive.getCurrentPosition() - (int) (straightInches * COUNTS_PER_INCH);
+        newBackRightTarget = BackRightDrive.getCurrentPosition() + (int) (straightInches * COUNTS_PER_INCH);
 
         FrontLeftDrive.setTargetPosition(newFrontLeftTarget);
         BackLeftDrive.setTargetPosition(newBackLeftTarget);
         FrontRightDrive.setTargetPosition(newFrontRightTarget);
         BackRightDrive.setTargetPosition(newBackRightTarget);
 
-
-
-        BackRightDrive.setPower(speed);
-        BackLeftDrive.setPower(speed);
-        FrontRightDrive.setPower(speed);
-        FrontLeftDrive.setPower(speed);
+        BackRightDrive.setPower(DRIVE_SPEED);
+        BackLeftDrive.setPower(DRIVE_SPEED);
+        FrontRightDrive.setPower(DRIVE_SPEED);
+        FrontLeftDrive.setPower(DRIVE_SPEED);
 
         FrontLeftDrive.setMode (DcMotor.RunMode.RUN_TO_POSITION);
         FrontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         BackLeftDrive.setMode  (DcMotor.RunMode.RUN_TO_POSITION);
         BackRightDrive.setMode (DcMotor.RunMode.RUN_TO_POSITION);
 
+        // Determine new target position, and pass to motor controller
+        double strafeConstant = 1.3;
 
+        if(strafeInches > 0) {
+            newFrontLeftTarget = FrontLeftDrive.getCurrentPosition() - (int) (strafeConstant * strafeInches * COUNTS_PER_INCH);
+            newFrontRightTarget = FrontRightDrive.getCurrentPosition() - (int) (strafeConstant * strafeInches * COUNTS_PER_INCH);
+            newBackLeftTarget = BackLeftDrive.getCurrentPosition() + (int) (strafeConstant * strafeInches * COUNTS_PER_INCH);
+            newBackRightTarget = BackRightDrive.getCurrentPosition() + (int) (strafeConstant * strafeInches * COUNTS_PER_INCH);
+        } else {
+            newFrontLeftTarget = FrontLeftDrive.getCurrentPosition() + (int) (strafeConstant * strafeInches * COUNTS_PER_INCH);
+            newFrontRightTarget = FrontRightDrive.getCurrentPosition() + (int) (strafeConstant * strafeInches * COUNTS_PER_INCH);
+            newBackLeftTarget = BackLeftDrive.getCurrentPosition() - (int) (strafeConstant * strafeInches * COUNTS_PER_INCH);
+            newBackRightTarget = BackRightDrive.getCurrentPosition() - (int) (strafeConstant * strafeInches * COUNTS_PER_INCH);
+        }
+
+        FrontLeftDrive.setTargetPosition(newFrontLeftTarget);
+        BackLeftDrive.setTargetPosition(newBackLeftTarget);
+        FrontRightDrive.setTargetPosition(newFrontRightTarget);
+        BackRightDrive.setTargetPosition(newBackRightTarget);
+
+        BackRightDrive.setPower(DRIVE_SPEED);
+        BackLeftDrive.setPower(DRIVE_SPEED);
+        FrontRightDrive.setPower(DRIVE_SPEED);
+        FrontLeftDrive.setPower(DRIVE_SPEED);
+
+        FrontLeftDrive.setMode (DcMotor.RunMode.RUN_TO_POSITION);
+        FrontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BackLeftDrive.setMode  (DcMotor.RunMode.RUN_TO_POSITION);
+        BackRightDrive.setMode (DcMotor.RunMode.RUN_TO_POSITION);
     }
 }
