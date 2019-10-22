@@ -25,7 +25,8 @@ public class BasicAuto extends SuperOp {
         if (running) {
             //leftTurn();
             //rightTurn();
-            super.basicEncoderDrive(0, 10);
+            //super.basicEncoderDrive(0, 10);
+            //super.encoderDriveWithSpeed(0.5, 100);
             running = !running;
         }
     }

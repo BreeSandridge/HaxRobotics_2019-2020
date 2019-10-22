@@ -108,6 +108,67 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         }
     }*/
 
+    /*public void encoderDriveWithSpeed(double speed, double desired) {
+        //variables that store initial encoder values for the four motors
+        double FrontLeftInitial = FrontLeftDrive.getCurrentPosition();
+        double FrontRightInitial = FrontRightDrive.getCurrentPosition();
+        double BackLeftInitial = BackLeftDrive.getCurrentPosition();
+        double BackRightInitial = BackRightDrive.getCurrentPosition();
+
+        //Front Left Motor movement
+        while (true) {
+            if (desired + FrontLeftInitial > FrontLeftDrive.getCurrentPosition() + 10) {
+                FrontLeftDrive.setPower(speed);
+            } else if (desired + FrontLeftInitial < FrontLeftDrive.getCurrentPosition() - 10) {
+                FrontLeftDrive.setPower(-speed);
+            } else {
+                FrontLeftDrive.setPower(0);
+            }
+
+            //Front Right Motor movement
+            if (desired + FrontRightInitial > FrontRightDrive.getCurrentPosition() + 10) {
+                FrontRightDrive.setPower(speed);
+            } else if (desired + FrontRightInitial < FrontRightDrive.getCurrentPosition() - 10) {
+                FrontRightDrive.setPower(-speed);
+            } else {
+                FrontRightDrive.setPower(0);
+
+            }
+
+            //Back Left Motor movement
+            if (desired + BackLeftInitial > BackLeftDrive.getCurrentPosition() + 10) {
+                BackLeftDrive.setPower(speed);
+            } else if (desired + FrontLeftInitial < BackLeftDrive.getCurrentPosition() - 10) {
+                BackLeftDrive.setPower(-speed);
+            } else {
+                BackLeftDrive.setPower(0);
+            }
+
+            //Back Right Motor movement
+            if (desired + BackRightInitial > BackRightDrive.getCurrentPosition() + 10) {
+                BackRightDrive.setPower(speed);
+            } else if (desired + FrontLeftInitial < BackRightDrive.getCurrentPosition() - 10) {
+                BackRightDrive.setPower(-speed);
+            } else {
+                BackRightDrive.setPower(0);
+            }
+
+            //Ends loop when all motors reach desired position
+            if (desired + FrontLeftInitial < FrontLeftDrive.getCurrentPosition() + 10 &&
+                    desired + FrontLeftInitial > FrontLeftDrive.getCurrentPosition() - 10){
+                if (desired + FrontRightInitial < FrontRightDrive.getCurrentPosition() + 10 &&
+                        desired + FrontRightInitial > FrontRightDrive.getCurrentPosition() - 10) {
+                    if (desired + BackLeftInitial < BackLeftDrive.getCurrentPosition() + 10 &&
+                            desired + BackLeftInitial > BackLeftDrive.getCurrentPosition() - 10) {
+                        if (desired + BackRightInitial < BackRightDrive.getCurrentPosition() + 10 &&
+                                desired + BackRightInitial > BackRightDrive.getCurrentPosition() - 10) {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }*/
     public void basicEncoderDrive(double straightInches, double strafeInches) {
         int newFrontLeftTarget, newFrontRightTarget, newBackLeftTarget, newBackRightTarget;
 
