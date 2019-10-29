@@ -92,31 +92,15 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     }
 
 
-    /*public void setEncoder(boolean on) {
-        encoder = on;
-        if (on) {
-
-            telemetry.addData("Setting encoders", 0);
-            FrontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            FrontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            BackLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            BackRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-
-
-            telemetry.addData("Set encoders", 0);
-        }
-    }*/
-
-    /*public void encoderDriveWithSpeed(double speed, double desired) {
+    public void encoderDriveWithSpeed(double speed, double desired) {
         //variables that store initial encoder values for the four motors
         double FrontLeftInitial = FrontLeftDrive.getCurrentPosition();
         double FrontRightInitial = FrontRightDrive.getCurrentPosition();
         double BackLeftInitial = BackLeftDrive.getCurrentPosition();
         double BackRightInitial = BackRightDrive.getCurrentPosition();
-
-        //Front Left Motor movement
+        //Front Back movement
         while (true) {
+            //Front Left Motor movement
             if (desired + FrontLeftInitial > FrontLeftDrive.getCurrentPosition() + 10) {
                 FrontLeftDrive.setPower(speed);
             } else if (desired + FrontLeftInitial < FrontLeftDrive.getCurrentPosition() - 10) {
@@ -132,7 +116,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
                 FrontRightDrive.setPower(-speed);
             } else {
                 FrontRightDrive.setPower(0);
-
             }
 
             //Back Left Motor movement
@@ -154,7 +137,16 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
             }
 
             //Ends loop when all motors reach desired position
-            if (desired + FrontLeftInitial < FrontLeftDrive.getCurrentPosition() + 10 &&
+            if (FrontLeftDrive.getPower() == 0) {
+                if (FrontRightDrive.getPower() == 0) {
+                    if (BackLeftDrive.getPower() == 0) {
+                        if (BackRightDrive.getPower() == 0) {
+                            return;
+                        }
+                    }
+                }
+            }
+            /*if (desired + FrontLeftInitial < FrontLeftDrive.getCurrentPosition() + 10 &&
                     desired + FrontLeftInitial > FrontLeftDrive.getCurrentPosition() - 10){
                 if (desired + FrontRightInitial < FrontRightDrive.getCurrentPosition() + 10 &&
                         desired + FrontRightInitial > FrontRightDrive.getCurrentPosition() - 10) {
@@ -166,10 +158,148 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
                         }
                     }
                 }
+            } */
+        }
+    }
+
+    public void encoderStrafeWithSpeed(double speed, double desired) {
+        //variables that store initial encoder values for the four motors
+        double FrontLeftInitial = FrontLeftDrive.getCurrentPosition();
+        double FrontRightInitial = FrontRightDrive.getCurrentPosition();
+        double BackLeftInitial = BackLeftDrive.getCurrentPosition();
+        double BackRightInitial = BackRightDrive.getCurrentPosition();
+        //Constant that converts distance of strafing into distance the wheels need to rotate
+        double constant = 1.7;
+        //Strafing movement
+        while (true) {
+            //if robot needs to strafe right
+            if (desired > 0) {
+                if (constant * desired + FrontLeftInitial > FrontLeftDrive.getCurrentPosition() + 10) {
+                    FrontLeftDrive.setPower(-speed);
+                } else {
+                    FrontLeftDrive.setPower(0);
+                }
+                if (constant * desired + FrontRightInitial > FrontRightDrive.getCurrentPosition() + 10) {
+                    FrontRightDrive.setPower(-speed);
+                } else {
+                    FrontRightDrive.setPower(0);
+                }
+                if (constant * desired + BackLeftInitial > BackLeftDrive.getCurrentPosition() + 10) {
+                    BackLeftDrive.setPower(speed);
+                } else {
+                    BackLeftDrive.setPower(0);
+                }
+                if (constant * desired + BackRightInitial > BackRightDrive.getCurrentPosition() + 10) {
+                    BackRightDrive.setPower(speed);
+                } else {
+                    BackRightDrive.setPower(0);
+                }
+                //if robot needs to strafe left
+            } else {
+                if (constant * desired + FrontLeftInitial > FrontLeftDrive.getCurrentPosition() + 10) {
+                    FrontLeftDrive.setPower(speed);
+                } else {
+                    FrontLeftDrive.setPower(0);
+                }
+                if (constant * desired + FrontRightInitial > FrontRightDrive.getCurrentPosition() + 10) {
+                    FrontRightDrive.setPower(speed);
+                } else {
+                    FrontRightDrive.setPower(0);
+                }
+                if (constant * desired + BackLeftInitial > BackLeftDrive.getCurrentPosition() + 10) {
+                    BackLeftDrive.setPower(-speed);
+                } else {
+                    BackLeftDrive.setPower(0);
+                }
+                if (constant * desired + BackRightInitial > BackRightDrive.getCurrentPosition() + 10) {
+                    BackRightDrive.setPower(-speed);
+                } else {
+                    BackRightDrive.setPower(0);
+                }
+            }
+            //Ends loop when all motors reach desired position
+            if (FrontLeftDrive.getPower() == 0){
+                if (FrontRightDrive.getPower() == 0) {
+                    if (BackLeftDrive.getPower() == 0) {
+                        if (BackRightDrive.getPower() == 0) {
+                            return;
+                        }
+                    }
+                }
             }
         }
-    }*/
+    }
+
+    public void encoderRotationWithSpeed(double speed, double desired) {
+        //variables that store initial encoder values for the four motors
+        double FrontLeftInitial = FrontLeftDrive.getCurrentPosition();
+        double FrontRightInitial = FrontRightDrive.getCurrentPosition();
+        double BackLeftInitial = BackLeftDrive.getCurrentPosition();
+        double BackRightInitial = BackRightDrive.getCurrentPosition();
+        //Constant that converts the degrees of robot rotation into distance the wheels need to rotate
+        double constant = 1.7;
+        //Rotating movement
+        while (true) {
+            //if robot needs to rotate clockwise
+            if (desired > 0) {
+                if (constant * desired + FrontLeftInitial > FrontLeftDrive.getCurrentPosition() + 10) {
+                    FrontLeftDrive.setPower(-speed);
+                } else {
+                    FrontLeftDrive.setPower(0);
+                }
+                if (constant * desired + FrontRightInitial > FrontRightDrive.getCurrentPosition() + 10) {
+                    FrontRightDrive.setPower(-speed);
+                } else {
+                    FrontRightDrive.setPower(0);
+                }
+                if (constant * desired + BackLeftInitial > BackLeftDrive.getCurrentPosition() + 10) {
+                    BackLeftDrive.setPower(-speed);
+                } else {
+                    BackLeftDrive.setPower(0);
+                }
+                if (constant * desired + BackRightInitial > BackRightDrive.getCurrentPosition() + 10) {
+                    BackRightDrive.setPower(-speed);
+                } else {
+                    BackRightDrive.setPower(0);
+                }
+                //if robot needs to rotate counter clockwise
+            } else {
+                if (constant * desired + FrontLeftInitial > FrontLeftDrive.getCurrentPosition() + 10) {
+                    FrontLeftDrive.setPower(speed);
+                } else {
+                    FrontLeftDrive.setPower(0);
+                }
+                if (constant * desired + FrontRightInitial > FrontRightDrive.getCurrentPosition() + 10) {
+                    FrontRightDrive.setPower(speed);
+                } else {
+                    FrontRightDrive.setPower(0);
+                }
+                if (constant * desired + BackLeftInitial > BackLeftDrive.getCurrentPosition() + 10) {
+                    BackLeftDrive.setPower(speed);
+                } else {
+                    BackLeftDrive.setPower(0);
+                }
+                if (constant * desired + BackRightInitial > BackRightDrive.getCurrentPosition() + 10) {
+                    BackRightDrive.setPower(speed);
+                } else {
+                    BackRightDrive.setPower(0);
+                }
+            }
+            //Ends loop when all motors reach desired position
+            if (FrontLeftDrive.getPower() == 0){
+                if (FrontRightDrive.getPower() == 0) {
+                    if (BackLeftDrive.getPower() == 0) {
+                        if (BackRightDrive.getPower() == 0) {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public void basicEncoderDrive(double straightInches, double strafeInches) {
+        //Front Left Motor movement
         int newFrontLeftTarget, newFrontRightTarget, newBackLeftTarget, newBackRightTarget;
 
         // Determine new target position, and pass to motor controller
