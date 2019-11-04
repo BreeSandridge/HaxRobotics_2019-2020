@@ -33,12 +33,26 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
                                       BackLeftDrive,  BackRightDrive);
     }
 
+    public double[] update(){
+        accelDrive.update();
+        double[] motor_values = accelDrive.motorValues();
+        return motor_values;
+    }
+
+
     @Override
     public void drive(double x, double y, double w) {
         FrontLeftDrive.setPower(x+y+w);
         FrontRightDrive.setPower(x+y-w);
         BackLeftDrive.setPower(-x+y+w);
         BackRightDrive.setPower(x+y-w);
+    }
+
+    public void drive(double frontleft, double frontright, double backleft, double backright){
+        FrontLeftDrive.setPower(frontleft);
+        FrontRightDrive.setPower(frontright);
+        BackLeftDrive.setPower(backleft);
+        BackRightDrive.setPower(backright);
     }
 
     public void sleep_secs(double t){
@@ -50,8 +64,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     }
 
     @Override
-    public void t_drive(double x, double y, double w, double t) {
-        DriveParams newParams = new DriveParams(x, y, w, t);
+    public void t_drive(double x, double y, double w, double desired_rotations) {
+        DriveParams newParams = new DriveParams(x, y, w, desired_rotations);
         accelDrive.pushCommand(newParams);
     }
 

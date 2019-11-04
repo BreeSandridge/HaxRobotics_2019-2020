@@ -3,12 +3,12 @@ package org.firstinspires.ftc.teamcode.StaceyZhangCode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class Example_Trep_Drive_SZ{
+public class Example_Trap_Drive_SZ{
     public double x, y, w, t;
     public boolean isRunning;
     public ElapsedTime elapsedTime = new ElapsedTime();
 
-    public Example_Trep_Drive_SZ(DcMotor FrontLeftDrive, DcMotor FrontRightDrive, DcMotor BackLeftDrive, DcMotor BackRightDrive){
+    public Example_Trap_Drive_SZ(DcMotor FrontLeftDrive, DcMotor FrontRightDrive, DcMotor BackLeftDrive, DcMotor BackRightDrive){
 
     }
 
