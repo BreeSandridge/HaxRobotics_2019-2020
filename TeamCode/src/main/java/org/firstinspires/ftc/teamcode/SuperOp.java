@@ -20,12 +20,17 @@ in a trapezoid drive pattern.
 
 public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
-    DcMotor FrontLeftDrive = null;
-    DcMotor FrontRightDrive = null;
-    DcMotor BackLeftDrive = null;
-    DcMotor BackRightDrive = null;
+    public DcMotor FrontLeftDrive = null;
+    public DcMotor FrontRightDrive = null;
+    public DcMotor BackLeftDrive = null;
+    public DcMotor BackRightDrive = null;
+
     protected Accel_Drive accelDrive;
-    boolean encoder;
+
+    public double x_speed;
+    public double y_speed;
+    public double w_speed;
+
 
 
 
@@ -36,6 +41,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
+
+
 
     @Override
     public void init() {
@@ -57,17 +64,34 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         accelDrive = new Accel_Drive(FrontLeftDrive, FrontRightDrive,
                 BackLeftDrive,  BackRightDrive);
 
-        encoder = false;
+        x_speed = .8;
+        y_speed = .6;
+        w_speed = .6;
+    }
+
+    public void setMode(DcMotor.RunMode mode){
+        FrontRightDrive.setMode(mode);
+        FrontLeftDrive.setMode(mode);
+        BackLeftDrive.setMode(mode);
+        BackRightDrive.setMode(mode);
     }
 
     // Mechanum wheel implementation
     // Accepts amount to move left/right (x), move up/down (y), and rotate (w)
-    @Override
+
     public void drive(double x, double y, double w) {
-        FrontLeftDrive.setPower(x+y+w);
-        FrontRightDrive.setPower(x+y-w);
-        BackLeftDrive.setPower(-x+y+w);
-        BackRightDrive.setPower(x+y-w);
+        FrontLeftDrive.setPower((y_speed * y) - (x_speed * x)+ (w_speed* w));
+        FrontRightDrive.setPower((y_speed * y) + (x_speed * x) - (w_speed * w));
+        BackLeftDrive.setPower((y_speed * y) + (x_speed * x) + (w_speed * w));
+        BackRightDrive.setPower((y_speed * y) - (x_speed * x) - (w_speed * w));
+    }
+
+    public void c_drive(){
+        drive(
+                gamepad1.left_stick_x,
+                gamepad1.left_stick_y,
+                gamepad1.right_stick_x
+        );
     }
 
     // Wait for a given number of seconds (t)
@@ -98,7 +122,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
      * @param speed (the speed [-1, 1], at which the robot's wheels will turn)
      * @param desired the distance the robot will travel (positive for forwards, negative for backwards)
      */
-    public void encoderDriveWithSpeed(double speed, double desired) {
+    /*public void encoderDriveWithSpeed(double speed, double desired) {
         //variables that store initial encoder values for the four motors
         double FrontLeftInitial = FrontLeftDrive.getCurrentPosition();
         double FrontRightInitial = FrontRightDrive.getCurrentPosition();
@@ -164,11 +188,11 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
                         }
                     }
                 }
-            } */
+            }
         }
-    }
+    }*/
 
-    public void encoderStrafeWithSpeed(double speed, double desired) {
+    /*public void encoderStrafeWithSpeed(double speed, double desired) {
         //variables that store initial encoder values for the four motors
         double FrontLeftInitial = FrontLeftDrive.getCurrentPosition();
         double FrontRightInitial = FrontRightDrive.getCurrentPosition();
@@ -234,9 +258,9 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
                 }
             }
         }
-    }
+    }*/
 
-    public void encoderRotationWithSpeed(double speed, double desired) {
+    /*public void encoderRotationWithSpeed(double speed, double desired) {
         //variables that store initial encoder values for the four motors
         double FrontLeftInitial = FrontLeftDrive.getCurrentPosition();
         double FrontRightInitial = FrontRightDrive.getCurrentPosition();
@@ -302,9 +326,9 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
                 }
             }
         }
-    }
+    }*/
 
-    public void basicEncoderDrive(double straightInches, double strafeInches) {
+    /*public void basicEncoderDrive(double straightInches, double strafeInches) {
         //Front Left Motor movement
         int newFrontLeftTarget, newFrontRightTarget, newBackLeftTarget, newBackRightTarget;
 
@@ -358,5 +382,5 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         FrontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         BackLeftDrive.setMode  (DcMotor.RunMode.RUN_TO_POSITION);
         BackRightDrive.setMode (DcMotor.RunMode.RUN_TO_POSITION);
-    }
+    }*/
 }
