@@ -43,7 +43,7 @@ import java.util.List;
  * purposes. We also show how to get data from the pipeline to your OpMode.
  */
 @TeleOp
-public class PipelineStageSwitchingExample extends LinearOpMode
+public class SimplerPipelineExample extends LinearOpMode
 {
     OpenCvCamera phoneCam;
     StageSwitchingPipeline stageSwitchingPipeline;
@@ -88,7 +88,7 @@ public class PipelineStageSwitchingExample extends LinearOpMode
         Mat contoursOnFrameMat = new Mat();
         List<MatOfPoint> contoursList = new ArrayList<>();
         int numContoursFound;
-
+        /*
         enum Stage
         {
             YCbCr_CHAN2,
@@ -96,9 +96,9 @@ public class PipelineStageSwitchingExample extends LinearOpMode
             CONTOURS_OVERLAYED_ON_FRAME,
             RAW_IMAGE,
         }
-
         private Stage stageToRenderToViewport = Stage.YCbCr_CHAN2;
         private Stage[] stages = Stage.values();
+        */
 
         @Override
         public void onViewportTapped()
@@ -107,7 +107,7 @@ public class PipelineStageSwitchingExample extends LinearOpMode
              * Note that this method is invoked from the UI thread
              * so whatever we do here, we must do quickly.
              */
-
+            /*
             int currentStageNum = stageToRenderToViewport.ordinal();
 
             int nextStageNum = currentStageNum + 1;
@@ -118,6 +118,7 @@ public class PipelineStageSwitchingExample extends LinearOpMode
             }
 
             stageToRenderToViewport = stages[nextStageNum];
+            */
         }
 
         @Override
@@ -136,7 +137,7 @@ public class PipelineStageSwitchingExample extends LinearOpMode
             numContoursFound = contoursList.size();
             input.copyTo(contoursOnFrameMat);
             Imgproc.drawContours(contoursOnFrameMat, contoursList, -1, new Scalar(0, 0, 255), 3, 8);
-
+            /*
             switch (stageToRenderToViewport)
             {
                 case YCbCr_CHAN2:
@@ -164,6 +165,8 @@ public class PipelineStageSwitchingExample extends LinearOpMode
                     return input;
                 }
             }
+             */
+            return contoursOnFrameMat;
         }
 
         public int getNumContoursFound()
