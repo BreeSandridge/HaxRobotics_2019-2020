@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -24,6 +25,13 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor FrontRightDrive = null;
     public DcMotor BackLeftDrive = null;
     public DcMotor BackRightDrive = null;
+    public DcMotor MiddleDrive = null;
+    public DcMotor LinearSlide = null;
+    public DcMotor FourBarLinkage = null;
+
+    public Servo topGripper = null;
+    public Servo bottomGripper = null;
+    public Servo foundationMover = null;
 
     protected Accel_Drive accelDrive;
 
