@@ -39,9 +39,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public double y_speed;
     public double w_speed;
 
-
-
-
     static final double COUNTS_PER_MOTOR_REV = 1440;            // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
@@ -54,6 +51,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
     @Override
     public void init() {
+
         // Initialize the hardware variables
         FrontLeftDrive  = hardwareMap.get(DcMotor.class, "FrontLeftDrive");
         FrontRightDrive = hardwareMap.get(DcMotor.class, "FrontRightDrive");
@@ -72,9 +70,9 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         accelDrive = new Accel_Drive(FrontLeftDrive, FrontRightDrive,
                 BackLeftDrive,  BackRightDrive);
 
-        x_speed = .8;
-        y_speed = .6;
-        w_speed = .6;
+        x_speed = .64;
+        y_speed = .48;
+        w_speed = .48;
     }
 
     public void setMode(DcMotor.RunMode mode){
@@ -86,7 +84,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
     // Mechanum wheel implementation
     // Accepts amount to move left/right (x), move up/down (y), and rotate (w)
-
     public void drive(double x, double y, double w) {
         FrontLeftDrive.setPower((y_speed * y) - (x_speed * x)+ (w_speed* w));
         FrontRightDrive.setPower((y_speed * y) + (x_speed * x) - (w_speed * w));

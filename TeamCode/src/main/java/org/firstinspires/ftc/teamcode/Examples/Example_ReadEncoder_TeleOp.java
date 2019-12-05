@@ -7,7 +7,6 @@ import org.firstinspires.ftc.teamcode.SuperOp;
 
 @TeleOp(name="Example_ReadEncoder ", group="Test")
 public class Example_ReadEncoder_TeleOp extends SuperOp {
-
     @Override
     public void init() {
         super.init();
@@ -34,15 +33,19 @@ public class Example_ReadEncoder_TeleOp extends SuperOp {
     int tn_avg = 0;
     int p_avg = 0;
     int n_avg = 0;
-
-    //this declares four modes the robot could be in
+/**
+    *this declares four modes the robot could be in
+    *enums allow words to be used as numbers
+    *this code declares four states: IDLE, TURNING, STRAFING, FORWARDS
+    *enum will be used in case statement below
+ */
     public enum MODE {
         IDLE, TURNING, STRAFING, FORWARDS
     }
 
     @Override
     public void loop() {
-        //display telemetry (encoder values) on driver station
+        //display telemetry (encoder values) on driver station app
         telemetry.addData("> Front Left: ", FrontLeftDrive.getCurrentPosition());
         telemetry.addData("> Front Right: ", FrontRightDrive.getCurrentPosition());
         telemetry.addData("> Back Left: ", BackLeftDrive.getCurrentPosition());
@@ -52,35 +55,42 @@ public class Example_ReadEncoder_TeleOp extends SuperOp {
         c_drive();
 
         //reset encoders if necessary
+        //method declared below
         if (gamepad1.a) {
             resetMotors();
         }
-
-        //allows the enum values or modes to be used
-        //in the switch statement below
+/**
+        *allows the enum values or modes to be used
+        *in the case statement below
+ */
         MODE[] modes = MODE.values();
         for (MODE mode : modes) {
             switch (mode) {
+
                 //if the dpad.left is pressed
                 //than the robot calls the method
                 //to move forward
                 case STRAFING:
                     StrafeRight();
                     break;
+
                 //if dpad.up is pressed
                 //than the robot calls the method
                 //to move forward
                 case FORWARDS:
                     MoveForwards();
                     break;
+
                 //if dpad.right is pressed
                 //than the robot calls the method
                 //to turn 90 degrees right
                 case TURNING:
                     Rotate90();
                     break;
+
                 //if no button is pressed
-                //than the robot does nothing
+                //than the robot does not call a method
+                //and does not move
                 case IDLE:
                     break;
             }
@@ -92,91 +102,110 @@ public class Example_ReadEncoder_TeleOp extends SuperOp {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
-
-    //method to rotate 90 degrees right (called above in switch statement)
-    //sets desired average for each motor
-    //if dpad.right is pressed
-    //the rotation variable, w, is
-    //increased until the average is met
-    //right side is negative
-    //but the left side is negative
-    //because we want the robot to go right
-    //if we wanted it to go left, the values would be reversed
+/**
+    *method to rotate 90 degrees right (called above in switch statement)
+    *sets desired average for each motor
+    *if dpad.right is pressed
+    *the rotation variable, w, is
+    *increased until the average is met
+    *right side is negative
+    *but the left side is negative
+    *because we want the robot to go right
+    *if we wanted it to go left, the values would be reversed
+ */
     public void Rotate90 () {
         if (rotate90) {
+
             fl = FrontLeftDrive.getCurrentPosition();
             fr = FrontRightDrive.getCurrentPosition();
             bl = BackLeftDrive.getCurrentPosition();
             br = BackRightDrive.getCurrentPosition();
+
             p_avg = (Math.abs(fl + bl)) / 2; //takes the absolute value of the left wheels and averages it
             n_avg = (Math.abs(fr + br)) / 2; //takes the absolute value of the right wheels and averages it
-
 
             if ((Math.abs(p_avg - tp_avg) < 10) && (Math.abs(n_avg - tn_avg) < 10)) {
                 rotate90 = false;
                 drive(0, 0, 0);
             }
+
         } else if (gamepad1.dpad_right) {
+
             //resetMotors();
             rotate90 = true;
+
+            //these are experimental values
             fl = FrontLeftDrive.getCurrentPosition() + 999;
             fr = FrontRightDrive.getCurrentPosition() - 999;
             bl = BackLeftDrive.getCurrentPosition() + 999;
             br = BackRightDrive.getCurrentPosition() - 999;
+
             tp_avg = (Math.abs(fl + bl)) / 2; //takes the absolute value of the left wheels and averages it
             tn_avg = (Math.abs(fr + br)) / 2; //takes the absolute value of the right wheels and averages it
             drive(0, 0, 0.8);
         }
     }
-
-    //method to move robot forwards (called above in switch statement)
-    //sets desired average for each motor
-    //if dpad.up is pressed
-    //the vertical movement variable, y, is
-    //increased until the average is met
-    //right wheels are positive
-    //but the left wheels are negative because
-    //it forces all the motors to go forwards
+/**
+    *method to move robot forwards (called above in switch statement)
+    *sets desired average for each motor
+    *if dpad.up is pressed
+    *the vertical movement variable, y, is
+    *increased until the average is met
+    *right wheels are positive
+    *but the left wheels are negative because
+    *it forces all the motors to go forwards
+ */
     public void MoveForwards () {
         if (moveForwards) {
+
             fl = FrontLeftDrive.getCurrentPosition();
             fr = FrontRightDrive.getCurrentPosition();
             bl = BackLeftDrive.getCurrentPosition();
             br = BackRightDrive.getCurrentPosition();
+
             n_avg = (Math.abs(fl + bl)) / 2; //takes the absolute value of the left wheels and averages it
             p_avg = (Math.abs(fr + br)) / 2; //takes the absolute value of the right wheels and averages it
+
             if (Math.abs(p_avg - tp_avg) < 10 && Math.abs(n_avg - tn_avg) < 10) {
                 moveForwards = false;
                 drive(0, 0, 0);
             }
+
         } else if (gamepad1.dpad_up) {
+
             //resetMotors();
             moveForwards = true;
+
+            //these are experimental values
             fl = FrontLeftDrive.getCurrentPosition() - 999;
             fr = FrontRightDrive.getCurrentPosition() + 999;
             bl = BackLeftDrive.getCurrentPosition() - 999;
             br = BackRightDrive.getCurrentPosition() + 999;
-            tn_avg = (Math.abs(fl + bl)) / 2; //takes the absolute value of the right wheels and averages it
+
+            tn_avg = (Math.abs(fl + bl)) / 2; //takes the absolute value of the left wheels and averages it
             tp_avg = (Math.abs(fr + br)) / 2; //takes the absolute value of the right wheels and averages it
             drive(0, 0.8, 0);
         }
     }
-
-    //method to strafe right (called above in switch statement)
-    //sets desired average for each motor
-    //if dpad.left is pressed
-    //the horizontal movement variable, x, is
-    //increased until the average is met
-    //back wheels are positive
-    //but the front wheels are negative because
-    //it forces the wheels to move inward
-    //this is what allows the robot to strafe
+/**
+    *method to strafe right (called above in switch statement)
+    *sets desired average for each motor
+    *if dpad.left is pressed
+    *the horizontal movement variable, x, is
+    *increased until the average is met
+    *back wheels are positive
+    *but the front wheels are negative because
+    *it forces the wheels to move inward
+    *this is what allows the robot to strafe
+ */
     public void StrafeRight () {
         if (strafeRight) {
+
             fl = FrontLeftDrive.getCurrentPosition();
             fr = FrontRightDrive.getCurrentPosition();
             bl = BackLeftDrive.getCurrentPosition();
             br = BackRightDrive.getCurrentPosition();
+
             n_avg = ((Math.abs(fl + fr)) / 2);  //takes the absolute value of the left wheels and averages it
             p_avg = ((Math.abs(bl + br)) / 2);  //takes the absolute value of the right wheels and averages it
 
@@ -186,12 +215,16 @@ public class Example_ReadEncoder_TeleOp extends SuperOp {
             }
 
         } else if (gamepad1.dpad_left) {
+
             //resetMotors();
             strafeRight = true;
+
+            //these are experimental values
             fl = FrontLeftDrive.getCurrentPosition() - 6000;
             fr = FrontRightDrive.getCurrentPosition() - 6000;
             bl = BackLeftDrive.getCurrentPosition() + 6000;
             br = BackRightDrive.getCurrentPosition() + 6000;
+
             tn_avg = (Math.abs(fl + fr)) / 2; //takes the absolute value of the left wheels and averages it
             tp_avg = (Math.abs(bl + br)) / 2; //takes the absolute value of the right wheels and averages it
             drive(0.8, 0, 0);
