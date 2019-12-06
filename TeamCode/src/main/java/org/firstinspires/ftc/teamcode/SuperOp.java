@@ -28,10 +28,12 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor MiddleDrive = null;
     public DcMotor LinearSlide = null;
     public DcMotor FourBarLinkage = null;
+    public DcMotor Latch
 
     public Servo topGripper = null;
     public Servo bottomGripper = null;
     public Servo foundationMover = null;
+    public Servo Latch = null;
 
     protected Accel_Drive accelDrive;
 
@@ -60,6 +62,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackLeftDrive  = hardwareMap.get(DcMotor.class, "BackLeftDrive");
         BackRightDrive = hardwareMap.get(DcMotor.class, "BackRightDrive");
 
+        Latch = hardwareMap.get(Servo.class, "Latch");
+
         // Reverse directions on the right motors
         // so that "forward" and "backward" are the same number for both sides
         FrontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -71,6 +75,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         // (may later be bundled into a class or lookup table)
         accelDrive = new Accel_Drive(FrontLeftDrive, FrontRightDrive,
                 BackLeftDrive,  BackRightDrive);
+
+        Latch.setPosition(0);
 
         x_speed = .8;
         y_speed = .6;
