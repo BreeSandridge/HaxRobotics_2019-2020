@@ -2,9 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.AreshPourkavoos.Accel_Drive;
 
 // extend OpMode so future classes will extend SuperOp Instead
 // implements is for interfaces
