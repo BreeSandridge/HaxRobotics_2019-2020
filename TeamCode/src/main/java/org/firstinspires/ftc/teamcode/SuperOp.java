@@ -3,9 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.AreshPourkavoos.Accel_Drive;
 
 // extend OpMode so future classes will extend SuperOp Instead
 // implements is for interfaces
@@ -25,6 +22,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor FrontRightDrive = null;
     public DcMotor BackLeftDrive = null;
     public DcMotor BackRightDrive = null;
+
     public DcMotor MiddleDrive = null;
     public DcMotor LinearSlide = null;
     public DcMotor FourBarLinkage = null;
@@ -116,6 +114,15 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackRightDrive.setMode(mode);
     }
 
+
+    public double[] update(){
+        accelDrive.update();
+        double[] motor_values = accelDrive.motorValues();
+        return motor_values;
+    }
+
+
+
     // Mechanum wheel implementation
     // Accepts amount to move left/right (x), move up/down (y), and rotate (w)
     public void drive(double x, double y, double w) {
@@ -133,6 +140,15 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         );
     }
 
+
+    public void drive(double frontleft, double frontright, double backleft, double backright){
+        FrontLeftDrive.setPower(frontleft);
+        FrontRightDrive.setPower(frontright);
+        BackLeftDrive.setPower(backleft);
+        BackRightDrive.setPower(backright);
+    }
+
+
     // Wait for a given number of seconds (t)
     // Is currently deprecated and will likely remain that way,
     // as this function would halt all data collection, etc.
@@ -149,8 +165,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     // and max rotation of w lasting t seconds
     // Would be called by implementation, is not yet
     @Override
-    public void t_drive(double x, double y, double w, double t) {
-        DriveParams newParams = new DriveParams(x, y, w, t);
+    public void t_drive(double x, double y, double w, double desired_rotations) {
+        DriveParams newParams = new DriveParams(x, y, w, desired_rotations);
         accelDrive.pushCommand(newParams);
     }
 
