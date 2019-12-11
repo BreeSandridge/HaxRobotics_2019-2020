@@ -20,10 +20,10 @@ in a trapezoid drive pattern.
 
 public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
-    DcMotor FrontLeftDrive = null;
-    DcMotor FrontRightDrive = null;
-    DcMotor BackLeftDrive = null;
-    DcMotor BackRightDrive = null;
+    public DcMotor FrontLeftDrive = null;
+    public DcMotor FrontRightDrive = null;
+    public DcMotor BackLeftDrive = null;
+    public DcMotor BackRightDrive = null;
     protected Accel_Drive accelDrive;
 
     @Override
