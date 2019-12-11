@@ -20,10 +20,10 @@ in a trapezoid drive pattern.
 
 public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
-    DcMotor FrontLeftDrive = null;
-    DcMotor FrontRightDrive = null;
-    DcMotor BackLeftDrive = null;
-    DcMotor BackRightDrive = null;
+    public DcMotor FrontLeftDrive = null;
+    public DcMotor FrontRightDrive = null;
+    public DcMotor BackLeftDrive = null;
+    public DcMotor BackRightDrive = null;
     protected Accel_Drive accelDrive;
 
     @Override
@@ -47,6 +47,15 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
                                       BackLeftDrive,  BackRightDrive);
     }
 
+
+    public double[] update(){
+        accelDrive.update();
+        double[] motor_values = accelDrive.motorValues();
+        return motor_values;
+    }
+
+
+
     // Mechanum wheel implementation
     // Accepts amount to move left/right (x), move up/down (y), and rotate (w)
     @Override
@@ -56,6 +65,15 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackLeftDrive.setPower(-x+y+w);
         BackRightDrive.setPower(x+y-w);
     }
+
+
+    public void drive(double frontleft, double frontright, double backleft, double backright){
+        FrontLeftDrive.setPower(frontleft);
+        FrontRightDrive.setPower(frontright);
+        BackLeftDrive.setPower(backleft);
+        BackRightDrive.setPower(backright);
+    }
+
 
     // Wait for a given number of seconds (t)
     // Is currently deprecated and will likely remain that way,
@@ -73,8 +91,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     // and max rotation of w lasting t seconds
     // Would be called by implementation, is not yet
     @Override
-    public void t_drive(double x, double y, double w, double t) {
-        DriveParams newParams = new DriveParams(x, y, w, t);
+    public void t_drive(double x, double y, double w, double desired_rotations) {
+        DriveParams newParams = new DriveParams(x, y, w, desired_rotations);
         accelDrive.pushCommand(newParams);
     }
 }
