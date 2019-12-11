@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.SuperOp;
 
-public class RedBuild extends SuperOp {
+public class BlueBuild extends SuperOp {
     // status stuff
-    enum STATUS {TOBLOCK, APPROACH, GETBLOCK, AWAY, TOBUILD, PARK}
+    enum STATUS {START, TOBLOCK, APPROACH, GETBLOCK, AWAY, TOBUILD, PARK}
     private STATUS status = STATUS.TOBLOCK;
     boolean running = true;
     private int targetPosition;
@@ -13,7 +13,7 @@ public class RedBuild extends SuperOp {
     @Override
     public void loop() {
 
-        // switch cases for making the robot do different things
+        // switch cases for changing the status of the robot to do different things
         switch (status) {
             case TOBLOCK:
                 toBlock();
@@ -38,7 +38,7 @@ public class RedBuild extends SuperOp {
 
     // method to go to block
     private void toBlock() {
-        t_drive(0, 0.75, 0, 1);
+        t_drive(0, -0.75, 0, 1);
         // vision code
 
         // if skystone is sighted
@@ -46,7 +46,6 @@ public class RedBuild extends SuperOp {
         status = STATUS.APPROACH;
     }
 
-    // approach the block horizontally
     private void approach() {
         t_drive(0.75, 0, 0, 1);
         status = STATUS.GETBLOCK;
@@ -69,7 +68,6 @@ public class RedBuild extends SuperOp {
         }
     }
 
-    // leave the block horizontally
     private void away() {
         t_drive(-0.75, 0, 0, 1);
         status = STATUS.TOBUILD;
@@ -78,7 +76,7 @@ public class RedBuild extends SuperOp {
     // go to build site and place the block back down
     private void toBuild() {
         // methods to get the robot back to the build site to place down the block
-        t_drive(0, -0.75,0, 1);
+        t_drive(0, 0.75,0, 1);
 
         // rotate the arm up
         targetPosition = 7000;
@@ -98,7 +96,7 @@ public class RedBuild extends SuperOp {
     // park the thing under the bridge
     private void park() {
         // vision stuff to park the robot under the bridge
-        t_drive(0, 1, 0, 1);
+        t_drive(0, -1, 0, 1);
     }
 }
 
@@ -107,13 +105,22 @@ public class RedBuild extends SuperOp {
 
 
 /*
-                    There's a hundred and four days of summer vacation, 'Til school comes along just to end it,
-                    So the annual problem for our generation, is finding a good way to spend it. Like maybe
-                    Building a rocket, or fighting a mummy, or climbing up the Eiffel tower,
-                    Discovering something that doesn't exist, Or giving a monkey a shower. Surfing tidal waves
-                    creating nanobots, or locating Frankenstein's brain, Finding a Dodo bird, painting
-                    a continent, Or driving our sister insane!
-                    As you can see there's a whole lot of stuff to do before school starts this fall
-                    So stick with us cause Phineas and Ferb are gonna do it all. Just stick with us cause
-                    Phineas and Ferb are gonna do it all. Mom! Phineas and Ferb are making a Title sequence!
-                 */
+Are you ready, kids?
+I said, are you ready?
+
+Who lives in a pineapple under the sea?
+SPONGEBOB SQUAREPANTS!
+Absorbent and yellow and porous is he
+SPONGEBOB SQUAREPANTS!
+
+If nautical nonsense be something you wish
+SPONGEBOB SQUAREPANTS!
+Then drop on the deck and flop like a fish
+SPONGEBOB SQUAREPANTS!
+
+SPONGEBOB SQUAREPANTS!
+SPONGEBOB SQUAREPANTS!
+SPONGEBOB SQUAREPANTS!
+SPONGEBOB SQUAREPANTS!
+
+ */
