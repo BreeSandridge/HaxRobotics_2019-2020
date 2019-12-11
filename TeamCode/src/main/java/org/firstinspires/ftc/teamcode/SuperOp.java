@@ -32,12 +32,31 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public Servo topGripper = null;
     public Servo bottomGripper = null;
     public Servo foundationMover = null;
+    public Servo basicGrabber = null;
 
     protected Accel_Drive accelDrive;
 
     public double x_speed;
     public double y_speed;
     public double w_speed;
+
+    public double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
+
+    public static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
+    public static final int    CYCLE_MS    =   50;     // period of each cycle
+    public static final double MAX_POS     =  1.0;     // Maximum rotational position
+    public static final double MIN_POS     =  0.0;     // Minimum rotational position
+
+
+    public enum STATUS {
+        TOBLOCK, GETBLOCK, BUILD, PARK
+    }
+
+    public boolean block = false;
+    public boolean rampUP = true;
+    public boolean hasBlock = false;
+    public STATUS[] statuses = STATUS.values();
+
 
     static final double COUNTS_PER_MOTOR_REV = 1440;            // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
@@ -47,7 +66,22 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
+    //these allow the motor's
+    //encoder values to be averaged
+    //they represent the motor's encoder values
+    public int fl = 0;
+    public int fr = 0;
+    public int bl = 0;
+    public int br = 0;
 
+    //averages of the motors go into these integers
+    public int tp_avg = 0;
+    public int tn_avg = 0;
+    public int p_avg = 0;
+    public int n_avg = 0;
+
+    public boolean TOBLOCK = true;
+    public boolean BUILD = false;
 
     @Override
     public void init() {
