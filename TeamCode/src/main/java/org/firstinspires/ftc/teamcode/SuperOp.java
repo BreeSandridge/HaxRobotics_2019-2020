@@ -28,12 +28,12 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor MiddleDrive = null;
     public DcMotor LinearSlide = null;
     public DcMotor FourBarLinkage = null;
-    public DcMotor LatchMotor;
+    //public DcMotor LatchMotor;
 
     public Servo topGripper = null;
     public Servo bottomGripper = null;
     public Servo foundationMover = null;
-    public Servo Latch = null;
+   // public Servo Latch = null;
 
     protected Accel_Drive accelDrive;
 
@@ -41,8 +41,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public double y_speed;
     public double w_speed;
 
-
-
+    public enum STATUS {START, TOBLOCK, APPROACH, GETBLOCK, AWAY, TOBUILD, PARK}
 
     static final double COUNTS_PER_MOTOR_REV = 1440;            // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
@@ -52,7 +51,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
-
+    public boolean isRunning = true;
 
     @Override
     public void init() {
@@ -62,9 +61,9 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackLeftDrive  = hardwareMap.get(DcMotor.class, "BackLeftDrive");
         BackRightDrive = hardwareMap.get(DcMotor.class, "BackRightDrive");
 
-        LatchMotor = hardwareMap.get(DcMotor.class, "LatchMotor");
+        //LatchMotor = hardwareMap.get(DcMotor.class, "LatchMotor");
 
-        Latch = hardwareMap.get(Servo.class, "Latch");
+        //Latch = hardwareMap.get(Servo.class, "Latch");
 
         // Reverse directions on the right motors
         // so that "forward" and "backward" are the same number for both sides
@@ -78,7 +77,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         accelDrive = new Accel_Drive(FrontLeftDrive, FrontRightDrive,
                 BackLeftDrive,  BackRightDrive);
 
-        Latch.setPosition(0);
+        //Latch.setPosition(0);
 
         x_speed = .8;
         y_speed = .6;

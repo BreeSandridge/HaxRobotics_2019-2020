@@ -21,15 +21,15 @@ public class RedBuild extends SuperOp {
             case APPROACH:
                 approach();
                 break;
-            case GETBLOCK:
+            /*case GETBLOCK:
                 getBlock();
-                break;
+                break;*/
             case AWAY:
                 away();
                 break;
-            case TOBUILD:
+            /*case TOBUILD:
                 toBuild();
-                break;
+                break;*/
             case PARK:
                 park();
                 break;
@@ -53,9 +53,10 @@ public class RedBuild extends SuperOp {
     }
 
     // method to pick up the block
-    private void getBlock() {
+    /*private void getBlock() {
         // rotate the arm down
         targetPosition = 9000;
+
         currPosition = LatchMotor.getCurrentPosition();
         LatchMotor.setPower(1);
 
@@ -68,7 +69,7 @@ public class RedBuild extends SuperOp {
             status = STATUS.AWAY;
         }
     }
-
+*/
     // leave the block horizontally
     private void away() {
         t_drive(-0.75, 0, 0, 1);
@@ -76,7 +77,7 @@ public class RedBuild extends SuperOp {
     }
 
     // go to build site and place the block back down
-    private void toBuild() {
+    /*private void toBuild() {
         // methods to get the robot back to the build site to place down the block
         t_drive(0, -0.75,0, 1);
 
@@ -94,7 +95,7 @@ public class RedBuild extends SuperOp {
             status = STATUS.PARK;
         }
     }
-
+*/
     // park the thing under the bridge
     private void park() {
         // vision stuff to park the robot under the bridge

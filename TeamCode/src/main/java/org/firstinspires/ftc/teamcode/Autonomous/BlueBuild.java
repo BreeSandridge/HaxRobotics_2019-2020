@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.SuperOp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.SuperOp;
+@Autonomous
 public class BlueBuild extends SuperOp {
+
     // status stuff
-    enum STATUS {START, TOBLOCK, APPROACH, GETBLOCK, AWAY, TOBUILD, PARK}
     private STATUS status = STATUS.TOBLOCK;
     boolean running = true;
     private int targetPosition;
@@ -21,14 +23,14 @@ public class BlueBuild extends SuperOp {
             case APPROACH:
                 approach();
                 break;
-            case GETBLOCK:
-                getBlock();
-                break;
+            //case GETBLOCK:
+                //getBlock();
+                //break;
             case AWAY:
                 away();
                 break;
             case TOBUILD:
-                toBuild();
+                //toBuild();
                 break;
             case PARK:
                 park();
@@ -38,12 +40,15 @@ public class BlueBuild extends SuperOp {
 
     // method to go to block
     private void toBlock() {
-        t_drive(0, -0.75, 0, 1);
-        // vision code
-
-        // if skystone is sighted
-        // set movement values to go towards block
-        status = STATUS.APPROACH;
+        if (isRunning) {
+           t_drive(0, 0.75, 0, 1000);
+            // vision code
+            // if skystone is sighted
+            // set movement values to go towards block
+            status = STATUS.APPROACH;
+        } else {
+            t_drive(0,0,0,0);
+        }
     }
 
     private void approach() {
@@ -52,7 +57,7 @@ public class BlueBuild extends SuperOp {
     }
 
     // method to pick up the block
-    private void getBlock() {
+  /*  private void getBlock() {
         // rotate the arm down
         targetPosition = 9000;
         currPosition = LatchMotor.getCurrentPosition();
@@ -67,14 +72,15 @@ public class BlueBuild extends SuperOp {
             status = STATUS.AWAY;
         }
     }
-
+*/
     private void away() {
         t_drive(-0.75, 0, 0, 1);
         status = STATUS.TOBUILD;
     }
 
+
     // go to build site and place the block back down
-    private void toBuild() {
+    /*private void toBuild() {
         // methods to get the robot back to the build site to place down the block
         t_drive(0, 0.75,0, 1);
 
@@ -92,7 +98,7 @@ public class BlueBuild extends SuperOp {
             status = STATUS.PARK;
         }
     }
-
+*/
     // park the thing under the bridge
     private void park() {
         // vision stuff to park the robot under the bridge
