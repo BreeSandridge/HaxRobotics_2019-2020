@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+// DriveParams class
+
 public class DriveParams {
     public double x, y, w, t, desired_rotations;
     DriveParams(double x, double y, double w, double desired_rotations){

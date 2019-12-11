@@ -214,7 +214,7 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
                 // Normalize speeds if either one exceeds +/- 1.0;
                 max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
-                if (max > 1.0)
+                if (max > 1.0);
                 {
                     leftSpeed /= max;
                     rightSpeed /= max;

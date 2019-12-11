@@ -10,12 +10,20 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
+
 @Autonomous
 public class Accel_Drive{
-
+  /*
+Accel_Drive class
+The Accel_Drive class implements the trapezoid drive,
+along with the ability to process multiple commands in a queue
+The SuperOp class contains an Accel_Drive object to maintain abstraction
+ */
     final double WHEEL_DIAMETER = 10.16; // centimeters, or 4 inches, mecanum wheels
     final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER*3.14;
     private double x, y, w, desired_rotations;    // x, y, w are desired values for speed
+
+
     private enum State {STOP, ACCEL, CONST, DECEL};
     private State driveState;
     //public ElapsedTime elapsedTime;
@@ -35,10 +43,17 @@ public Accel_Drive(DcMotor FrontLeftDrive, DcMotor FrontRightDrive,
         commands = new LinkedList<>();
     }
 
+    // Called by SuperOp.t_drive()
+    // Pushes a new DriveParams object onto the queue
     public void pushCommand(DriveParams newCommand){
         commands.add(newCommand);
     }
 
+    // Begin executing a new command
+    // this.x, y, w, t are the values of the current command
+    // but will (probably) later be replaced by a DriveParams object
+    // Makes sure that robot is stopped,
+    // but should only be called under those circumstances anyway
     public void set(DriveParams state){
         if (driveState != State.STOP)
             return;
@@ -60,6 +75,7 @@ public Accel_Drive(DcMotor FrontLeftDrive, DcMotor FrontRightDrive,
         BackRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+
     public String getCurrentPos(){
         String currentPositionStr = "Path0"+"Starting at: " + FrontLeftDrive.getCurrentPosition() + ", "
                 + FrontRightDrive.getCurrentPosition() + ", " + BackRightDrive.getCurrentPosition() + ", "
@@ -68,13 +84,16 @@ public Accel_Drive(DcMotor FrontLeftDrive, DcMotor FrontRightDrive,
     }
 
 
-    /*public void drive(double x, double y, double w) {
+
+    // Copy of SuperOp.drive()
+    public void drive(double x, double y, double w) {
         FrontLeftDrive.setPower(x+y+w);
         FrontRightDrive.setPower(x+y-w);
         BackLeftDrive.setPower(-x+y+w);
         BackRightDrive.setPower(x+y-w);
     }
      */
+
 
     // converting controller x, y, w values to power values to be set to for each motor
     // return values to autonomous drive to set values to each motor
@@ -90,6 +109,12 @@ public Accel_Drive(DcMotor FrontLeftDrive, DcMotor FrontRightDrive,
 
     // update the values of x, y, and w in relation to current rotations of wheel,
     // (encoder, rather than using time), for acceleration drive
+    // This is the bread and butter of the trapezoid drive implementation
+    // driveState variable can be one of ACCEL, CONST, DECEL, or STOP
+    // If accel/decel, sets the drive appropriately
+    // If const, does nothing (motors set once at the end of accel period)
+    // If stopped, checks the queue for the next command
+
     public void update() {
         double portion = (FrontLeftDrive.getCurrentPosition()+FrontRightDrive.getCurrentPosition()+
                 BackRightDrive.getCurrentPosition()+BackLeftDrive.getCurrentPosition())/4*desired_rotations;
