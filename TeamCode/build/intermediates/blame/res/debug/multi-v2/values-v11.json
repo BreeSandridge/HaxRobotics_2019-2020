@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\Alexa\\OneDrive\\Desktop\\SKYSTONE 2019-2020\\HaxRobotics_2019-2020\\TeamCode\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v11\\values-v11.xml",
+            "outputFile": "/home/a/Desktop/school/2019_2020/robotics/HaxRobotics_2019-2020/TeamCode/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v11/values-v11.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Alexa\\.gradle\\caches\\transforms-2\\files-2.1\\0a37125afcdd18ef9772924838cf3d9c\\RobotCore-release\\res\\values-v11\\values-v11.xml",
+                    "source": "/home/a/.gradle/caches/transforms-2/files-2.1/0a37125afcdd18ef9772924838cf3d9c/RobotCore-release/res/values-v11/values-v11.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
