@@ -16,7 +16,14 @@ public class BlueBuild extends SuperOp {
     private double targetTime;
     @Override
     public void loop() {
+        telemetry.addData("Position: ", LatchMotor.getCurrentPosition());
         telemetry.addData("Time: ", time.milliseconds());
+        telemetry.addData("> Front Right: ", FrontRightDrive.getCurrentPosition());
+        telemetry.addData("> Back Left: ", BackLeftDrive.getCurrentPosition());
+        telemetry.addData("> Back Right: ", BackRightDrive.getCurrentPosition());
+        telemetry.addData("> Front Left: ", FrontLeftDrive.getCurrentPosition());
+        telemetry.addData("Status: ", status);
+        currPosition = LatchMotor.getCurrentPosition(); 
         // switch cases for changing the status of the robot to do different things
         switch (status) {
             case START:
@@ -28,9 +35,9 @@ public class BlueBuild extends SuperOp {
             case APPROACH:
                 approach();
                 break;
-            //case GETBLOCK:
-                //getBlock();
-                //break;
+            case GETBLOCK:
+                getBlock();
+                break;
             case AWAY:
                 away();
                 break;
@@ -52,13 +59,7 @@ public class BlueBuild extends SuperOp {
     // method to go to block
     private void toBlock() {
         targetTime = 3;
-        //t_drive(0, 0.75, 0, 1);
         drive(0, 0.5, 0);
-        telemetry.addData("> Front Right: ", FrontRightDrive.getCurrentPosition());
-        telemetry.addData("> Back Left: ", BackLeftDrive.getCurrentPosition());
-        telemetry.addData("> Back Right: ", BackRightDrive.getCurrentPosition());
-        telemetry.addData("> Front Left: ", FrontLeftDrive.getCurrentPosition());
-        telemetry.addData("Status: ", status);
         // vision code
         // if skystone is sighted
         // set movement values to go towards block
@@ -71,38 +72,36 @@ public class BlueBuild extends SuperOp {
     }
 
     private void approach() {
-        //t_drive(0.75, 0, 0, 1);
         targetTime = 1.5;
         drive(0.5, 0, 0);
         telemetry.addData("Status: ", status);
         if(time.seconds() >= targetTime) {
             drive(0,0,0);
             sleep_secs(0.5);
-            status = STATUS.AWAY;
+            status = STATUS.GETBLOCK;
             time.reset();
         }
     }
 
     // method to pick up the block
-  /*  private void getBlock() {
+     private void getBlock() {
         // rotate the arm down
-        targetPosition = 9000;
         currPosition = LatchMotor.getCurrentPosition();
-        LatchMotor.setPower(1);
+        targetPosition = currPosition - 577;
+        LatchMotor.setPower(-0.7);
 
         // check if the arm is in position
-        if (currPosition > targetPosition - 100 || currPosition < targetPosition + 100) {
+        if (currPosition <= targetPosition + 13 && currPosition >= targetPosition - 13) {
             // pull the block in
             LatchMotor.setPower(0);
-            Latch.setPosition(0.5);
             // switch status
             status = STATUS.AWAY;
+            time.reset();
         }
     }
-*/
     private void away() {
+        RightSpeedMultiplier = 1.5;
         targetTime = 1.5;
-        //t_drive(-0.75, 0, 0, 1);
         drive(-0.5, 0, 0);
         telemetry.addData("Status: ", status);
         if(time.seconds() >= targetTime) {
@@ -117,30 +116,28 @@ public class BlueBuild extends SuperOp {
 
     // go to build site and place the block back down
     private void toBuild() {
+        targetPosition = currPosition + 577;
         // methods to get the robot back to the build site to place down the block
-        //t_drive(0, 0.75,0, 1);
         targetTime = 3;
         drive(0,-0.5,0);
         telemetry.addData("Status: ", status);
-        if(time.seconds() >= targetTime){
-            drive(0,0,0);
-            sleep_secs(0.5);
-            status = STATUS.PARK;
-            time.reset();
-        }
-        // rotate the arm up
-        /*targetPosition = 7000;
-        currPosition = LatchMotor.getCurrentPosition();
-        LatchMotor.setPower(-1);
+        if(time.seconds() >= targetTime) {
+            drive(0, 0, 0);
+            // rotate the arm up
+            currPosition = LatchMotor.getCurrentPosition();
+            LatchMotor.setPower(0.7);
 
-        // check if the arm is in position
-        if (currPosition > targetPosition - 100 || currPosition < targetPosition + 100) {
-            // pull the block in
-            LatchMotor.setPower(0);
-            Latch.setPosition(0);
-            // switch status
-            status = STATUS.PARK;
-        }*/
+            // check if the arm is in position
+            if (currPosition <= targetPosition + 13 && currPosition >= targetPosition - 13) {
+                // pull the block in
+                LatchMotor.setPower(0);
+                Latch.setPosition(0);
+                // switch status
+                status = STATUS.PARK;
+                time.reset();
+                RightSpeedMultiplier = 1;
+            }
+        }
     }
 
     // park the thing under the bridge
