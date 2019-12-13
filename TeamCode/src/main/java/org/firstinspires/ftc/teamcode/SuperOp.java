@@ -2,9 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.AreshPourkavoos.Accel_Drive;
 
 // extend OpMode so future classes will extend SuperOp Instead
 // implements is for interfaces
@@ -43,8 +40,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
         // Pass the motors to the AccelDrive so it can access them
         // (may later be bundled into a class or lookup table)
-        accelDrive = new Accel_Drive(FrontLeftDrive, FrontRightDrive,
-                                      BackLeftDrive,  BackRightDrive);
+        accelDrive = new Accel_Drive();
     }
 
     // Mechanum wheel implementation
@@ -55,6 +51,13 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         FrontRightDrive.setPower(x+y-w);
         BackLeftDrive.setPower(-x+y+w);
         BackRightDrive.setPower(x+y-w);
+    }
+
+    public void drive (double[] motorVals){
+        double x = motorVals[0];
+        double y = motorVals[1];
+        double w = motorVals[2];
+        drive(x, y, w);
     }
 
     // Wait for a given number of seconds (t)
@@ -76,5 +79,10 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public void t_drive(double x, double y, double w, double t) {
         DriveParams newParams = new DriveParams(x, y, w, t);
         accelDrive.pushCommand(newParams);
+    }
+
+    public void a_drive(){
+        accelDrive.update();
+        drive(accelDrive.motorPowers);
     }
 }

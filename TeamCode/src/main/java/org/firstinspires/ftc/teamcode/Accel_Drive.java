@@ -1,9 +1,10 @@
-package org.firstinspires.ftc.teamcode.AreshPourkavoos;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.DriveParams;
+import org.firstinspires.ftc.teamcode.SuperOp;
 
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
@@ -19,20 +20,14 @@ The SuperOp class contains an Accel_Drive object to maintain abstraction
 public class Accel_Drive{
 
     // Variable declarations
+    public double[] motorPowers = {0.0, 0.0, 0.0};
     private double x, y, w, t;
     private enum State {STOP, ACCEL, CONST, DECEL};
     private State driveState;
     public ElapsedTime elapsedTime;
-    DcMotor FrontLeftDrive, FrontRightDrive;
-    DcMotor  BackLeftDrive,  BackRightDrive;
     Queue<DriveParams> commands;
 
-    public Accel_Drive(DcMotor FrontLeftDrive, DcMotor FrontRightDrive,
-                       DcMotor  BackLeftDrive, DcMotor  BackRightDrive) {
-        this.FrontLeftDrive  = FrontLeftDrive;
-        this.FrontRightDrive = FrontRightDrive;
-        this.BackLeftDrive   = BackLeftDrive;
-        this.BackRightDrive  = BackRightDrive;
+    public Accel_Drive() {
         elapsedTime = new ElapsedTime();
         elapsedTime.reset();
         commands = new LinkedList<>();
@@ -60,13 +55,6 @@ public class Accel_Drive{
         elapsedTime.reset();
     }
 
-    // Copy of SuperOp.drive()
-    public void drive(double x, double y, double w) {
-        FrontLeftDrive.setPower(x+y+w);
-        FrontRightDrive.setPower(x+y-w);
-        BackLeftDrive.setPower(-x+y+w);
-        BackRightDrive.setPower(x+y-w);
-    }
 
     // This is the bread and butter of the trapezoid drive implementation
     // driveState variable can be one of ACCEL, CONST, DECEL, or STOP
@@ -77,10 +65,15 @@ public class Accel_Drive{
         double portion = elapsedTime.seconds() / t;
         switch (driveState){
             case ACCEL:
-                if (portion < 0.1)
-                    drive(x * portion * 10, y * portion * 10, w * portion * 10);
+                if (portion < 0.1) {
+                    motorPowers[0] = x * portion * 10;
+                    motorPowers[1] = y * portion * 10;
+                    motorPowers[2] = w * portion * 10;
+                }
                 else{
-                    drive(x, y, w);
+                    motorPowers[0] = x;
+                    motorPowers[1] = y;
+                    motorPowers[2] = w;
                     driveState = State.CONST;
                 }
                 break;
@@ -89,11 +82,15 @@ public class Accel_Drive{
                     driveState = State.DECEL;
                 break;
             case DECEL:
-                if (portion < 1)
-                    drive(x * (1 - portion) * 10, y * (1 - portion) * 10, w * (1 - portion) * 10);
-                else{
+                if (portion < 1) {
+                    motorPowers[0] = x * (1 - portion) * 10;
+                    motorPowers[1] = y * (1 - portion) * 10;
+                    motorPowers[2] = w * (1 - portion) * 10;
+                } else{
                     driveState = State.STOP;
-                    drive(0, 0, 0);
+                    motorPowers[0] = 0;
+                    motorPowers[1] = 1;
+                    motorPowers[2] = 2;
                 }
                 break;
             case STOP:
