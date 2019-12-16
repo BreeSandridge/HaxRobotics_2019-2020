@@ -23,7 +23,7 @@ public class BlueBuild extends SuperOp {
         telemetry.addData("> Back Right: ", BackRightDrive.getCurrentPosition());
         telemetry.addData("> Front Left: ", FrontLeftDrive.getCurrentPosition());
         telemetry.addData("Status: ", status);
-        currPosition = LatchMotor.getCurrentPosition(); 
+        currPosition = LatchMotor.getCurrentPosition();
         // switch cases for changing the status of the robot to do different things
         switch (status) {
             case START:
