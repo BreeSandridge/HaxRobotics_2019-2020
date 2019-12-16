@@ -16,13 +16,14 @@ public class BlueBuild extends SuperOp {
     private double targetTime;
     @Override
     public void loop() {
-        telemetry.addData("Position: ", LatchMotor.getCurrentPosition());
+        telemetry.addData("LatchMotor Position: ", LatchMotor.getCurrentPosition());
         telemetry.addData("Time: ", time.milliseconds());
-        telemetry.addData("> Front Right: ", FrontRightDrive.getCurrentPosition());
-        telemetry.addData("> Back Left: ", BackLeftDrive.getCurrentPosition());
-        telemetry.addData("> Back Right: ", BackRightDrive.getCurrentPosition());
-        telemetry.addData("> Front Left: ", FrontLeftDrive.getCurrentPosition());
+        telemetry.addData("Front Right: ", FrontRightDrive.getCurrentPosition());
+        telemetry.addData("Back Left: ", BackLeftDrive.getCurrentPosition());
+        telemetry.addData("Back Right: ", BackRightDrive.getCurrentPosition());
+        telemetry.addData("Front Left: ", FrontLeftDrive.getCurrentPosition());
         telemetry.addData("Status: ", status);
+        telemetry.addData("Latch Position: ", Latch.getPosition());
         currPosition = LatchMotor.getCurrentPosition();
         // switch cases for changing the status of the robot to do different things
         switch (status) {
@@ -91,7 +92,7 @@ public class BlueBuild extends SuperOp {
         LatchMotor.setPower(-0.7);
 
         // check if the arm is in position
-        if (currPosition <= targetPosition + 13 && currPosition >= targetPosition - 13) {
+        if (currPosition <= targetPosition + 13 && currPosition >= targetPosition - 6) {
             // pull the block in
             LatchMotor.setPower(0);
             // switch status
@@ -119,7 +120,7 @@ public class BlueBuild extends SuperOp {
         targetPosition = currPosition + 577;
         // methods to get the robot back to the build site to place down the block
         targetTime = 3;
-        drive(0,-0.5,0);
+        drive(0,0.5,0);
         telemetry.addData("Status: ", status);
         if(time.seconds() >= targetTime) {
             drive(0, 0, 0);
@@ -145,7 +146,7 @@ public class BlueBuild extends SuperOp {
         // vision stuff to park the robot under the bridge
         //t_drive(0, -1, 0, 1);
         targetTime = 1.5;
-        drive(0, 0.5, 0);
+        drive(0, -0.5, 0);
         if(time.seconds() >= targetTime){
             drive(0,0,0);
             sleep_secs(0.5);

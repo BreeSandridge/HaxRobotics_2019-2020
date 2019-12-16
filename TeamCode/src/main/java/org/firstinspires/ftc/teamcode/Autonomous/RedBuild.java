@@ -1,105 +1,160 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.SuperOp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.SuperOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
+@Autonomous
 public class RedBuild extends SuperOp {
+
     // status stuff
-    enum STATUS {TOBLOCK, APPROACH, GETBLOCK, AWAY, TOBUILD, PARK}
-    private STATUS status = STATUS.TOBLOCK;
+    private STATUS status = STATUS.START;
     boolean running = true;
     private int targetPosition;
     private int currPosition;
-
+    private ElapsedTime time = new ElapsedTime();
+    private double targetTime;
     @Override
     public void loop() {
-
-        // switch cases for making the robot do different things
+        telemetry.addData("LatchMotor Position: ", LatchMotor.getCurrentPosition());
+        telemetry.addData("Time: ", time.milliseconds());
+        telemetry.addData("Front Right: ", FrontRightDrive.getCurrentPosition());
+        telemetry.addData("Back Left: ", BackLeftDrive.getCurrentPosition());
+        telemetry.addData("Back Right: ", BackRightDrive.getCurrentPosition());
+        telemetry.addData("Front Left: ", FrontLeftDrive.getCurrentPosition());
+        telemetry.addData("Status: ", status);
+        telemetry.addData("Latch Position: ", Latch.getPosition());
+        currPosition = LatchMotor.getCurrentPosition();
+        // switch cases for changing the status of the robot to do different things
         switch (status) {
+            case START:
+                start1();
+                break;
             case TOBLOCK:
                 toBlock();
                 break;
             case APPROACH:
                 approach();
                 break;
-            /*case GETBLOCK:
+            case GETBLOCK:
                 getBlock();
-                break;*/
+                break;
             case AWAY:
                 away();
                 break;
-            /*case TOBUILD:
+            case TOBUILD:
                 toBuild();
-                break;*/
+                break;
             case PARK:
                 park();
                 break;
+            case STOP:
+                stop1();
+                break;
+        }
+    }
+    private void start1(){
+        time.reset();
+        status = STATUS.TOBLOCK;
+    }
+    // method to go to block
+    private void toBlock() {
+        targetTime = 3;
+        drive(0, -0.5, 0);
+        // vision code
+        // if skystone is sighted
+        // set movement values to go towards block
+        if(time.seconds() >= targetTime) {
+            drive(0,0,0);
+            sleep_secs(0.5);
+            status = STATUS.APPROACH;
+            time.reset();
         }
     }
 
-    // method to go to block
-    private void toBlock() {
-        t_drive(0, 0.75, 0, 1);
-        // vision code
-
-        // if skystone is sighted
-        // set movement values to go towards block
-        status = STATUS.APPROACH;
-    }
-
-    // approach the block horizontally
     private void approach() {
-        t_drive(0.75, 0, 0, 1);
-        status = STATUS.GETBLOCK;
+        targetTime = 1.5;
+        drive(0.5, 0, 0);
+        telemetry.addData("Status: ", status);
+        if(time.seconds() >= targetTime) {
+            drive(0,0,0);
+            sleep_secs(0.5);
+            status = STATUS.GETBLOCK;
+            time.reset();
+        }
     }
 
     // method to pick up the block
-    /*private void getBlock() {
+    private void getBlock() {
         // rotate the arm down
-        targetPosition = 9000;
-
         currPosition = LatchMotor.getCurrentPosition();
-        LatchMotor.setPower(1);
+        targetPosition = currPosition - 577;
+        LatchMotor.setPower(-0.7);
 
         // check if the arm is in position
-        if (currPosition > targetPosition - 100 || currPosition < targetPosition + 100) {
+        if (currPosition <= targetPosition + 13 && currPosition >= targetPosition - 6) {
             // pull the block in
             LatchMotor.setPower(0);
-            Latch.setPosition(0.5);
             // switch status
             status = STATUS.AWAY;
+            time.reset();
         }
     }
-*/
-    // leave the block horizontally
     private void away() {
-        t_drive(-0.75, 0, 0, 1);
-        status = STATUS.TOBUILD;
+        RightSpeedMultiplier = 1.5;
+        targetTime = 1.5;
+        drive(-0.5, 0, 0);
+        telemetry.addData("Status: ", status);
+        if(time.seconds() >= targetTime) {
+            drive(0,0,0);
+            sleep_secs(0.5);
+            status = STATUS.TOBUILD;
+            time.reset();
+        }
+
     }
+
 
     // go to build site and place the block back down
-    /*private void toBuild() {
+    private void toBuild() {
+        targetPosition = currPosition + 577;
         // methods to get the robot back to the build site to place down the block
-        t_drive(0, -0.75,0, 1);
+        targetTime = 3;
+        drive(0,-0.5,0);
+        telemetry.addData("Status: ", status);
+        if(time.seconds() >= targetTime) {
+            drive(0, 0, 0);
+            // rotate the arm up
+            currPosition = LatchMotor.getCurrentPosition();
+            LatchMotor.setPower(0.7);
 
-        // rotate the arm up
-        targetPosition = 7000;
-        currPosition = LatchMotor.getCurrentPosition();
-        LatchMotor.setPower(-1);
-
-        // check if the arm is in position
-        if (currPosition > targetPosition - 100 || currPosition < targetPosition + 100) {
-            // pull the block in
-            LatchMotor.setPower(0);
-            Latch.setPosition(0);
-            // switch status
-            status = STATUS.PARK;
+            // check if the arm is in position
+            if (currPosition <= targetPosition + 13 && currPosition >= targetPosition - 13) {
+                // pull the block in
+                LatchMotor.setPower(0);
+                Latch.setPosition(0);
+                // switch status
+                status = STATUS.PARK;
+                time.reset();
+                RightSpeedMultiplier = 1;
+            }
         }
     }
-*/
+
     // park the thing under the bridge
     private void park() {
         // vision stuff to park the robot under the bridge
-        t_drive(0, 1, 0, 1);
+        //t_drive(0, -1, 0, 1);
+        targetTime = 1.5;
+        drive(0, 0.5, 0);
+        if(time.seconds() >= targetTime){
+            drive(0,0,0);
+            sleep_secs(0.5);
+            status = STATUS.STOP;
+        }
+    }
+    private void stop1(){
+        drive(0,0,0);
     }
 }
 
@@ -108,13 +163,22 @@ public class RedBuild extends SuperOp {
 
 
 /*
-                    There's a hundred and four days of summer vacation, 'Til school comes along just to end it,
-                    So the annual problem for our generation, is finding a good way to spend it. Like maybe
-                    Building a rocket, or fighting a mummy, or climbing up the Eiffel tower,
-                    Discovering something that doesn't exist, Or giving a monkey a shower. Surfing tidal waves
-                    creating nanobots, or locating Frankenstein's brain, Finding a Dodo bird, painting
-                    a continent, Or driving our sister insane!
-                    As you can see there's a whole lot of stuff to do before school starts this fall
-                    So stick with us cause Phineas and Ferb are gonna do it all. Just stick with us cause
-                    Phineas and Ferb are gonna do it all. Mom! Phineas and Ferb are making a Title sequence!
-                 */
+Are you ready, kids?
+I cant hear youuuuuu
+
+Who lives in a pineapple under the sea?
+SPONGEBOB SQUAREPANTS!
+Absorbent and yellow and porous is he
+SPONGEBOB SQUAREPANTS!
+
+If nautical nonsense be something you wish
+SPONGEBOB SQUAREPANTS!
+Then drop on the deck and flop like a fish
+SPONGEBOB SQUAREPANTS!
+
+SPONGEBOB SQUAREPANTS!
+SPONGEBOB SQUAREPANTS!
+SPONGEBOB SQUAREPANTS!
+SPONGEBOB SQUAREPANTS!
+
+ */
