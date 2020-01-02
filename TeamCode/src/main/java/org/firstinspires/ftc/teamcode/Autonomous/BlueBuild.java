@@ -22,7 +22,7 @@ public class BlueBuild extends SuperOp {
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
         telemetry.addData("LatchMotor Position: ", LatchMotor.getCurrentPosition());
-        telemetry.addData("Time: ", time.milliseconds());
+        telemetry.addData("Time: ", time.seconds());
         telemetry.addData("Front Right: ", FrontRightDrive.getCurrentPosition());
         telemetry.addData("Back Left: ", BackLeftDrive.getCurrentPosition());
         telemetry.addData("Back Right: ", BackRightDrive.getCurrentPosition());
@@ -65,22 +65,24 @@ public class BlueBuild extends SuperOp {
     //this is the first method run
     //it resets the elapsed time
     //then switches the status to 'TOBLOCK'
-    /* private void start1(){
+    /*private void start1(){
+        targetTime = .5;
         time.reset();
         status = STATUS.TOBLOCK;
-    }*/
+    } */
 
     //method to go to block
     //moves forward for 3 seconds at a motor power of .5
     //if the time is >= 3 seconds, the STATUS changes to 'APPROACH'
     private void toBlock() {
+        rightSpeedMultiplier = 1.1;
         //move forward for 3 seconds
         targetTime = 3;
         drive(0, 0.5, 0);
+
         // vision code
         // if skystone is sighted
         // set movement values to go towards block
-
         if(time.seconds() >= targetTime) {
             //stop
             drive(0,0,0);
@@ -117,7 +119,7 @@ public class BlueBuild extends SuperOp {
         //rotate arm down
         currPosition = LatchMotor.getCurrentPosition();
         targetPosition = currPosition - 577;
-        LatchMotor.setPower(-0.7);
+        LatchMotor.setPower(0.7);
 
         //check if the arm is in position
         if (currPosition <= targetPosition + 13 && currPosition >= targetPosition - 6) {
@@ -133,11 +135,14 @@ public class BlueBuild extends SuperOp {
     //then stop and switch STATUS to 'AWAY'
     private void away() {
         //strafe left
-        rightSpeedMultiplier = 1.5;
+        rightSpeedMultiplier = 1.2;
         targetTime = 1.5;
         drive(-0.5, 0, 0);
         telemetry.addData("Status: ", status);
-
+        telemetry.addData("Front Right pt2: ", FrontRightDrive.getCurrentPosition());
+        telemetry.addData("Front Left pt2: ", FrontLeftDrive.getCurrentPosition());
+        telemetry.addData("Back Right pt2: ", BackRightDrive.getCurrentPosition());
+        telemetry.addData("Back Left pt2: ", BackLeftDrive.getCurrentPosition());
         if(time.seconds() >= targetTime) {
             //stop
             drive(0,0,0);

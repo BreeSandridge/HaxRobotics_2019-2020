@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AreshPourkavoos.Accel_Drive;
 
@@ -25,21 +24,15 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor FrontRightDrive = null;
     public DcMotor BackLeftDrive = null;
     public DcMotor BackRightDrive = null;
-    public DcMotor MiddleDrive = null;
-    public DcMotor LinearSlide = null;
-    public DcMotor FourBarLinkage = null;
-
-
-    public DcMotor LatchMotor = null;
     public DcMotor LeftStoneRamp = null;
     public DcMotor RightStoneRamp = null;
+    public DcMotor LatchMotor = null;
 
-    public Servo StoneArm = null;
+    public Servo Flipper = null;
     public Servo Trapdoor = null;
-    public Servo topGripper = null;
-    public Servo bottomGripper = null;
-    public Servo foundationMover = null;
     public Servo Latch = null;
+
+    public enum STATUS {START, TOBLOCK, APPROACH, GETBLOCK, AWAY, TOBUILD, PARK, STOP}
 
     protected Accel_Drive accelDrive;
 
@@ -47,8 +40,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public double y_speed;
     public double w_speed;
     public double rightSpeedMultiplier;
-
-    public enum STATUS {START, TOBLOCK, APPROACH, GETBLOCK, AWAY, TOBUILD, PARK, STOP}
 
     static final double COUNTS_PER_MOTOR_REV = 1440;            // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
@@ -68,8 +59,12 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackLeftDrive  = hardwareMap.get(DcMotor.class, "BackLeftDrive");
         BackRightDrive = hardwareMap.get(DcMotor.class, "BackRightDrive");
         LatchMotor = hardwareMap.get(DcMotor.class, "LatchMotor");
+        LeftStoneRamp = hardwareMap.get(DcMotor.class, "LeftStoneRamp");
+        RightStoneRamp = hardwareMap.get(DcMotor.class, "RightStoneRamp");
 
-        //Latch = hardwareMap.get(Servo.class, "Latch");
+        Flipper = hardwareMap.get(Servo.class, "Flipper");
+        Trapdoor = hardwareMap.get(Servo.class, "Trapdoor");
+        Latch = hardwareMap.get(Servo.class, "Latch");
 
         // Reverse directions on the right motors
         // so that "forward" and "backward" are the same number for both sides
@@ -77,13 +72,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         FrontRightDrive.setDirection(DcMotor.Direction.REVERSE);
         BackLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
-
-        // Pass the motors to the AccelDrive so it can access them
-        // (may later be bundled into a class or lookup table)
-        accelDrive = new Accel_Drive(FrontLeftDrive, FrontRightDrive,
-                BackLeftDrive,  BackRightDrive);
-
-        //Latch.setPosition(0);
 
         x_speed = .8;
         y_speed = .6;
@@ -101,9 +89,9 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     // Accepts amount to move left/right (x), move up/down (y), and rotate (w)
 
     public void drive(double x, double y, double w) {
-        FrontLeftDrive.setPower((y_speed * y)*rightSpeedMultiplier - (x_speed * x)+ (w_speed* w));
+        FrontLeftDrive.setPower((y_speed * y) * rightSpeedMultiplier - (x_speed * x)+ (w_speed* w));
         FrontRightDrive.setPower((y_speed * y) + (x_speed * x) - (w_speed * w));
-        BackLeftDrive.setPower((y_speed * y) + (x_speed * x) + (w_speed * w));
+        BackLeftDrive.setPower((y_speed * y) * rightSpeedMultiplier + (x_speed * x) + (w_speed * w));
         BackRightDrive.setPower((y_speed * y) - (x_speed * x) - (w_speed * w));
     }
 
@@ -111,7 +99,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         drive(
                 gamepad1.left_stick_x,
                 gamepad1.left_stick_y,
-                gamepad1.right_stick_x
+                    gamepad1.right_stick_x
         );
     }
 
@@ -142,6 +130,17 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
      * until a certain encoder value is reached
      * @param speed (the speed [-1, 1], at which the robot's wheels will turn)
      * @param desired the distance the robot will travel (positive for forwards, negative for backwards)
+     */
+
+
+
+
+
+
+    /*
+    Why does Waldo wear stripes?
+
+    Because he doesnt want to be spotted
      */
     /*public void encoderDriveWithSpeed(double speed, double desired) {
         //variables that store initial encoder values for the four motors
