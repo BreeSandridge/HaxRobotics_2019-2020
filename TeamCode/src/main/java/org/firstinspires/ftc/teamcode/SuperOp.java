@@ -34,10 +34,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor LeftStoneRamp = null;
     public DcMotor RightStoneRamp = null;
 
-
-    //public DcMotor LatchMotor;
-
-
     public Servo StoneArm = null;
     public Servo Trapdoor = null;
     public Servo topGripper = null;
