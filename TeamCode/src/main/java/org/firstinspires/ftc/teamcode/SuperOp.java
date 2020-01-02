@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -25,6 +26,12 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor FrontRightDrive = null;
     public DcMotor BackLeftDrive = null;
     public DcMotor BackRightDrive = null;
+
+    public DcMotor LeftStoneRamp = null;
+    public DcMotor RightStoneRamp = null;
+    public Servo StoneArm = null;
+    public Servo Trapdoor = null;
+
     public DcMotor MiddleDrive = null;
     public DcMotor LinearSlide = null;
     public DcMotor FourBarLinkage = null;
@@ -40,6 +47,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public Servo bottomGripper = null;
     public Servo foundationMover = null;
     public Servo Latch = null;
+
+    public enum STATUS {START, TOBLOCK, APPROACH, GETBLOCK, AWAY, TOBUILD, PARK, STOP}
 
     protected Accel_Drive accelDrive;
 
@@ -68,23 +77,11 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackLeftDrive  = hardwareMap.get(DcMotor.class, "BackLeftDrive");
         BackRightDrive = hardwareMap.get(DcMotor.class, "BackRightDrive");
 
-        //LatchMotor = hardwareMap.get(DcMotor.class, "LatchMotor");
 
-        //Latch = hardwareMap.get(Servo.class, "Latch");
-
-        // Reverse directions on the right motors
-        // so that "forward" and "backward" are the same number for both sides
-        FrontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        FrontRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        BackLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
-
-        // Pass the motors to the AccelDrive so it can access them
-        // (may later be bundled into a class or lookup table)
-        accelDrive = new Accel_Drive(FrontLeftDrive, FrontRightDrive,
-                BackLeftDrive,  BackRightDrive);
-
-        //Latch.setPosition(0);
+        LeftStoneRamp = hardwareMap.get(DcMotor.class, "LeftStoneRamp");
+        RightStoneRamp = hardwareMap.get(DcMotor.class, "RightStoneRamp");
+        StoneArm = hardwareMap.get(Servo.class, "StoneArm");
+        Trapdoor = hardwareMap.get(Servo.class, "Trapdoor");
 
         x_speed = .8;
         y_speed = .6;
@@ -143,6 +140,17 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
      * until a certain encoder value is reached
      * @param speed (the speed [-1, 1], at which the robot's wheels will turn)
      * @param desired the distance the robot will travel (positive for forwards, negative for backwards)
+     */
+
+
+
+
+
+
+    /*
+    Why does Waldo wear stripes?
+
+    Because he doesnt want to be spotted
      */
     /*public void encoderDriveWithSpeed(double speed, double desired) {
         //variables that store initial encoder values for the four motors
