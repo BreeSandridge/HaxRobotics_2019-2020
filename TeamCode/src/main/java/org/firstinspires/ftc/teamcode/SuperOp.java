@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AreshPourkavoos.Accel_Drive;
 
@@ -29,23 +27,14 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
     public DcMotor LeftStoneRamp = null;
     public DcMotor RightStoneRamp = null;
-    public Servo StoneArm = null;
+
+    public Servo Flipper = null;
     public Servo Trapdoor = null;
 
-    public DcMotor MiddleDrive = null;
-    public DcMotor LinearSlide = null;
-    public DcMotor FourBarLinkage = null;
 
 
-    public DcMotor LatchMotor = null;
-    public DcMotor LeftStoneRamp = null;
-    public DcMotor RightStoneRamp = null;
+    public DcMotor LatchMotor;
 
-    public Servo StoneArm = null;
-    public Servo Trapdoor = null;
-    public Servo topGripper = null;
-    public Servo bottomGripper = null;
-    public Servo foundationMover = null;
     public Servo Latch = null;
 
     public enum STATUS {START, TOBLOCK, APPROACH, GETBLOCK, AWAY, TOBUILD, PARK, STOP}
@@ -80,7 +69,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
         LeftStoneRamp = hardwareMap.get(DcMotor.class, "LeftStoneRamp");
         RightStoneRamp = hardwareMap.get(DcMotor.class, "RightStoneRamp");
-        StoneArm = hardwareMap.get(Servo.class, "StoneArm");
+        Flipper = hardwareMap.get(Servo.class, "Flipper");
         Trapdoor = hardwareMap.get(Servo.class, "Trapdoor");
 
         x_speed = .8;
