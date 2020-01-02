@@ -8,7 +8,7 @@ public class BlueBuild extends SuperOp {
 
     //This uses an enum declared in SuperOp
     //It declares the first STATUS as "START"
-    private STATUS status = STATUS.START;
+    private STATUS status = STATUS.TOBLOCK;
     boolean running = true;
     private int targetPosition;
     private int currPosition;
@@ -33,11 +33,11 @@ public class BlueBuild extends SuperOp {
 
         //switch statements for changing the status of the robot
         //this allows us to use different code for each status
-        //there are methods created below the switch statments for easier reading
+        //there are methods created below the switch statement for easier reading
         switch (status) {
-            case START:
+            /* case START:
                 start1();
-                break;
+                break; */
             case TOBLOCK:
                 toBlock();
                 break;
@@ -56,19 +56,19 @@ public class BlueBuild extends SuperOp {
             case PARK:
                 park();
                 break;
-            case STOP:
+            /* case STOP:
                 stop1();
-                break;
+                break; */
         }
     }
 
     //this is the first method run
     //it resets the elapsed time
     //then switches the status to 'TOBLOCK'
-    private void start1(){
+    /* private void start1(){
         time.reset();
         status = STATUS.TOBLOCK;
-    }
+    }*/
 
     //method to go to block
     //moves forward for 3 seconds at a motor power of .5
@@ -193,16 +193,17 @@ public class BlueBuild extends SuperOp {
             drive(0,0,0);
             sleep_secs(0.5);
             //switch STATUS
-            status = STATUS.STOP;
+            //bstatus = STATUS.STOP;
         }
     }
 
     //stop all motion of the robot
     //set all motor powers to 0
-    private void stop1(){
+    /* private void stop1(){
         drive(0,0,0);
-    }
+    } */
 }
+
 
 
 

@@ -67,8 +67,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         FrontRightDrive = hardwareMap.get(DcMotor.class, "FrontRightDrive");
         BackLeftDrive  = hardwareMap.get(DcMotor.class, "BackLeftDrive");
         BackRightDrive = hardwareMap.get(DcMotor.class, "BackRightDrive");
-
-        //LatchMotor = hardwareMap.get(DcMotor.class, "LatchMotor");
+        LatchMotor = hardwareMap.get(DcMotor.class, "LatchMotor");
 
         //Latch = hardwareMap.get(Servo.class, "Latch");
 
