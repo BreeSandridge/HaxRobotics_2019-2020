@@ -20,12 +20,12 @@ public class DriverController extends SuperOp {
     private double currPosDoor;
 
 
+    private boolean flipperState = false;
+    private boolean trapdoorState = false;
+
     // can be written much more efficiently, just a basic DriverController
     @Override
     public void loop() {
-       telemetry.addData("Arm State: ", arm);
-       telemetry.addData("Door State: ", door);
-       telemetry.addData("Current Arm Position: ", Flipper.getPosition());
        c_drive();
 
        // inputs - for now all on gamepad1 (driver controlled)
@@ -39,6 +39,34 @@ public class DriverController extends SuperOp {
            LeftStoneRamp.setPower(0);
        }
 
+
+
+       if (gamepad2.a) {
+           Trapdoor.setPosition(trapdoorState ? 1 : 0);
+           trapdoorState = !trapdoorState;
+       }
+
+
+       Flipper.setPower(gamepad2.left_stick_x);
+       telemetry.addData(" > Flipper Power: ", Flipper.getPower());
+       telemetry.update();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
        // if the player wants the arm dropped then drop it, otherwise if the player wants it raised
        // then raise it
        // currently if you press a you have to wait until it fully drops to do another command
@@ -51,17 +79,13 @@ public class DriverController extends SuperOp {
          * calling Flipper.setPosition(x) in the runtime loop doesnt move the arm either
          * so it either is a SuperOp problem or a problem with the Servo configuration
          */
-//       if (gamepad1.a) {
-//           dropArm();
-//       } else if (gamepad1.y){
-//           raiseArm();
-//       }
 
-       if (gamepad1.x) {
+
+       /*if (gamepad1.x) {
            openDoor();
        } else {
            closeDoor();
-       }
+       } */
     }
 
     // Intake
@@ -75,7 +99,7 @@ public class DriverController extends SuperOp {
     }
 
 
-    private void dropArm() {
+    /*private void dropArm() {
         switch (arm) {
             case INIT:
                 // set target position
@@ -134,7 +158,7 @@ public class DriverController extends SuperOp {
                 break;
         }
     }
-
+*/
 
     // NOT WORKING
     private void openDoor() {

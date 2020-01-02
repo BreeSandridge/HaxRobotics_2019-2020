@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -28,11 +29,13 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor LeftStoneRamp = null;
     public DcMotor RightStoneRamp = null;
 
-    public Servo Flipper = null;
+    public DcMotor LatchMotor;
+
+    public CRServo Flipper = null;
     public Servo Trapdoor = null;
 
 
-    public DcMotor LatchMotor;
+
 
     public Servo Latch = null;
 
@@ -67,7 +70,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
         LeftStoneRamp = hardwareMap.get(DcMotor.class, "LeftStoneRamp");
         RightStoneRamp = hardwareMap.get(DcMotor.class, "RightStoneRamp");
-        Flipper = hardwareMap.get(Servo.class, "Flipper");
+        Flipper = hardwareMap.crservo.get("StoneArm");
         Trapdoor = hardwareMap.get(Servo.class, "Trapdoor");
 
         LatchMotor = hardwareMap.get(DcMotor.class, "LatchMotor");
@@ -114,7 +117,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public void c_drive(){
         drive(
                 gamepad1.left_stick_x,
-                gamepad1.left_stick_y,
+                -gamepad1.left_stick_y,
                 gamepad1.right_stick_x
         );
     }
