@@ -35,8 +35,14 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor MiddleDrive = null;
     public DcMotor LinearSlide = null;
     public DcMotor FourBarLinkage = null;
-    public DcMotor LatchMotor;
 
+
+    public DcMotor LatchMotor = null;
+    public DcMotor LeftStoneRamp = null;
+    public DcMotor RightStoneRamp = null;
+
+    public Servo StoneArm = null;
+    public Servo Trapdoor = null;
     public Servo topGripper = null;
     public Servo bottomGripper = null;
     public Servo foundationMover = null;
@@ -49,9 +55,9 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public double x_speed;
     public double y_speed;
     public double w_speed;
+    public double rightSpeedMultiplier;
 
-
-
+    public enum STATUS {START, TOBLOCK, APPROACH, GETBLOCK, AWAY, TOBUILD, PARK, STOP}
 
     static final double COUNTS_PER_MOTOR_REV = 1440;            // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
@@ -61,7 +67,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
-
+    public boolean isRunning = true;
 
     @Override
     public void init() {
@@ -71,29 +77,11 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackLeftDrive  = hardwareMap.get(DcMotor.class, "BackLeftDrive");
         BackRightDrive = hardwareMap.get(DcMotor.class, "BackRightDrive");
 
+
         LeftStoneRamp = hardwareMap.get(DcMotor.class, "LeftStoneRamp");
         RightStoneRamp = hardwareMap.get(DcMotor.class, "RightStoneRamp");
         StoneArm = hardwareMap.get(Servo.class, "StoneArm");
         Trapdoor = hardwareMap.get(Servo.class, "Trapdoor");
-
-        LatchMotor = hardwareMap.get(DcMotor.class, "LatchMotor");
-
-        Latch = hardwareMap.get(Servo.class, "Latch");
-
-        // Reverse directions on the right motors
-        // so that "forward" and "backward" are the same number for both sides
-        FrontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        FrontRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        BackLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
-
-        LeftStoneRamp.setDirection(DcMotor.Direction.FORWARD);
-        RightStoneRamp.setDirection(DcMotor.Direction.REVERSE);
-
-        // Pass the motors to the AccelDrive so it can access them
-        // (may later be bundled into a class or lookup table)
-        accelDrive = new Accel_Drive(FrontLeftDrive, FrontRightDrive,
-                BackLeftDrive,  BackRightDrive);
 
         x_speed = .8;
         y_speed = .6;
@@ -111,7 +99,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     // Accepts amount to move left/right (x), move up/down (y), and rotate (w)
 
     public void drive(double x, double y, double w) {
-        FrontLeftDrive.setPower((y_speed * y) - (x_speed * x)+ (w_speed* w));
+        FrontLeftDrive.setPower((y_speed * y)*rightSpeedMultiplier - (x_speed * x)+ (w_speed* w));
         FrontRightDrive.setPower((y_speed * y) + (x_speed * x) - (w_speed * w));
         BackLeftDrive.setPower((y_speed * y) + (x_speed * x) + (w_speed * w));
         BackRightDrive.setPower((y_speed * y) - (x_speed * x) - (w_speed * w));
