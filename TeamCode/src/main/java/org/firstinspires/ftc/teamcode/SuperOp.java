@@ -92,9 +92,9 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         accelDrive = new Accel_Drive(FrontLeftDrive, FrontRightDrive,
                 BackLeftDrive,  BackRightDrive);
 
-        x_speed = .8;
-        y_speed = .6;
-        w_speed = .6;
+        x_speed = .6;
+        y_speed = .4;
+        w_speed = .4;
     }
 
     public void setMode(DcMotor.RunMode mode){
@@ -116,7 +116,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
     public void c_drive(){
         drive(
-                gamepad1.left_stick_x,
+                -gamepad1.left_stick_x,
                 -gamepad1.left_stick_y,
                 gamepad1.right_stick_x
         );

@@ -30,15 +30,36 @@ public class DriverController extends SuperOp {
 
        // inputs - for now all on gamepad1 (driver controlled)
        // add gamepad2 controls as well but give gamepad1 right to override
-       if (gamepad1.right_trigger > 0.05) {
-           pickupStone();
+       /*if (gamepad1.right_trigger > 0.05) {
+           intake(gamepad1.right_trigger);
        } else if (gamepad1.left_trigger > 0.05) {
-           dropStone();
+           intake(-gamepad1.left_trigger);
        } else {
            RightStoneRamp.setPower(0);
            LeftStoneRamp.setPower(0);
-       }
+       }*/
 
+
+       //  if only driver right trigger is pressed down
+       if (gamepad1.right_trigger > 0.05 && gamepad1.left_trigger < 0.05) {
+           intake(gamepad1.right_trigger);
+       }
+       // if only driver left trigger is pressed down
+       else if (gamepad1.left_trigger > 0.05 && gamepad1.right_trigger < 0.05) {
+           intake(-gamepad1.left_trigger);
+       }
+       // if only operator right trigger is pressed down
+       else if (gamepad2.right_trigger > 0.05 && gamepad2.left_trigger < 0.05) {
+           intake(gamepad2.right_trigger);
+        }
+       // if only operator left trigger is pressed down
+       else if (gamepad2.left_trigger > 0.05 && gamepad2.right_trigger < 0.05) {
+           intake(-gamepad2.left_trigger);
+       }
+       // else turn off intake
+       else{
+           intake(0);
+       }
 
 
        if (gamepad2.a) {
@@ -47,7 +68,7 @@ public class DriverController extends SuperOp {
        }
 
 
-       Flipper.setPower(gamepad2.left_stick_x);
+       Flipper.setPower(gamepad2.left_stick_y);
        telemetry.addData(" > Flipper Power: ", Flipper.getPower());
        telemetry.update();
 
@@ -89,13 +110,9 @@ public class DriverController extends SuperOp {
     }
 
     // Intake
-    private void pickupStone() {
-        RightStoneRamp.setPower(1);
-        LeftStoneRamp.setPower(1);
-    }
-    private void dropStone() {
-        RightStoneRamp.setPower(-1);
-        LeftStoneRamp.setPower(-1);
+    private void intake(float power){
+        RightStoneRamp.setPower(power);
+        LeftStoneRamp.setPower(power);
     }
 
 
