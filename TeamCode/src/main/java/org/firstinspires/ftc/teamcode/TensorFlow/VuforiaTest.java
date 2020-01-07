@@ -59,7 +59,8 @@ public class VuforiaTest extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        CameraParams cameraParams = new CameraParams(0, 0, 0,1836, 3264, 2565);
+        //CameraParams cameraParams = new CameraParams(0, 0, 0,1836, 3264, 2565);
+        CameraParams cameraParams = new CameraParams(0, 0, 0,2448, 3264, 2668);
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
@@ -81,8 +82,8 @@ public class VuforiaTest extends LinearOpMode {
                             telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                     right, bottom);
                             double[] blockPos = cameraParams.undoPerspectiveOnRect(left, top, right, bottom);
-                            telemetry.addData(String.format("  position (%d)", i), "%.03f , %.03f, %.03f",
-                                    (float)blockPos[0], (float)blockPos[1], (float)blockPos[2]);
+                            telemetry.addData(String.format("  position (%d)", i), "%.03f , %.03f",
+                                    (float)blockPos[0], (float)blockPos[1]);
                         }
                         telemetry.update();
                     }

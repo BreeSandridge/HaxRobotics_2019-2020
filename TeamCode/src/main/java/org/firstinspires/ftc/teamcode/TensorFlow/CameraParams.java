@@ -8,10 +8,14 @@ public class CameraParams {
     private double offset_x = 0;
     private double offset_y = 0;
     private double offset_z = 0;
-    private double h = 1836; // Image height
-    private double w = 3264; // Image width
-    private double res = 2565; // How many pixels in a 45-degree angle
+    //private double h = 1836; // Image height
+    //private double w = 3264; // Image width
+    //private double res = 2565; // How many pixels in a 45-degree angle
+    private double h; // Image height
+    private double w; // Image width
+    private double res; // How many pixels in a 45-degree angle
     private double y = 3.5; // Height of the camera above the ground (inches)
+    private double blockWidth = 7.5; // Width of the stones (inches)
 
     // Given a location on screen, returns a location in space
     // Assumes value of y (3.5 inches)
@@ -29,9 +33,17 @@ public class CameraParams {
     // Given a rectangle, returns location in space of bottom edge
     public double[] undoPerspectiveOnRect(float x_left, float y_top, float x_right, float y_bottom){
         // Find the middle of the bottom edge of the bounding rectangle
+        /*
         float px = (x_left+x_right)/2;
         float py = y_bottom;
         return undoPerspectiveOnPoint(px, py);
+        */
+        double rectWidth = x_right-x_left;
+        double blockDist = blockWidth*res/rectWidth;
+        double rectOffset = (x_left+x_right)/2 - w/2;
+        double blockOffset = rectOffset*blockDist/res;
+        double[] pos = {blockDist, blockOffset};
+        return pos;
     }
 
     // Constructor: accepts offset, dimensions, and resolution of camera
