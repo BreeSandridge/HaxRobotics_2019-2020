@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -28,7 +29,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor RightStoneRamp = null;
     public DcMotor LatchMotor = null;
 
-    public Servo Flipper = null;
+    public CRServo Flipper = null;
     public Servo Trapdoor = null;
     public Servo Latch = null;
 
@@ -39,7 +40,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public double x_speed;
     public double y_speed;
     public double w_speed;
-    public double rightSpeedMultiplier;
+    public double leftSpeedMultiplier;
 
     static final double COUNTS_PER_MOTOR_REV = 1440;            // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
@@ -62,7 +63,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         LeftStoneRamp = hardwareMap.get(DcMotor.class, "LeftStoneRamp");
         RightStoneRamp = hardwareMap.get(DcMotor.class, "RightStoneRamp");
 
-        Flipper = hardwareMap.get(Servo.class, "Flipper");
+        Flipper = hardwareMap.crservo.get("Flipper");
         Trapdoor = hardwareMap.get(Servo.class, "Trapdoor");
         Latch = hardwareMap.get(Servo.class, "Latch");
 
@@ -89,9 +90,9 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     // Accepts amount to move left/right (x), move up/down (y), and rotate (w)
 
     public void drive(double x, double y, double w) {
-        FrontLeftDrive.setPower((y_speed * y) * rightSpeedMultiplier - (x_speed * x)+ (w_speed* w));
+        FrontLeftDrive.setPower((y_speed * y) * leftSpeedMultiplier - (x_speed * x)+ (w_speed* w));
         FrontRightDrive.setPower((y_speed * y) + (x_speed * x) - (w_speed * w));
-        BackLeftDrive.setPower((y_speed * y) * rightSpeedMultiplier + (x_speed * x) + (w_speed * w));
+        BackLeftDrive.setPower((y_speed * y) * leftSpeedMultiplier + (x_speed * x) + (w_speed * w));
         BackRightDrive.setPower((y_speed * y) - (x_speed * x) - (w_speed * w));
     }
 

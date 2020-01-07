@@ -12,6 +12,7 @@ public class BlueBuild extends SuperOp {
     boolean running = true;
     private int targetPosition;
     private int currPosition;
+    //create new stopwatch
     private ElapsedTime time = new ElapsedTime();
     private double targetTime;
 
@@ -35,9 +36,9 @@ public class BlueBuild extends SuperOp {
         //this allows us to use different code for each status
         //there are methods created below the switch statement for easier reading
         switch (status) {
-            /* case START:
+             case START:
                 start1();
-                break; */
+                break;
             case TOBLOCK:
                 toBlock();
                 break;
@@ -65,31 +66,34 @@ public class BlueBuild extends SuperOp {
     //this is the first method run
     //it resets the elapsed time
     //then switches the status to 'TOBLOCK'
-    /*private void start1(){
-        targetTime = .5;
+    private void start1(){
+        //targetTime = .5;
         time.reset();
         status = STATUS.TOBLOCK;
-    } */
+    }
 
     //method to go to block
     //moves forward for 3 seconds at a motor power of .5
     //if the time is >= 3 seconds, the STATUS changes to 'APPROACH'
     private void toBlock() {
-        rightSpeedMultiplier = 1.1;
+        leftSpeedMultiplier = 1.1;
         //move forward for 3 seconds
         targetTime = 3;
         drive(0, 0.5, 0);
 
         // vision code
         // if skystone is sighted
+        /*
+        */
+
         // set movement values to go towards block
-        if(time.seconds() >= targetTime) {
+        if(time.seconds()-targetTime > 0) {
             //stop
             drive(0,0,0);
             sleep_secs(0.5);
             //switch STATUS
-            status = STATUS.APPROACH;
             time.reset();
+            status = STATUS.APPROACH;
         }
     }
 
@@ -107,8 +111,9 @@ public class BlueBuild extends SuperOp {
             drive(0,0,0);
             sleep_secs(0.5);
             //switches STATUS
-            status = STATUS.GETBLOCK;
+            //resets clock
             time.reset();
+            status = STATUS.GETBLOCK;
         }
     }
 
@@ -119,15 +124,16 @@ public class BlueBuild extends SuperOp {
         //rotate arm down
         currPosition = LatchMotor.getCurrentPosition();
         targetPosition = currPosition - 577;
-        LatchMotor.setPower(0.7);
+        LatchMotor.setPower(0.3);
 
         //check if the arm is in position
         if (currPosition <= targetPosition + 13 && currPosition >= targetPosition - 6) {
             //pull the block in
             LatchMotor.setPower(0);
             //switches STATUS
-            status = STATUS.AWAY;
+            //resets clock
             time.reset();
+            status = STATUS.AWAY;
         }
     }
 
@@ -135,7 +141,7 @@ public class BlueBuild extends SuperOp {
     //then stop and switch STATUS to 'AWAY'
     private void away() {
         //strafe left
-        rightSpeedMultiplier = 1.2;
+        leftSpeedMultiplier = 1.1;
         targetTime = 1.5;
         drive(-0.5, 0, 0);
         telemetry.addData("Status: ", status);
@@ -148,8 +154,9 @@ public class BlueBuild extends SuperOp {
             drive(0,0,0);
             sleep_secs(0.5);
             //switch STATUS
-            status = STATUS.TOBUILD;
+            //resets clock
             time.reset();
+            status = STATUS.TOBUILD;
         }
     }
 
@@ -159,6 +166,7 @@ public class BlueBuild extends SuperOp {
     //check if the arm is up
     //lastly, set STATUS to 'PARK'
     private void toBuild() {
+        //sets target position for grabber
         targetPosition = currPosition + 577;
         //methods to get the robot back to the build site to place down the block
         targetTime = 3;
@@ -169,7 +177,7 @@ public class BlueBuild extends SuperOp {
             drive(0, 0, 0);
             //rotate the arm up
             currPosition = LatchMotor.getCurrentPosition();
-            LatchMotor.setPower(0.7);
+            LatchMotor.setPower(0.3);
 
             //check if the arm is in position
             if (currPosition <= targetPosition + 13 && currPosition >= targetPosition - 13) {
@@ -178,8 +186,9 @@ public class BlueBuild extends SuperOp {
                 Latch.setPosition(0);
                 //switch STATUS
                 status = STATUS.PARK;
+                //resets clock
                 time.reset();
-                rightSpeedMultiplier = 1;
+                leftSpeedMultiplier = 1;
             }
         }
     }
@@ -198,7 +207,7 @@ public class BlueBuild extends SuperOp {
             drive(0,0,0);
             sleep_secs(0.5);
             //switch STATUS
-            //bstatus = STATUS.STOP;
+            //status = STATUS.STOP;
         }
     }
 

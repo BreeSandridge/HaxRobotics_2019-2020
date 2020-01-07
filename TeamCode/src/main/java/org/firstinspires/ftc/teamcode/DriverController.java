@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+/*package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -57,7 +57,7 @@ public class DriverController extends SuperOp {
 //           raiseArm();
 //       }
 
-       if (gamepad1.x) {
+       /*if (gamepad1.x) {
            openDoor();
        } else {
            closeDoor();
@@ -189,9 +189,7 @@ public class DriverController extends SuperOp {
                 break;
         }
     }
-}
-
-
+}*/
 
 
 

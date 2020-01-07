@@ -132,7 +132,7 @@ public class RedBuild extends SuperOp {
     //then stop and switch STATUS to 'AWAY'
     private void away() {
         //strafe right
-        rightSpeedMultiplier = 1.5;
+        leftSpeedMultiplier = 1.5;
         targetTime = 1.5;
         drive(-0.5, 0, 0);
         telemetry.addData("Status: ", status);
@@ -172,7 +172,7 @@ public class RedBuild extends SuperOp {
                 //switch STATUS
                 status = STATUS.PARK;
                 time.reset();
-                rightSpeedMultiplier = 1;
+                leftSpeedMultiplier = 1;
             }
         }
     }
