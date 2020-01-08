@@ -9,9 +9,10 @@ public class BlueBuild extends SuperOp {
     //This uses an enum declared in SuperOp
     //It declares the first STATUS as "START"
     private STATUS status = STATUS.TOBLOCK;
-    boolean running = true;
-    private int targetPosition;
-    private int currPosition;
+    private int currPosition = LatchMotor.getCurrentPosition();
+    private int startPosition = LatchMotor.getCurrentPosition();
+    private int targetPosition = currPosition - 557;
+    private int targetPosition1 = startPosition;
     //create new stopwatch
     private ElapsedTime time = new ElapsedTime();
     private double targetTime;
@@ -122,10 +123,7 @@ public class BlueBuild extends SuperOp {
     //pull the block in and switch STATUS to 'AWAY'
      private void getBlock() {
         //rotate arm down
-        currPosition = LatchMotor.getCurrentPosition();
-        targetPosition = currPosition - 577;
         LatchMotor.setPower(0.3);
-
         //check if the arm is in position
         if (currPosition <= targetPosition + 13 && currPosition >= targetPosition - 6) {
             //pull the block in
@@ -144,11 +142,6 @@ public class BlueBuild extends SuperOp {
         leftSpeedMultiplier = 1.1;
         targetTime = 1.5;
         drive(-0.5, 0, 0);
-        telemetry.addData("Status: ", status);
-        telemetry.addData("Front Right pt2: ", FrontRightDrive.getCurrentPosition());
-        telemetry.addData("Front Left pt2: ", FrontLeftDrive.getCurrentPosition());
-        telemetry.addData("Back Right pt2: ", BackRightDrive.getCurrentPosition());
-        telemetry.addData("Back Left pt2: ", BackLeftDrive.getCurrentPosition());
         if(time.seconds() >= targetTime) {
             //stop
             drive(0,0,0);
@@ -167,7 +160,7 @@ public class BlueBuild extends SuperOp {
     //lastly, set STATUS to 'PARK'
     private void toBuild() {
         //sets target position for grabber
-        targetPosition = currPosition + 577;
+
         //methods to get the robot back to the build site to place down the block
         targetTime = 3;
         drive(0,0.5,0);
@@ -178,9 +171,8 @@ public class BlueBuild extends SuperOp {
             //rotate the arm up
             currPosition = LatchMotor.getCurrentPosition();
             LatchMotor.setPower(0.3);
-
             //check if the arm is in position
-            if (currPosition <= targetPosition + 13 && currPosition >= targetPosition - 13) {
+            if (currPosition <= targetPosition1 + 13 && currPosition >= targetPosition1 - 13) {
                 //pull the block in
                 LatchMotor.setPower(0);
                 Latch.setPosition(0);
@@ -188,7 +180,6 @@ public class BlueBuild extends SuperOp {
                 status = STATUS.PARK;
                 //resets clock
                 time.reset();
-                leftSpeedMultiplier = 1;
             }
         }
     }
