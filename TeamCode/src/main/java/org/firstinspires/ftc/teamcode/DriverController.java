@@ -1,25 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import java.util.Scanner;
 
 @TeleOp(name="Driver Controller")
 public class DriverController extends SuperOp {
-    // status of the arm and door
-    // change the state of the arm and door as it is raising or dropping
-    // so the program can execute what it is doing on every loop
-    private enum DOORSTATE { INIT, OPEN, CLOSE, OPENED, CLOSED }
 
 
-    private DOORSTATE door = DOORSTATE.INIT;
+    private final float latch_cd = 1000;
 
-    private double targetPosArm;
-    private double targetPosDoor;
-
-    private double currPosArm;
-    private double currPosDoor;
-
-
-    private boolean flipperState = false;
     private boolean trapdoorState = false;
 
     // can be written much more efficiently, just a basic DriverController
@@ -32,7 +23,6 @@ public class DriverController extends SuperOp {
          * Controls Intake System by given priority to driver intake, then outtake, then operator
          * intake, then outtake
          */
-
        // if only driver right trigger is pressed down
        if (gamepad1.right_trigger > 0.05 && gamepad1.left_trigger < 0.05) {
            intake(gamepad1.right_trigger);
@@ -58,11 +48,12 @@ public class DriverController extends SuperOp {
        /*
         * Toggles trapdoor
         */
-       if (gamepad2.a) {
+       if (gamepad2.a && timer.milliseconds() > latch_cd) {
            // sets to 1 if trapdoor state is == to true
            // otherwise set to 0
            Trapdoor.setPosition(trapdoorState ? 1 : 0);
            trapdoorState = !trapdoorState;
+           timer.reset();
        }
 
 
@@ -72,39 +63,6 @@ public class DriverController extends SuperOp {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-       // if the player wants the arm dropped then drop it, otherwise if the player wants it raised
-       // then raise it
-       // currently if you press a you have to wait until it fully drops to do another command
-       // working on a more efficient way to raise the arm so the driver can change their mind
-       // midway through the raise
-
-        /** arm moving code doesnt work right now because of some weird reason
-         * it doesn't seem to be a code problem because the code for the door
-         * is working perfectly and it's basically identical
-         * calling Flipper.setPosition(x) in the runtime loop doesnt move the arm either
-         * so it either is a SuperOp problem or a problem with the Servo configuration
-         */
-
-
-       /*if (gamepad1.x) {
-           openDoor();
-       } else {
-           closeDoor();
-       } */
     }
 
     // Intake
@@ -175,7 +133,7 @@ public class DriverController extends SuperOp {
     }
 */
 
-    // NOT WORKING
+/*    // NOT WORKING
     private void openDoor() {
         switch (door) {
             case INIT:
@@ -227,7 +185,7 @@ public class DriverController extends SuperOp {
             case OPEN:
                 break;
         }
-    }
+    }*/
 }
 
 
