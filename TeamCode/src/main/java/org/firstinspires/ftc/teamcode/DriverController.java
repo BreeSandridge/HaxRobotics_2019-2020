@@ -7,10 +7,9 @@ public class DriverController extends SuperOp {
     // status of the arm and door
     // change the state of the arm and door as it is raising or dropping
     // so the program can execute what it is doing on every loop
-    private enum ARMSTATE {INIT, RAISING, DROPPING, RAISED, DROPPED }
     private enum DOORSTATE { INIT, OPEN, CLOSE, OPENED, CLOSED }
 
-    private ARMSTATE arm = ARMSTATE.INIT;
+
     private DOORSTATE door = DOORSTATE.INIT;
 
     private double targetPosArm;
@@ -28,19 +27,13 @@ public class DriverController extends SuperOp {
     public void loop() {
        c_drive();
 
-       // inputs - for now all on gamepad1 (driver controlled)
-       // add gamepad2 controls as well but give gamepad1 right to override
-       /*if (gamepad1.right_trigger > 0.05) {
-           intake(gamepad1.right_trigger);
-       } else if (gamepad1.left_trigger > 0.05) {
-           intake(-gamepad1.left_trigger);
-       } else {
-           RightStoneRamp.setPower(0);
-           LeftStoneRamp.setPower(0);
-       }*/
 
+        /*
+         * Controls Intake System by given priority to driver intake, then outtake, then operator
+         * intake, then outtake
+         */
 
-       //  if only driver right trigger is pressed down
+       // if only driver right trigger is pressed down
        if (gamepad1.right_trigger > 0.05 && gamepad1.left_trigger < 0.05) {
            intake(gamepad1.right_trigger);
        }
@@ -62,13 +55,18 @@ public class DriverController extends SuperOp {
        }
 
 
+       /*
+        * Toggles trapdoor
+        */
        if (gamepad2.a) {
+           // sets to 1 if trapdoor state is == to true
+           // otherwise set to 0
            Trapdoor.setPosition(trapdoorState ? 1 : 0);
            trapdoorState = !trapdoorState;
        }
 
 
-       Flipper.setPower(gamepad2.left_stick_y);
+       Flipper.setPower (gamepad2.left_stick_y);
        telemetry.addData(" > Flipper Power: ", Flipper.getPower());
        telemetry.update();
 

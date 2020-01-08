@@ -114,6 +114,9 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackRightDrive.setPower((y_speed * y) - (x_speed * x) - (w_speed * w));
     }
 
+    /**
+     * Uses gamepad1 to use
+     */
     public void c_drive(){
         drive(
                 -gamepad1.left_stick_x,
