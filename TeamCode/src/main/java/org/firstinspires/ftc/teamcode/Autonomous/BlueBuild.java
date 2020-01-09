@@ -21,6 +21,7 @@ public class BlueBuild extends SuperOp {
     private int targetPosition;
     private int targetPosition1;
     private boolean ran = false;
+    private boolean ran1 = true;
 
     @Override
     public void loop() {
@@ -80,9 +81,19 @@ public class BlueBuild extends SuperOp {
     //it resets the elapsed time
     //then switches the status to 'TOBLOCK'
     private void start1(){
+        if(ran == false){
+            time.reset();
+            ran = !ran;
+        }
+        targetTime = 0.1;
+        drive(0.5,0,0);
+        if(time.seconds() >= targetTime){
+            drive(0,0,0);
+            time.reset();
+            status = STATUS.TOBLOCK;
+            ran = false;
+        }
         //targetTime = .5;
-        time.reset();
-        status = STATUS.TOBLOCK;
     }
 
     //method to go to block
@@ -115,7 +126,7 @@ public class BlueBuild extends SuperOp {
     //if time >= 1.5 seconds, the robot stops
     //and switches the STATUS to 'GETBLOCK'
     private void approach() {
-        targetTime = 0.8;
+        targetTime = 1.1;
         drive(0.5, 0, 0);
 
         if(time.seconds() >= targetTime) {
@@ -146,9 +157,9 @@ public class BlueBuild extends SuperOp {
             LatchMotor.setPower(0);
             //switches STATUS
             //resets clock
-            if(ran){
+            if(ran1){
                 time.reset();
-                ran = !ran;
+                ran1 = !ran1;
             }
             targetTime = 0.8;
             drive(-0.5, 0, 0);
@@ -161,7 +172,6 @@ public class BlueBuild extends SuperOp {
                 time.reset();
                 status = STATUS.TOBUILD;
             }
-            time.reset();
         }
     }
 
@@ -191,15 +201,13 @@ public class BlueBuild extends SuperOp {
     private void toBuild() {
         //sets target position for grabber
         //methods to get the robot back to the build site to place down the block
-        targetTime = 3;
-        drive(0,0.5,0);
-        telemetry.addData("Status: ", status);
-
+        targetTime = 2.4;
+        drive(0,-0.5,0);
         if(time.seconds() >= targetTime) {
             drive(0, 0, 0);
             //rotate the arm up
             currPosition = LatchMotor.getCurrentPosition();
-            LatchMotor.setPower(0.3);
+            LatchMotor.setPower(-0.3);
             //check if the arm is in position
             if (currPosition <= targetPosition1 + 13 && currPosition >= targetPosition1 - 13) {
                 //pull the block in
