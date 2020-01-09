@@ -15,11 +15,12 @@ public class BlueBuild extends SuperOp {
     //create new stopwatch
     private ElapsedTime time = new ElapsedTime();
     private double targetTime;
-
+    private ElapsedTime arm = new ElapsedTime();
     private int currPosition;
     private int startPosition;
     private int targetPosition;
     private int targetPosition1;
+    private boolean ran = false;
 
     @Override
     public void loop() {
@@ -27,6 +28,7 @@ public class BlueBuild extends SuperOp {
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
+        telemetry.addData("Arm", arm.seconds());
         telemetry.addData("LatchMotor Position: ", LatchMotor.getCurrentPosition());
         telemetry.addData("Time: ", time.seconds());
         telemetry.addData("Front Right: ", FrontRightDrive.getCurrentPosition());
@@ -51,20 +53,17 @@ public class BlueBuild extends SuperOp {
                 toBlock();
                 break;
             case APPROACH:
-                //time.reset();
                 approach();
                 break;
             case GETBLOCK:
-                //time.reset();
                 getBlock();
-                status = STATUS.AWAY;
+                //status = STATUS.AWAY;
                 break;
             case AWAY:
                 //time.reset();
-                away();
+                //away();
                 break;
             case TOBUILD:
-                //time.reset();
                 toBuild();
                 break;
             case PARK:
@@ -92,7 +91,7 @@ public class BlueBuild extends SuperOp {
     private void toBlock() {
         //move forward for 3 seconds
         leftSpeedMultiplier = 1;
-        targetTime = 2.5;
+        targetTime = 2.4;
         drive(0, 0.5, 0);
 
         // vision code
@@ -104,7 +103,7 @@ public class BlueBuild extends SuperOp {
         if(time.seconds()-targetTime > 0) {
             //stop
             drive(0,0,0);
-            sleep_secs(0.5);
+            //sleep_secs(0.5);
             //switch STATUS
             time.reset();
             status = STATUS.APPROACH;
@@ -116,18 +115,15 @@ public class BlueBuild extends SuperOp {
     //if time >= 1.5 seconds, the robot stops
     //and switches the STATUS to 'GETBLOCK'
     private void approach() {
-        //time.reset();
-        targetTime = 1.5;
+        targetTime = 1.3;
         drive(0.5, 0, 0);
-        telemetry.addData("Status: ", status);
 
         if(time.seconds() >= targetTime) {
             //robot stops for .5 secs
             drive(0,0,0);
-            sleep_secs(0.5);
+            //sleep_secs(0.5);
             //switches STATUS
             //resets clock
-            //time.reset();
             status = STATUS.GETBLOCK;
         }
     }
@@ -136,22 +132,42 @@ public class BlueBuild extends SuperOp {
     //check to see if the arm is in position
     //pull the block in and switch STATUS to 'AWAY'
      private void getBlock() {
+        if(!ran){
+            arm.reset();
+            ran = !ran;
+        }
+        currPosition = LatchMotor.getCurrentPosition();
         //rotate arm down
         LatchMotor.setPower(0.3);
         //check if the arm is in position
-        if (currPosition <= targetPosition + 13 && currPosition >= targetPosition - 6) {
+        if ((currPosition <= targetPosition + 13 && currPosition >= targetPosition - 6)|| arm.seconds() > 1) {
+
             //pull the block in
             LatchMotor.setPower(0);
             //switches STATUS
             //resets clock
-            //time.reset();
-            //status = STATUS.AWAY;
+            if(ran){
+                time.reset();
+                ran = !ran;
+            }
+            targetTime = 1.3;
+            drive(-0.5, 0, 0);
+            if(time.seconds() >= targetTime) {
+                //stop
+                drive(0,0,0);
+                //sleep_secs(0.5);
+                //switch STATUS
+                //resets clock
+                time.reset();
+                status = STATUS.TOBUILD;
+            }
+            time.reset();
         }
     }
 
     //strafe left for 1.5 seconds
-    //then stop and switch STATUS to 'AWAY'
-    private void away() {
+    //then stop and switch STATUS to 'TOBUILD'
+    /*private void away() {
         //strafe left
         leftSpeedMultiplier = 1;
         targetTime = 1.5;
@@ -159,13 +175,13 @@ public class BlueBuild extends SuperOp {
         if(time.seconds() >= targetTime) {
             //stop
             drive(0,0,0);
-            sleep_secs(0.5);
+            //sleep_secs(0.5);
             //switch STATUS
             //resets clock
-            //time.reset();
+            time.reset();
             status = STATUS.TOBUILD;
         }
-    }
+    }*/
 
     //go to build site and place the block back down
     //go backwards for 3 seconds
@@ -174,7 +190,6 @@ public class BlueBuild extends SuperOp {
     //lastly, set STATUS to 'PARK'
     private void toBuild() {
         //sets target position for grabber
-
         //methods to get the robot back to the build site to place down the block
         targetTime = 3;
         drive(0,0.5,0);
@@ -210,7 +225,7 @@ public class BlueBuild extends SuperOp {
         if(time.seconds() >= targetTime){
             //stop robot
             drive(0,0,0);
-            sleep_secs(0.5);
+            //sleep_secs(0.5);
             //switch STATUS
             //status = STATUS.STOP;
         }
