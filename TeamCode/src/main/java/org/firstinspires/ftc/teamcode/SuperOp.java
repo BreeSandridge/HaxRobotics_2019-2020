@@ -41,6 +41,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public double y_speed;
     public double w_speed;
     public double leftSpeedMultiplier;
+    public double rightSpeedMultiplier;
 
     static final double COUNTS_PER_MOTOR_REV = 1440;            // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
@@ -91,9 +92,9 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
     public void drive(double x, double y, double w) {
         FrontLeftDrive.setPower((y_speed * y) * leftSpeedMultiplier - (x_speed * x)+ (w_speed* w));
-        FrontRightDrive.setPower((y_speed * y) + (x_speed * x) - (w_speed * w));
+        FrontRightDrive.setPower((y_speed * y) * rightSpeedMultiplier + (x_speed * x) - (w_speed * w));
         BackLeftDrive.setPower((y_speed * y) * leftSpeedMultiplier + (x_speed * x) + (w_speed * w));
-        BackRightDrive.setPower((y_speed * y) - (x_speed * x) - (w_speed * w));
+        BackRightDrive.setPower((y_speed * y) * rightSpeedMultiplier - (x_speed * x) - (w_speed * w));
     }
 
     public void c_drive(){

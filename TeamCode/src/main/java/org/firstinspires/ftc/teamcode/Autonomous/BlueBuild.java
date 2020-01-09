@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.SuperOp;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous
@@ -8,14 +10,16 @@ public class BlueBuild extends SuperOp {
 
     //This uses an enum declared in SuperOp
     //It declares the first STATUS as "START"
-    private STATUS status = STATUS.TOBLOCK;
-    private int currPosition = LatchMotor.getCurrentPosition();
-    private int startPosition = LatchMotor.getCurrentPosition();
-    private int targetPosition = currPosition - 557;
-    private int targetPosition1 = startPosition;
+    private STATUS status = STATUS.START;
+
     //create new stopwatch
     private ElapsedTime time = new ElapsedTime();
     private double targetTime;
+
+    private int currPosition;
+    private int startPosition;
+    private int targetPosition;
+    private int targetPosition1;
 
     @Override
     public void loop() {
@@ -31,8 +35,11 @@ public class BlueBuild extends SuperOp {
         telemetry.addData("Front Left: ", FrontLeftDrive.getCurrentPosition());
         telemetry.addData("Status: ", status);
         telemetry.addData("Latch Position: ", Latch.getPosition());
-        currPosition = LatchMotor.getCurrentPosition();
 
+        currPosition = LatchMotor.getCurrentPosition();
+        startPosition = LatchMotor.getCurrentPosition();
+        targetPosition = currPosition - 557;
+        targetPosition1 = startPosition;
         //switch statements for changing the status of the robot
         //this allows us to use different code for each status
         //there are methods created below the switch statement for easier reading
@@ -77,8 +84,8 @@ public class BlueBuild extends SuperOp {
     //moves forward for 3 seconds at a motor power of .5
     //if the time is >= 3 seconds, the STATUS changes to 'APPROACH'
     private void toBlock() {
-        leftSpeedMultiplier = 1.1;
         //move forward for 3 seconds
+        rightSpeedMultiplier = 1.05;
         targetTime = 3;
         drive(0, 0.5, 0);
 
