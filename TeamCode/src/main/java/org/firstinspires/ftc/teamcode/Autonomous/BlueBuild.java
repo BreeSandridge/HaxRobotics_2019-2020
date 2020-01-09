@@ -115,7 +115,7 @@ public class BlueBuild extends SuperOp {
     //if time >= 1.5 seconds, the robot stops
     //and switches the STATUS to 'GETBLOCK'
     private void approach() {
-        targetTime = 1.3;
+        targetTime = 0.8;
         drive(0.5, 0, 0);
 
         if(time.seconds() >= targetTime) {
@@ -150,7 +150,7 @@ public class BlueBuild extends SuperOp {
                 time.reset();
                 ran = !ran;
             }
-            targetTime = 1.3;
+            targetTime = 0.8;
             drive(-0.5, 0, 0);
             if(time.seconds() >= targetTime) {
                 //stop
