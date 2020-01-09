@@ -40,8 +40,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public double x_speed;
     public double y_speed;
     public double w_speed;
-    public double leftSpeedMultiplier;
-    public double rightSpeedMultiplier;
+    public double leftSpeedMultiplier = 1;
+    public double rightSpeedMultiplier = 1;
 
     static final double COUNTS_PER_MOTOR_REV = 1440;            // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
