@@ -71,9 +71,9 @@ public class BlueBuild extends SuperOp {
                 //time.reset();
                 park();
                 break;
-            /* case STOP:
+            case STOP:
                 stop1();
-                break; */
+                break;
         }
     }
 
@@ -85,7 +85,7 @@ public class BlueBuild extends SuperOp {
             time.reset();
             ran = !ran;
         }
-        targetTime = 0.2;
+        targetTime = 0.3;
         drive(0.5,0,0);
         if(time.seconds() >= targetTime){
             drive(0,0,0);
@@ -150,7 +150,7 @@ public class BlueBuild extends SuperOp {
         currPosition = LatchMotor.getCurrentPosition();
         //rotate arm down
         LatchMotor.setPower(0.3);
-        //check if the arm is in position
+        sleep_secs(.5);
         if ((currPosition <= targetPosition + 13 && currPosition >= targetPosition - 6)|| arm.seconds() > 1) {
 
             //pull the block in
@@ -161,7 +161,7 @@ public class BlueBuild extends SuperOp {
                 time.reset();
                 ran1 = !ran1;
             }
-            targetTime = 0.9;
+            targetTime = 1.1;
             drive(-0.5, 0, 0);
             if(time.seconds() >= targetTime) {
                 //stop
@@ -174,24 +174,6 @@ public class BlueBuild extends SuperOp {
             }
         }
     }
-
-    //strafe left for 1.5 seconds
-    //then stop and switch STATUS to 'TOBUILD'
-    /*private void away() {
-        //strafe left
-        leftSpeedMultiplier = 1;
-        targetTime = 1.5;
-        drive(-0.5, 0, 0);
-        if(time.seconds() >= targetTime) {
-            //stop
-            drive(0,0,0);
-            //sleep_secs(0.5);
-            //switch STATUS
-            //resets clock
-            time.reset();
-            status = STATUS.TOBUILD;
-        }
-    }*/
 
     //go to build site and place the block back down
     //go backwards for 3 seconds
@@ -206,7 +188,7 @@ public class BlueBuild extends SuperOp {
         }
         //sets target position for grabber
         //methods to get the robot back to the build site to place down the block
-        targetTime = 2.4;
+        targetTime = 2;
         drive(0,-0.5,0);
         if(time.seconds() >= targetTime) {
             drive(0, 0, 0);
@@ -215,32 +197,20 @@ public class BlueBuild extends SuperOp {
                 ran = !ran;
             }
             currPosition = LatchMotor.getCurrentPosition();
-            //rotate arm down
+            //rotate arm up
             LatchMotor.setPower(-0.3);
+            drive(0,0,0);
+            LatchMotor.setPower(0);
+            time.reset();
+            status = STATUS.PARK;
             //check if the arm is in position
-            if ((currPosition <= targetPosition + 13 && currPosition >= targetPosition - 6) || arm.seconds() > 1) {
-                drive(0,0,0);
-                //pull the block in
+            /*if ((currPosition <= targetPosition + 13 && currPosition >= targetPosition - 6) || arm.seconds() > 1) { drive(0,0,0);
+                //leave motor
                 LatchMotor.setPower(0);
                 time.reset();
                 status = STATUS.PARK;
-            }
+            } */
         }
-            //rotate the arm up
-            /*currPosition = LatchMotor.getCurrentPosition();
-            LatchMotor.setPower(-0.3);
-            sleep_secs(0.75);
-            //check if the arm is in position
-            if (!LatchMotor.isBusy()) {
-                //pull the block in
-                LatchMotor.setPower(0);
-                Latch.setPosition(0);
-                //switch STATUS
-                status = STATUS.PARK;
-                //resets clock
-                time.reset();
-            }
-        }*/
     }
 
     //park the robot in the middle of the alliance bridge
@@ -249,23 +219,22 @@ public class BlueBuild extends SuperOp {
     private void park() {
         // vision code to park the robot under the bridge
         //t_drive(0, -1, 0, 1);
-        targetTime = 1.3;
+        targetTime = .8;
         drive(0, 0.5, 0);
-
         if(time.seconds() >= targetTime){
             //stop robot
             drive(0,0,0);
-            //sleep_secs(0.5);
+            sleep_secs(0.5);
             //switch STATUS
-            //status = STATUS.STOP;
+            status = STATUS.STOP;
         }
     }
 
     //stop all motion of the robot
     //set all motor powers to 0
-    /* private void stop1(){
+    private void stop1(){
         drive(0,0,0);
-    } */
+    }
 }
 
 
