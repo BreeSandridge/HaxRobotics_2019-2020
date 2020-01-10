@@ -27,7 +27,6 @@ in a trapezoid drive pattern.
  */
 
 public abstract class SuperOp extends OpMode implements SuperOp_Interface {
-
     public DcMotor FrontLeftDrive = null;
     public DcMotor FrontRightDrive = null;
     public DcMotor BackLeftDrive = null;
@@ -40,10 +39,10 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public Servo Trapdoor = null;
     public Servo Latch = null;
 
-    public enum STATUS {START, TOBLOCK, APPROACH, GETBLOCK, AWAY, TOBUILD, PARK, STOP}
+    public enum STATUS {FlIPPER, START, TOBLOCK, APPROACH, GETBLOCK, AWAY, TOBUILD, RELEASEBLOCK, PARK, STOP}
 
     protected Accel_Drive accelDrive;
-
+    public int startPoint = 1;
     public double x_speed;
     public double y_speed;
     public double w_speed;
@@ -115,10 +114,10 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     // Accepts amount to move left/right (x), move up/down (y), and rotate (w)
 
     public void drive(double x, double y, double w) {
-        FrontLeftDrive.setPower((y_speed * y) * leftSpeedMultiplier - (x_speed * x)+ (w_speed* w));
-        FrontRightDrive.setPower((y_speed * y) * rightSpeedMultiplier + (x_speed * x) - (w_speed * w));
-        BackLeftDrive.setPower((y_speed * y) * leftSpeedMultiplier + (x_speed * x) + (w_speed * w));
-        BackRightDrive.setPower((y_speed * y) * rightSpeedMultiplier - (x_speed * x) - (w_speed * w));
+        FrontLeftDrive.setPower((y_speed * y) * startPoint - (x_speed * x) * startPoint + (w_speed* w));
+        FrontRightDrive.setPower((y_speed * y) * startPoint + (x_speed * x) * startPoint - (w_speed * w));
+        BackLeftDrive.setPower((y_speed * y) * startPoint + (x_speed * x) * startPoint + (w_speed * w));
+        BackRightDrive.setPower((y_speed * y) * startPoint - (x_speed * x) * startPoint - (w_speed * w));
     }
 
     public void c_drive(){
