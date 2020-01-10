@@ -38,10 +38,10 @@ public class BlueBuild extends SuperOp {
         telemetry.addData("Front Left: ", FrontLeftDrive.getCurrentPosition());
         telemetry.addData("Status: ", status);
         telemetry.addData("Latch Position: ", Latch.getPosition());
+        telemetry.addData("Power",LatchMotor.getPower());
 
         currPosition = LatchMotor.getCurrentPosition();
         startPosition = LatchMotor.getCurrentPosition();
-        targetPosition = currPosition - 500;
         targetPosition1 = startPosition;
         //switch statements for changing the status of the robot
         //this allows us to use different code for each status
@@ -85,7 +85,7 @@ public class BlueBuild extends SuperOp {
             time.reset();
             ran = !ran;
         }
-        targetTime = 0.1;
+        targetTime = 0.2;
         drive(0.5,0,0);
         if(time.seconds() >= targetTime){
             drive(0,0,0);
@@ -126,7 +126,7 @@ public class BlueBuild extends SuperOp {
     //if time >= 1.5 seconds, the robot stops
     //and switches the STATUS to 'GETBLOCK'
     private void approach() {
-        targetTime = 1.1;
+        targetTime = 1.3;
         drive(0.5, 0, 0);
 
         if(time.seconds() >= targetTime) {
@@ -161,7 +161,7 @@ public class BlueBuild extends SuperOp {
                 time.reset();
                 ran1 = !ran1;
             }
-            targetTime = 0.8;
+            targetTime = 0.9;
             drive(-0.5, 0, 0);
             if(time.seconds() >= targetTime) {
                 //stop
@@ -199,26 +199,48 @@ public class BlueBuild extends SuperOp {
     //check if the arm is up
     //lastly, set STATUS to 'PARK'
     private void toBuild() {
+
+        if(ran){
+            targetPosition = LatchMotor.getCurrentPosition() + 500;
+            ran = !ran;
+        }
         //sets target position for grabber
         //methods to get the robot back to the build site to place down the block
         targetTime = 2.4;
         drive(0,-0.5,0);
         if(time.seconds() >= targetTime) {
             drive(0, 0, 0);
-            //rotate the arm up
+            if (!ran) {
+                arm.reset();
+                ran = !ran;
+            }
             currPosition = LatchMotor.getCurrentPosition();
+            //rotate arm down
             LatchMotor.setPower(-0.3);
             //check if the arm is in position
-            if (currPosition <= targetPosition1 + 13 && currPosition >= targetPosition1 - 13) {
+            if ((currPosition <= targetPosition + 13 && currPosition >= targetPosition - 6) || arm.seconds() > 1) {
+                drive(0,0,0);
+                //pull the block in
+                LatchMotor.setPower(0);
+                time.reset();
+                status = STATUS.PARK;
+            }
+        }
+            //rotate the arm up
+            /*currPosition = LatchMotor.getCurrentPosition();
+            LatchMotor.setPower(-0.3);
+            sleep_secs(0.75);
+            //check if the arm is in position
+            if (!LatchMotor.isBusy()) {
                 //pull the block in
                 LatchMotor.setPower(0);
                 Latch.setPosition(0);
                 //switch STATUS
                 status = STATUS.PARK;
                 //resets clock
-                //time.reset();
+                time.reset();
             }
-        }
+        }*/
     }
 
     //park the robot in the middle of the alliance bridge
@@ -227,8 +249,8 @@ public class BlueBuild extends SuperOp {
     private void park() {
         // vision code to park the robot under the bridge
         //t_drive(0, -1, 0, 1);
-        targetTime = 1.5;
-        drive(0, -0.5, 0);
+        targetTime = 1.3;
+        drive(0, 0.5, 0);
 
         if(time.seconds() >= targetTime){
             //stop robot
