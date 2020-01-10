@@ -23,7 +23,7 @@ public class RedBuild extends SuperOp {
 
     @Override
     public void loop() {
-
+        startPoint = -1;
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
@@ -100,7 +100,7 @@ public class RedBuild extends SuperOp {
             ran = !ran;
         }
         targetTime = 0.5;
-        drive(-0.5,0,0);
+        drive(0.5,0,0);
         if(time.seconds() >= targetTime){
             drive(0,0,0);
             time.reset();
@@ -117,7 +117,7 @@ public class RedBuild extends SuperOp {
         //move forward for 3 seconds
         leftSpeedMultiplier = 1;
         targetTime = 2.5;
-        drive(0, -0.5, 0);
+        drive(0, 0.5, 0);
 
         // vision code
         // if skystone is sighted
@@ -141,7 +141,7 @@ public class RedBuild extends SuperOp {
     //and switches the STATUS to 'GETBLOCK'
     private void approach() {
         targetTime = 0.9;
-        drive(-0.5, 0, 0);
+        drive(0.5, 0, 0);
 
         if(time.seconds() >= targetTime) {
             //robot stops for .5 secs
@@ -176,7 +176,7 @@ public class RedBuild extends SuperOp {
                 ran1 = !ran1;
             }
             targetTime = 1.1;
-            drive(0.5, 0, 0);
+            drive(-0.5, 0, 0);
             if(time.seconds() >= targetTime) {
                 //stop
                 drive(0,0,0);
@@ -203,7 +203,7 @@ public class RedBuild extends SuperOp {
         //sets target position for grabber
         //methods to get the robot back to the build site to place down the block
         targetTime = 2;
-        drive(0,0.5,0);
+        drive(0,-0.5,0);
         if(time.seconds() >= targetTime) {
             drive(0, 0, 0);
             arm.reset();
@@ -236,10 +236,10 @@ public class RedBuild extends SuperOp {
         // vision code to park the robot under the bridge
         //t_drive(0, -1, 0, 1);
         targetTime = .9;
-        drive(0, -0.5, 0);
+        drive(0, 0.5, 0);
         if(time.seconds() >= targetTime){
             //stop robot
-            drive(-0.5,0,0);
+            drive(0.5,0,0);
             sleep_secs(0.3);
             drive(0,0,0);
             //switch STATUS
@@ -251,8 +251,6 @@ public class RedBuild extends SuperOp {
     //set all motor powers to 0
     private void stop1(){
         drive(0,0,0);
-        LatchMotor.setPower(0);
-        Flipper.setPower(0);
     }
 }
 
