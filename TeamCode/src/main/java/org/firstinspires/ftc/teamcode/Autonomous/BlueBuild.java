@@ -10,16 +10,14 @@ public class BlueBuild extends SuperOp {
 
     //This uses an enum declared in SuperOp
     //It declares the first STATUS as "START"
-    private STATUS status = STATUS.START;
+    private STATUS status = STATUS.FlIPPER;
 
     //create new stopwatch
     private ElapsedTime time = new ElapsedTime();
     private double targetTime;
     private ElapsedTime arm = new ElapsedTime();
     private int currPosition;
-    private int startPosition;
     private int targetPosition;
-    private int targetPosition1;
     private boolean ran = false;
     private boolean ran1 = true;
 
@@ -30,6 +28,7 @@ public class BlueBuild extends SuperOp {
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
         telemetry.addData("Arm", arm.seconds());
+        telemetry.addData("Power",LatchMotor.getPower());
         telemetry.addData("LatchMotor Position: ", LatchMotor.getCurrentPosition());
         telemetry.addData("Time: ", time.seconds());
         telemetry.addData("Front Right: ", FrontRightDrive.getCurrentPosition());
@@ -38,15 +37,15 @@ public class BlueBuild extends SuperOp {
         telemetry.addData("Front Left: ", FrontLeftDrive.getCurrentPosition());
         telemetry.addData("Status: ", status);
         telemetry.addData("Latch Position: ", Latch.getPosition());
-        telemetry.addData("Power",LatchMotor.getPower());
 
         currPosition = LatchMotor.getCurrentPosition();
-        startPosition = LatchMotor.getCurrentPosition();
-        targetPosition1 = startPosition;
         //switch statements for changing the status of the robot
         //this allows us to use different code for each status
         //there are methods created below the switch statement for easier reading
         switch (status) {
+            case FlIPPER:
+                flipper();
+                break;
              case START:
                 start1();
                 break;
@@ -67,6 +66,9 @@ public class BlueBuild extends SuperOp {
             case TOBUILD:
                 toBuild();
                 break;
+            case RELEASEBLOCK:
+                release();
+                break;
             case PARK:
                 //time.reset();
                 park();
@@ -80,12 +82,24 @@ public class BlueBuild extends SuperOp {
     //this is the first method run
     //it resets the elapsed time
     //then switches the status to 'TOBLOCK'
+    private void flipper(){
+        if(ran1){
+            time.reset();
+            ran1 = !ran1;
+        }
+        targetTime = 2;
+        Flipper.setPower(-1);
+        if(time.seconds() >= targetTime){
+            Flipper.setPower(0);
+            status = STATUS.START;
+        }
+    }
     private void start1(){
         if(ran == false){
             time.reset();
             ran = !ran;
         }
-        targetTime = 0.3;
+        targetTime = 0.5;
         drive(0.5,0,0);
         if(time.seconds() >= targetTime){
             drive(0,0,0);
@@ -102,7 +116,7 @@ public class BlueBuild extends SuperOp {
     private void toBlock() {
         //move forward for 3 seconds
         leftSpeedMultiplier = 1;
-        targetTime = 2.4;
+        targetTime = 2.5;
         drive(0, 0.5, 0);
 
         // vision code
@@ -126,7 +140,7 @@ public class BlueBuild extends SuperOp {
     //if time >= 1.5 seconds, the robot stops
     //and switches the STATUS to 'GETBLOCK'
     private void approach() {
-        targetTime = 1.3;
+        targetTime = 0.9;
         drive(0.5, 0, 0);
 
         if(time.seconds() >= targetTime) {
@@ -157,7 +171,7 @@ public class BlueBuild extends SuperOp {
             LatchMotor.setPower(0);
             //switches STATUS
             //resets clock
-            if(ran1){
+            if(!ran1){
                 time.reset();
                 ran1 = !ran1;
             }
@@ -192,17 +206,8 @@ public class BlueBuild extends SuperOp {
         drive(0,-0.5,0);
         if(time.seconds() >= targetTime) {
             drive(0, 0, 0);
-            if (!ran) {
-                arm.reset();
-                ran = !ran;
-            }
-            currPosition = LatchMotor.getCurrentPosition();
-            //rotate arm up
-            LatchMotor.setPower(-0.3);
-            drive(0,0,0);
-            LatchMotor.setPower(0);
-            time.reset();
-            status = STATUS.PARK;
+            arm.reset();
+            status = STATUS.RELEASEBLOCK;
             //check if the arm is in position
             /*if ((currPosition <= targetPosition + 13 && currPosition >= targetPosition - 6) || arm.seconds() > 1) { drive(0,0,0);
                 //leave motor
@@ -212,6 +217,17 @@ public class BlueBuild extends SuperOp {
             } */
         }
     }
+    private void release(){
+        currPosition = LatchMotor.getCurrentPosition();
+        //rotate arm up
+
+        LatchMotor.setPower(-0.3);
+        if(arm.seconds() >= 1) {
+            LatchMotor.setPower(0);
+            time.reset();
+            status = STATUS.PARK;
+        }
+    }
 
     //park the robot in the middle of the alliance bridge
     //drive 1.5 seconds forward, then stop
@@ -219,12 +235,13 @@ public class BlueBuild extends SuperOp {
     private void park() {
         // vision code to park the robot under the bridge
         //t_drive(0, -1, 0, 1);
-        targetTime = .8;
+        targetTime = .9;
         drive(0, 0.5, 0);
         if(time.seconds() >= targetTime){
             //stop robot
+            drive(0.5,0,0);
+            sleep_secs(0.3);
             drive(0,0,0);
-            sleep_secs(0.5);
             //switch STATUS
             status = STATUS.STOP;
         }
