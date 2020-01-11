@@ -27,6 +27,7 @@ public class Accel_Drive{
     public ElapsedTime elapsedTime;
     Queue<DriveParams> commands;
 
+
     public Accel_Drive() {
         elapsedTime = new ElapsedTime();
         elapsedTime.reset();
@@ -44,9 +45,11 @@ public class Accel_Drive{
     // but will (probably) later be replaced by a DriveParams object
     // Makes sure that robot is stopped,
     // but should only be called under those circumstances anyway
-    public void set(DriveParams state){
-        if (driveState != State.STOP)
+    public void set(DriveParams state) {
+        if (driveState != State.STOP) {
             return;
+        }
+
         this.x = state.x;
         this.y = state.y;
         this.w = state.w;
