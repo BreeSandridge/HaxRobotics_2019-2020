@@ -6,7 +6,15 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.AreshPourkavoos.Accel_Drive;
+
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.Autonomous.CameraParams;
+
+import java.util.List;
+
 
 // extend OpMode so future classes will extend SuperOp Instead
 // implements is for interfaces
@@ -24,34 +32,33 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
     public ElapsedTime timer;
 
+
     public DcMotor FrontLeftDrive = null;
     public DcMotor FrontRightDrive = null;
     public DcMotor BackLeftDrive = null;
     public DcMotor BackRightDrive = null;
-
     public DcMotor LeftStoneRamp = null;
     public DcMotor RightStoneRamp = null;
+    public DcMotor LatchMotor = null;
 
-    public DcMotor LatchMotor;
 
     public CRServo Flipper = null;
     public Servo Trapdoor = null;
 
-
-
-
     public Servo Latch = null;
 
-    public enum STATUS {START, TOBLOCK, APPROACH, GETBLOCK, AWAY, TOBUILD, PARK, STOP}
+    public enum STATUS {FlIPPER, START, TOBLOCK, APPROACH, GETBLOCK, AWAY, TOBUILD, RELEASEBLOCK, PARK, STOP}
 
     protected Accel_Drive accelDrive;
-
+    public int startPoint = 1;
     public double x_speed;
     public double y_speed;
     public double w_speed;
-
-
-
+    public double auto_x_speed;
+    public double auto_y_speed;
+    public double auto_w_speed;
+    public double leftSpeedMultiplier = 1;
+    public double rightSpeedMultiplier = 1;
 
     static final double COUNTS_PER_MOTOR_REV = 1440;            // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
@@ -61,6 +68,17 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
+    public boolean isRunning = true;
+
+    private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
+    private static final String LABEL_FIRST_ELEMENT = "Stone";
+    private static final String LABEL_SECOND_ELEMENT = "Skystone";
+    CameraParams cameraParams;
+
+    private static final String VUFORIA_KEY =
+            "AUAq88//////AAABmU+bO6dpUU4BreRJC5efYI1U4Fc5EvLiP5eGiT94wpCspMiACoccxAAVAgEOcCw87pTuHz671RvMDs3dtUBYrJNGI/x/bm60AsIdy3J7prt5EP8xeJuiKjWX32EoIhEsRnqZPpQOmCh11Q5vboZhsCNkNGMNWUIufrVa2g4SKwkSAjaAdOla8w/LwPKbiQBYvwbikpCb01LQg8iVYzWJHBfWLbQcXbuEBQIG9VSgGzyz4RStzgfG5mCTO4UZQbs7P3b/oJIf2rSzd7Ng1HmpHjldX8uFnLMuvIjgG/mJENP/edAw51wRui/21dV8QNdhV8KwP+KBdgpyVBMj44+OlN4ZrGGRkxYDNzd7yptjiGfe";
+    private VuforiaLocalizer vuforia;
+    private TFObjectDetector tfod;
 
 
     @Override
@@ -70,14 +88,13 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         FrontRightDrive = hardwareMap.get(DcMotor.class, "FrontRightDrive");
         BackLeftDrive  = hardwareMap.get(DcMotor.class, "BackLeftDrive");
         BackRightDrive = hardwareMap.get(DcMotor.class, "BackRightDrive");
-
+        LatchMotor = hardwareMap.get(DcMotor.class, "LatchMotor");
         LeftStoneRamp = hardwareMap.get(DcMotor.class, "LeftStoneRamp");
         RightStoneRamp = hardwareMap.get(DcMotor.class, "RightStoneRamp");
+
+
         Flipper = hardwareMap.crservo.get("Flipper");
         Trapdoor = hardwareMap.get(Servo.class, "Trapdoor");
-
-        LatchMotor = hardwareMap.get(DcMotor.class, "LatchMotor");
-
         Latch = hardwareMap.get(Servo.class, "Latch");
 
         // Reverse directions on the right motors
@@ -87,13 +104,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        LeftStoneRamp.setDirection(DcMotor.Direction.FORWARD);
-        RightStoneRamp.setDirection(DcMotor.Direction.REVERSE);
 
-        // Pass the motors to the AccelDrive so it can access them
-        // (may later be bundled into a class or lookup table)
-        accelDrive = new Accel_Drive(FrontLeftDrive, FrontRightDrive,
-                BackLeftDrive,  BackRightDrive);
 
         /**changed values **/
         x_speed = .70;
@@ -101,6 +112,18 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         w_speed = .45;
 
         timer = new ElapsedTime();
+
+
+
+        auto_x_speed = .8;
+        auto_y_speed = .6;
+        auto_w_speed = .6;
+
+        initVuforia();
+        initTfod();
+        tfod.activate();
+        cameraParams = new CameraParams(0, 0, 0, 1280, 720, 1080);
+
     }
 
     public void setMode(DcMotor.RunMode mode){
@@ -108,12 +131,24 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         FrontLeftDrive.setMode(mode);
         BackLeftDrive.setMode(mode);
         BackRightDrive.setMode(mode);
+
+        // Pass the motors to the AccelDrive so it can access them
+        // (may later be bundled into a class or lookup table)
+        //accelDrive = new Accel_Drive();
+
     }
 
     // Mechanum wheel implementation
     // Accepts amount to move left/right (x), move up/down (y), and rotate (w)
 
     public void drive(double x, double y, double w) {
+        FrontLeftDrive.setPower((auto_y_speed * y) * startPoint - (auto_x_speed * x) * startPoint + (auto_w_speed* w));
+        FrontRightDrive.setPower((auto_y_speed * y) * startPoint + (auto_x_speed * x) * startPoint - (auto_w_speed * w));
+        BackLeftDrive.setPower((auto_y_speed * y) * startPoint + (auto_x_speed * x) * startPoint + (auto_w_speed * w));
+        BackRightDrive.setPower((auto_y_speed * y) * startPoint - (auto_x_speed * x) * startPoint - (auto_w_speed * w));
+    }
+
+    public void teleDrive(double x, double y, double w) {
         FrontLeftDrive.setPower((y_speed * y) - (x_speed * x)+ (w_speed* w));
         FrontRightDrive.setPower((y_speed * y) + (x_speed * x) - (w_speed * w));
         BackLeftDrive.setPower((y_speed * y) + (x_speed * x) + (w_speed * w));
@@ -124,11 +159,18 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
      * Uses gamepad1 to use
      */
     public void c_drive(){
-        drive(
+        teleDrive(
                 -gamepad1.left_stick_x,
                 -gamepad1.left_stick_y,
                 gamepad1.right_stick_x
         );
+    }
+
+    public void drive (double[] motorVals){
+        double x = motorVals[0];
+        double y = motorVals[1];
+        double w = motorVals[2];
+        drive(x, y, w);
     }
 
     // Wait for a given number of seconds (t)
@@ -153,6 +195,65 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     }
 
 
+    private void initVuforia() {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        //parameters.cameraDirection = CameraDirection.BACK;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
+    }
+
+    /**
+     * Initialize the TensorFlow Object Detection engine.
+     */
+    private void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minimumConfidence = 0.8;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+    }
+
+    boolean skystoneAligned() {
+        // getUpdatedRecognitions() will return null if no new information is available since
+        // the last time that call was made.
+        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+        if (updatedRecognitions == null)
+            return false;
+        //telemetry.addData("# Object Detected", updatedRecognitions.size());
+
+        // step through the list of recognitions and display boundary info.
+        //int i = 0;
+        for (Recognition recognition : updatedRecognitions) {
+            String label = recognition.getLabel();
+            if (!label.equals("Skystone"))
+                continue;
+            float left = recognition.getLeft(), top = recognition.getTop();
+            float right = recognition.getRight(), bottom = recognition.getBottom();
+            double blockPos = cameraParams.undoPerspective(left, top, right, bottom);
+            double armOffset = 10;
+            if (blockPos > armOffset)
+                return true;
+            /*
+            telemetry.addData(String.format("label (%d)", i), label);
+            telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                    left, top);
+            telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                    right, bottom);
+            telemetry.addData(String.format("  position (%d)", i), "%.03f",
+                    (float) blockPos);
+             */
+        }
+        return false;
+    }
     /**
      * This method allows forwards and backwards movement for the robot by running the motors
      * until a certain encoder value is reached
@@ -160,4 +261,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
      * @param desired the distance the robot will travel (positive for forwards, negative for backwards)
      */
 
+
 }
+
