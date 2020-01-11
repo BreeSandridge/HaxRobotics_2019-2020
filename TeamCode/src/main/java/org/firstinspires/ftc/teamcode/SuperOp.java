@@ -95,9 +95,10 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         accelDrive = new Accel_Drive(FrontLeftDrive, FrontRightDrive,
                 BackLeftDrive,  BackRightDrive);
 
-        x_speed = .6;
-        y_speed = .4;
-        w_speed = .4;
+        /**changed values **/
+        x_speed = .70;
+        y_speed = .40;
+        w_speed = .45;
 
         timer = new ElapsedTime();
     }
