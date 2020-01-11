@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous
-public class RedBuild extends SuperOp {
+public class BluePlayer extends SuperOp {
 
     //This uses an enum declared in SuperOp
     //It declares the first STATUS as "START"
@@ -49,9 +49,9 @@ public class RedBuild extends SuperOp {
             case START:
                 start1();
                 break;
-            case TOBLOCK:
-                toBlock();
-                break;
+            /*case TOBLOCK:
+                //toBlock();
+                break; */
             case APPROACH:
                 approach();
                 break;
@@ -104,7 +104,7 @@ public class RedBuild extends SuperOp {
         if(time.seconds() >= targetTime){
             drive(0,0,0);
             time.reset();
-            status = STATUS.TOBLOCK;
+            status = STATUS.APPROACH;
             ran = false;
         }
         //targetTime = .5;
@@ -117,7 +117,7 @@ public class RedBuild extends SuperOp {
         //move forward for 3 seconds
         leftSpeedMultiplier = 1;
         targetTime = 2.5;
-        drive(0, -0.5, 0);
+        drive(0, 0.5, 0);
 
         // vision code
         // if skystone is sighted
@@ -140,7 +140,7 @@ public class RedBuild extends SuperOp {
     //if time >= 1.5 seconds, the robot stops
     //and switches the STATUS to 'GETBLOCK'
     private void approach() {
-        targetTime = 1.4;
+        targetTime = 0.9;
         drive(0.5, 0, 0);
 
         if(time.seconds() >= targetTime) {
@@ -202,8 +202,8 @@ public class RedBuild extends SuperOp {
         }
         //sets target position for grabber
         //methods to get the robot back to the build site to place down the block
-        targetTime = 2;
-        drive(0,0.5,0);
+        targetTime = 1.9;
+        drive(0,-0.5,0);
         if(time.seconds() >= targetTime) {
             drive(0, 0, 0);
             arm.reset();
@@ -236,11 +236,11 @@ public class RedBuild extends SuperOp {
         // vision code to park the robot under the bridge
         //t_drive(0, -1, 0, 1);
         targetTime = .9;
-        drive(0, -0.5, 0);
+        drive(0, 0.5, 0);
         if(time.seconds() >= targetTime){
             //stop robot
             drive(0.5,0,0);
-            sleep_secs(0.3);
+            sleep_secs(0.4);
             drive(0,0,0);
             //switch STATUS
             status = STATUS.STOP;
