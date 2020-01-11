@@ -56,7 +56,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public double w_speed;
     public double auto_x_speed;
     public double auto_y_speed;
-    public double auto_w_speed;
+    public double auto_w_speed;  
     public double leftSpeedMultiplier = 1;
     public double rightSpeedMultiplier = 1;
 
