@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -28,6 +29,10 @@ in a trapezoid drive pattern.
  */
 
 public abstract class SuperOp extends OpMode implements SuperOp_Interface {
+
+    public ElapsedTime timer;
+
+
     public DcMotor FrontLeftDrive = null;
     public DcMotor FrontRightDrive = null;
     public DcMotor BackLeftDrive = null;
@@ -36,8 +41,10 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor RightStoneRamp = null;
     public DcMotor LatchMotor = null;
 
+
     public CRServo Flipper = null;
     public Servo Trapdoor = null;
+
     public Servo Latch = null;
 
     public enum STATUS {FlIPPER, START, TOBLOCK, APPROACH, GETBLOCK, AWAY, TOBUILD, RELEASEBLOCK, PARK, STOP}
@@ -47,6 +54,9 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public double x_speed;
     public double y_speed;
     public double w_speed;
+    public double auto_x_speed;
+    public double auto_y_speed;
+    public double auto_w_speed;
     public double leftSpeedMultiplier = 1;
     public double rightSpeedMultiplier = 1;
 
@@ -82,6 +92,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         LeftStoneRamp = hardwareMap.get(DcMotor.class, "LeftStoneRamp");
         RightStoneRamp = hardwareMap.get(DcMotor.class, "RightStoneRamp");
 
+
         Flipper = hardwareMap.crservo.get("Flipper");
         Trapdoor = hardwareMap.get(Servo.class, "Trapdoor");
         Latch = hardwareMap.get(Servo.class, "Latch");
@@ -94,9 +105,19 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
 
-        x_speed = .8;
-        y_speed = .6;
-        w_speed = .6;
+
+        /**changed values **/
+        x_speed = .70;
+        y_speed = .40;
+        w_speed = .45;
+
+        timer = new ElapsedTime();
+
+
+
+        auto_x_speed = .8;
+        auto_y_speed = .6;
+        auto_w_speed = .6;
 
         initVuforia();
         initTfod();
@@ -121,17 +142,27 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     // Accepts amount to move left/right (x), move up/down (y), and rotate (w)
 
     public void drive(double x, double y, double w) {
-        FrontLeftDrive.setPower((y_speed * y) * startPoint - (x_speed * x) * startPoint + (w_speed* w));
-        FrontRightDrive.setPower((y_speed * y) * startPoint + (x_speed * x) * startPoint - (w_speed * w));
-        BackLeftDrive.setPower((y_speed * y) * startPoint + (x_speed * x) * startPoint + (w_speed * w));
-        BackRightDrive.setPower((y_speed * y) * startPoint - (x_speed * x) * startPoint - (w_speed * w));
+        FrontLeftDrive.setPower((auto_y_speed * y) * startPoint - (auto_x_speed * x) * startPoint + (auto_w_speed* w));
+        FrontRightDrive.setPower((auto_y_speed * y) * startPoint + (auto_x_speed * x) * startPoint - (auto_w_speed * w));
+        BackLeftDrive.setPower((auto_y_speed * y) * startPoint + (auto_x_speed * x) * startPoint + (auto_w_speed * w));
+        BackRightDrive.setPower((auto_y_speed * y) * startPoint - (auto_x_speed * x) * startPoint - (auto_w_speed * w));
     }
 
+    public void teleDrive(double x, double y, double w) {
+        FrontLeftDrive.setPower((y_speed * y) - (x_speed * x)+ (w_speed* w));
+        FrontRightDrive.setPower((y_speed * y) + (x_speed * x) - (w_speed * w));
+        BackLeftDrive.setPower((y_speed * y) + (x_speed * x) + (w_speed * w));
+        BackRightDrive.setPower((y_speed * y) - (x_speed * x) - (w_speed * w));
+    }
+
+    /**
+     * Uses gamepad1 to use
+     */
     public void c_drive(){
-        drive(
-                gamepad1.left_stick_x,
-                gamepad1.left_stick_y,
-                    gamepad1.right_stick_x
+        teleDrive(
+                -gamepad1.left_stick_x,
+                -gamepad1.left_stick_y,
+                gamepad1.right_stick_x
         );
     }
 
@@ -231,279 +262,5 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
      */
 
 
-
-
-
-
-    /*
-    Why does Waldo wear stripes?
-
-    Because he doesnt want to be spotted
-     */
-    /*public void encoderDriveWithSpeed(double speed, double desired) {
-        //variables that store initial encoder values for the four motors
-        double FrontLeftInitial = FrontLeftDrive.getCurrentPosition();
-        double FrontRightInitial = FrontRightDrive.getCurrentPosition();
-        double BackLeftInitial = BackLeftDrive.getCurrentPosition();
-        double BackRightInitial = BackRightDrive.getCurrentPosition();
-        //Front Back movement
-        while (true) {
-            //Front Left Motor movement
-            if (desired + FrontLeftInitial > FrontLeftDrive.getCurrentPosition() + 10) {
-                FrontLeftDrive.setPower(speed);
-            } else if (desired + FrontLeftInitial < FrontLeftDrive.getCurrentPosition() - 10) {
-                FrontLeftDrive.setPower(-speed);
-            } else {
-                FrontLeftDrive.setPower(0);
-            }
-
-            //Front Right Motor movement
-            if (desired + FrontRightInitial > FrontRightDrive.getCurrentPosition() + 10) {
-                FrontRightDrive.setPower(speed);
-            } else if (desired + FrontRightInitial < FrontRightDrive.getCurrentPosition() - 10) {
-                FrontRightDrive.setPower(-speed);
-            } else {
-                FrontRightDrive.setPower(0);
-            }
-
-            //Back Left Motor movement
-            if (desired + BackLeftInitial > BackLeftDrive.getCurrentPosition() + 10) {
-                BackLeftDrive.setPower(speed);
-            } else if (desired + FrontLeftInitial < BackLeftDrive.getCurrentPosition() - 10) {
-                BackLeftDrive.setPower(-speed);
-            } else {
-                BackLeftDrive.setPower(0);
-            }
-
-            //Back Right Motor movement
-            if (desired + BackRightInitial > BackRightDrive.getCurrentPosition() + 10) {
-                BackRightDrive.setPower(speed);
-            } else if (desired + FrontLeftInitial < BackRightDrive.getCurrentPosition() - 10) {
-                BackRightDrive.setPower(-speed);
-            } else {
-                BackRightDrive.setPower(0);
-            }
-
-            //Ends loop when all motors reach desired position
-            if (FrontLeftDrive.getPower() == 0) {
-                if (FrontRightDrive.getPower() == 0) {
-                    if (BackLeftDrive.getPower() == 0) {
-                        if (BackRightDrive.getPower() == 0) {
-                            return;
-                        }
-                    }
-                }
-            }
-            /*if (desired + FrontLeftInitial < FrontLeftDrive.getCurrentPosition() + 10 &&
-                    desired + FrontLeftInitial > FrontLeftDrive.getCurrentPosition() - 10){
-                if (desired + FrontRightInitial < FrontRightDrive.getCurrentPosition() + 10 &&
-                        desired + FrontRightInitial > FrontRightDrive.getCurrentPosition() - 10) {
-                    if (desired + BackLeftInitial < BackLeftDrive.getCurrentPosition() + 10 &&
-                            desired + BackLeftInitial > BackLeftDrive.getCurrentPosition() - 10) {
-                        if (desired + BackRightInitial < BackRightDrive.getCurrentPosition() + 10 &&
-                                desired + BackRightInitial > BackRightDrive.getCurrentPosition() - 10) {
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-    }*/
-
-    /*public void encoderStrafeWithSpeed(double speed, double desired) {
-        //variables that store initial encoder values for the four motors
-        double FrontLeftInitial = FrontLeftDrive.getCurrentPosition();
-        double FrontRightInitial = FrontRightDrive.getCurrentPosition();
-        double BackLeftInitial = BackLeftDrive.getCurrentPosition();
-        double BackRightInitial = BackRightDrive.getCurrentPosition();
-        //Constant that converts distance of strafing into distance the wheels need to rotate
-        double constant = 1.7;
-        //Strafing movement
-        while (true) {
-            //if robot needs to strafe right
-            if (desired > 0) {
-                if (constant * desired + FrontLeftInitial > FrontLeftDrive.getCurrentPosition() + 10) {
-                    FrontLeftDrive.setPower(-speed);
-                } else {
-                    FrontLeftDrive.setPower(0);
-                }
-                if (constant * desired + FrontRightInitial > FrontRightDrive.getCurrentPosition() + 10) {
-                    FrontRightDrive.setPower(-speed);
-                } else {
-                    FrontRightDrive.setPower(0);
-                }
-                if (constant * desired + BackLeftInitial > BackLeftDrive.getCurrentPosition() + 10) {
-                    BackLeftDrive.setPower(speed);
-                } else {
-                    BackLeftDrive.setPower(0);
-                }
-                if (constant * desired + BackRightInitial > BackRightDrive.getCurrentPosition() + 10) {
-                    BackRightDrive.setPower(speed);
-                } else {
-                    BackRightDrive.setPower(0);
-                }
-                //if robot needs to strafe left
-            } else {
-                if (constant * desired + FrontLeftInitial > FrontLeftDrive.getCurrentPosition() + 10) {
-                    FrontLeftDrive.setPower(speed);
-                } else {
-                    FrontLeftDrive.setPower(0);
-                }
-                if (constant * desired + FrontRightInitial > FrontRightDrive.getCurrentPosition() + 10) {
-                    FrontRightDrive.setPower(speed);
-                } else {
-                    FrontRightDrive.setPower(0);
-                }
-                if (constant * desired + BackLeftInitial > BackLeftDrive.getCurrentPosition() + 10) {
-                    BackLeftDrive.setPower(-speed);
-                } else {
-                    BackLeftDrive.setPower(0);
-                }
-                if (constant * desired + BackRightInitial > BackRightDrive.getCurrentPosition() + 10) {
-                    BackRightDrive.setPower(-speed);
-                } else {
-                    BackRightDrive.setPower(0);
-                }
-            }
-            //Ends loop when all motors reach desired position
-            if (FrontLeftDrive.getPower() == 0){
-                if (FrontRightDrive.getPower() == 0) {
-                    if (BackLeftDrive.getPower() == 0) {
-                        if (BackRightDrive.getPower() == 0) {
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-    }*/
-
-    /*public void encoderRotationWithSpeed(double speed, double desired) {
-        //variables that store initial encoder values for the four motors
-        double FrontLeftInitial = FrontLeftDrive.getCurrentPosition();
-        double FrontRightInitial = FrontRightDrive.getCurrentPosition();
-        double BackLeftInitial = BackLeftDrive.getCurrentPosition();
-        double BackRightInitial = BackRightDrive.getCurrentPosition();
-        //Constant that converts the degrees of robot rotation into distance the wheels need to rotate
-        double constant = 1.7;
-        //Rotating movement
-        while (true) {
-            //if robot needs to rotate clockwise
-            if (desired > 0) {
-                if (constant * desired + FrontLeftInitial > FrontLeftDrive.getCurrentPosition() + 10) {
-                    FrontLeftDrive.setPower(-speed);
-                } else {
-                    FrontLeftDrive.setPower(0);
-                }
-                if (constant * desired + FrontRightInitial > FrontRightDrive.getCurrentPosition() + 10) {
-                    FrontRightDrive.setPower(-speed);
-                } else {
-                    FrontRightDrive.setPower(0);
-                }
-                if (constant * desired + BackLeftInitial > BackLeftDrive.getCurrentPosition() + 10) {
-                    BackLeftDrive.setPower(-speed);
-                } else {
-                    BackLeftDrive.setPower(0);
-                }
-                if (constant * desired + BackRightInitial > BackRightDrive.getCurrentPosition() + 10) {
-                    BackRightDrive.setPower(-speed);
-                } else {
-                    BackRightDrive.setPower(0);
-                }
-                //if robot needs to rotate counter clockwise
-            } else {
-                if (constant * desired + FrontLeftInitial > FrontLeftDrive.getCurrentPosition() + 10) {
-                    FrontLeftDrive.setPower(speed);
-                } else {
-                    FrontLeftDrive.setPower(0);
-                }
-                if (constant * desired + FrontRightInitial > FrontRightDrive.getCurrentPosition() + 10) {
-                    FrontRightDrive.setPower(speed);
-                } else {
-                    FrontRightDrive.setPower(0);
-                }
-                if (constant * desired + BackLeftInitial > BackLeftDrive.getCurrentPosition() + 10) {
-                    BackLeftDrive.setPower(speed);
-                } else {
-                    BackLeftDrive.setPower(0);
-                }
-                if (constant * desired + BackRightInitial > BackRightDrive.getCurrentPosition() + 10) {
-                    BackRightDrive.setPower(speed);
-                } else {
-                    BackRightDrive.setPower(0);
-                }
-            }
-            //Ends loop when all motors reach desired position
-            if (FrontLeftDrive.getPower() == 0){
-                if (FrontRightDrive.getPower() == 0) {
-                    if (BackLeftDrive.getPower() == 0) {
-                        if (BackRightDrive.getPower() == 0) {
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-    }*/
-
-    /*public void basicEncoderDrive(double straightInches, double strafeInches) {
-        //Front Left Motor movement
-        int newFrontLeftTarget, newFrontRightTarget, newBackLeftTarget, newBackRightTarget;
-
-        // Determine new target position, and pass to motor controller
-        newFrontLeftTarget = FrontLeftDrive.getCurrentPosition() - (int) (straightInches * COUNTS_PER_INCH);
-        newFrontRightTarget = FrontRightDrive.getCurrentPosition() + (int) (straightInches * COUNTS_PER_INCH);
-        newBackLeftTarget = BackLeftDrive.getCurrentPosition() - (int) (straightInches * COUNTS_PER_INCH);
-        newBackRightTarget = BackRightDrive.getCurrentPosition() + (int) (straightInches * COUNTS_PER_INCH);
-
-        FrontLeftDrive.setTargetPosition(newFrontLeftTarget);
-        BackLeftDrive.setTargetPosition(newBackLeftTarget);
-        FrontRightDrive.setTargetPosition(newFrontRightTarget);
-        BackRightDrive.setTargetPosition(newBackRightTarget);
-
-        BackRightDrive.setPower(DRIVE_SPEED);
-        BackLeftDrive.setPower(DRIVE_SPEED);
-        FrontRightDrive.setPower(DRIVE_SPEED);
-        FrontLeftDrive.setPower(DRIVE_SPEED);
-
-        FrontLeftDrive.setMode (DcMotor.RunMode.RUN_TO_POSITION);
-        FrontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BackLeftDrive.setMode  (DcMotor.RunMode.RUN_TO_POSITION);
-        BackRightDrive.setMode (DcMotor.RunMode.RUN_TO_POSITION);
-
-        // Determine new target position, and pass to motor controller
-        double strafeConstant = 1.3;
-
-        if(strafeInches > 0) {
-            newFrontLeftTarget = FrontLeftDrive.getCurrentPosition() - (int) (strafeConstant * strafeInches * COUNTS_PER_INCH);
-            newFrontRightTarget = FrontRightDrive.getCurrentPosition() - (int) (strafeConstant * strafeInches * COUNTS_PER_INCH);
-            newBackLeftTarget = BackLeftDrive.getCurrentPosition() + (int) (strafeConstant * strafeInches * COUNTS_PER_INCH);
-            newBackRightTarget = BackRightDrive.getCurrentPosition() + (int) (strafeConstant * strafeInches * COUNTS_PER_INCH);
-        } else {
-            newFrontLeftTarget = FrontLeftDrive.getCurrentPosition() + (int) (strafeConstant * strafeInches * COUNTS_PER_INCH);
-            newFrontRightTarget = FrontRightDrive.getCurrentPosition() + (int) (strafeConstant * strafeInches * COUNTS_PER_INCH);
-            newBackLeftTarget = BackLeftDrive.getCurrentPosition() - (int) (strafeConstant * strafeInches * COUNTS_PER_INCH);
-            newBackRightTarget = BackRightDrive.getCurrentPosition() - (int) (strafeConstant * strafeInches * COUNTS_PER_INCH);
-        }
-
-        FrontLeftDrive.setTargetPosition(newFrontLeftTarget);
-        BackLeftDrive.setTargetPosition(newBackLeftTarget);
-        FrontRightDrive.setTargetPosition(newFrontRightTarget);
-        BackRightDrive.setTargetPosition(newBackRightTarget);
-
-        BackRightDrive.setPower(DRIVE_SPEED);
-        BackLeftDrive.setPower(DRIVE_SPEED);
-        FrontRightDrive.setPower(DRIVE_SPEED);
-        FrontLeftDrive.setPower(DRIVE_SPEED);
-
-        FrontLeftDrive.setMode (DcMotor.RunMode.RUN_TO_POSITION);
-        FrontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BackLeftDrive.setMode  (DcMotor.RunMode.RUN_TO_POSITION);
-        BackRightDrive.setMode (DcMotor.RunMode.RUN_TO_POSITION);
-    }*/
-    public void a_drive(){
-        accelDrive.update();
-        drive(accelDrive.motorPowers);
-    }
 }
 
