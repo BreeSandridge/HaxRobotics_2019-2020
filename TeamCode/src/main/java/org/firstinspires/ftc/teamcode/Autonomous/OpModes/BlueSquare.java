@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomous;
+package org.firstinspires.ftc.teamcode.Autonomous.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.SuperOp;
 
@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous
-public class RedPlayer extends SuperOp {
+public class BlueSquare extends SuperOp {
 
     //This uses an enum declared in SuperOp
     //It declares the first STATUS as "START"
@@ -87,10 +87,10 @@ public class RedPlayer extends SuperOp {
             time.reset();
             ran1 = !ran1;
         }
-        targetTime = 2;
-        Flipper.setPower(-1);
+        targetTime = .525;
+        FlipperMotor.setPower(.3);
         if(time.seconds() >= targetTime){
-            Flipper.setPower(0);
+            FlipperMotor.setPower(0);
             status = STATUS.START;
         }
     }
@@ -140,7 +140,7 @@ public class RedPlayer extends SuperOp {
     //if time >= 1.5 seconds, the robot stops
     //and switches the STATUS to 'GETBLOCK'
     private void approach() {
-        targetTime = 1.4;
+        targetTime = 1.5;
         drive(0.5, 0, 0);
 
         if(time.seconds() >= targetTime) {
@@ -175,7 +175,7 @@ public class RedPlayer extends SuperOp {
                 time.reset();
                 ran1 = !ran1;
             }
-            targetTime = 1.1;
+            targetTime = 1.5;
             drive(-0.5, 0, 0);
             if(time.seconds() >= targetTime) {
                 //stop
@@ -235,7 +235,8 @@ public class RedPlayer extends SuperOp {
     private void park() {
         // vision code to park the robot under the bridge
         //t_drive(0, -1, 0, 1);
-        targetTime = .9;
+        //targetTime = .9;
+        targetTime = 1.4;
         drive(0, -0.5, 0);
         if(time.seconds() >= targetTime){
             //stop robot

@@ -40,9 +40,9 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor LeftStoneRamp = null;
     public DcMotor RightStoneRamp = null;
     public DcMotor LatchMotor = null;
+    public DcMotor FlipperMotor = null;
 
-
-    public CRServo Flipper = null;
+    //public Servo Flipper = null;
     public Servo Trapdoor = null;
 
     public Servo Latch = null;
@@ -56,7 +56,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public double w_speed;
     public double auto_x_speed;
     public double auto_y_speed;
-    public double auto_w_speed;  
+    public double auto_w_speed;
     public double leftSpeedMultiplier = 1;
     public double rightSpeedMultiplier = 1;
 
@@ -91,9 +91,9 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         LatchMotor = hardwareMap.get(DcMotor.class, "LatchMotor");
         LeftStoneRamp = hardwareMap.get(DcMotor.class, "LeftStoneRamp");
         RightStoneRamp = hardwareMap.get(DcMotor.class, "RightStoneRamp");
+        FlipperMotor = hardwareMap.get (DcMotor.class, "FlipperMotor");
 
-
-        Flipper = hardwareMap.crservo.get("Flipper");
+        //Flipper = hardwareMap.get(Servo.class, "Flipper");
         Trapdoor = hardwareMap.get(Servo.class, "Trapdoor");
         Latch = hardwareMap.get(Servo.class, "Latch");
 
@@ -107,7 +107,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
 
         /**changed values **/
-        x_speed = .70;
+        x_speed = .75;
         y_speed = .40;
         w_speed = .45;
 
@@ -124,6 +124,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         tfod.activate();
         cameraParams = new CameraParams(0, 0, 0, 1280, 720, 1080);
 
+        //Flipper.setPosition(.03);
     }
 
     public void setMode(DcMotor.RunMode mode){
@@ -222,7 +223,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
 
-    boolean skystoneAligned() {
+    public boolean skystoneAligned() {
         // getUpdatedRecognitions() will return null if no new information is available since
         // the last time that call was made.
         List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();

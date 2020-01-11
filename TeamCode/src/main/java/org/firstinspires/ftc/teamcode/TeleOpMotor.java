@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name="Driver Controller")
-public class DriverController extends SuperOp {
+@TeleOp(name="Driver Controller With Motor")
+public class TeleOpMotor extends SuperOp {
 
 
     private final float latch_cd = 500;
@@ -72,7 +72,15 @@ public class DriverController extends SuperOp {
 
         //telemetry.addData("> Flipper pos: ", Flipper.getPosition());
         telemetry.addData("> gamepad2 pos: ", gamepad2.left_stick_y);
-        /*Flipper.setPosition(gamepad2.left_stick_y > .01 ?
+        if (gamepad2.left_stick_y > .05) {
+            FlipperMotor.setPower(-.3);
+        } else if (gamepad2.left_stick_y < - .05) {
+            FlipperMotor.setPower(.35);
+        } else {
+            FlipperMotor.setPower(0);
+        }
+
+       /* Flipper.setPosition(gamepad2.left_stick_y > .01 ?
                 Flipper.getPosition() + .02 < .8 ? Flipper.getPosition() + .02 : .8
                 : gamepad2.left_stick_y < -0.01 ?
                 Flipper.getPosition() - .02 > .03 ? Flipper.getPosition() -.02 : .03
@@ -85,7 +93,7 @@ public class DriverController extends SuperOp {
 //       telemetry.update();
 
         if (gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1) {
-            LatchMotor.setPower(-gamepad2.right_stick_y);
+            LatchMotor.setPower(-gamepad2.right_stick_y * .25);
         } else {
             LatchMotor.setPower(0);
         }
