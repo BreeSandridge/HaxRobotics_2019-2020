@@ -5,14 +5,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.AreshPourkavoos.Accel_Drive;
 import org.firstinspires.ftc.teamcode.Autonomous.CameraParams;
 
 import java.util.List;
+
 
 // extend OpMode so future classes will extend SuperOp Instead
 // implements is for interfaces
@@ -92,6 +93,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
+
         x_speed = .8;
         y_speed = .6;
         w_speed = .6;
@@ -108,6 +110,11 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         FrontLeftDrive.setMode(mode);
         BackLeftDrive.setMode(mode);
         BackRightDrive.setMode(mode);
+
+        // Pass the motors to the AccelDrive so it can access them
+        // (may later be bundled into a class or lookup table)
+        //accelDrive = new Accel_Drive();
+
     }
 
     // Mechanum wheel implementation
@@ -126,6 +133,13 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
                 gamepad1.left_stick_y,
                     gamepad1.right_stick_x
         );
+    }
+
+    public void drive (double[] motorVals){
+        double x = motorVals[0];
+        double y = motorVals[1];
+        double w = motorVals[2];
+        drive(x, y, w);
     }
 
     // Wait for a given number of seconds (t)
@@ -487,4 +501,9 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackLeftDrive.setMode  (DcMotor.RunMode.RUN_TO_POSITION);
         BackRightDrive.setMode (DcMotor.RunMode.RUN_TO_POSITION);
     }*/
+    public void a_drive(){
+        accelDrive.update();
+        drive(accelDrive.motorPowers);
+    }
 }
+
