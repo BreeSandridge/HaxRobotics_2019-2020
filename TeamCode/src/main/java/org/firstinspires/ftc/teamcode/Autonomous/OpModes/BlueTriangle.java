@@ -95,6 +95,7 @@ public class BlueTriangle extends SuperOp {
         }
     }
     private void start1(){
+        sleep_secs(10);
         if(ran == false){
             time.reset();
             ran = !ran;
