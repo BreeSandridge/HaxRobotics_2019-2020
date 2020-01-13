@@ -47,18 +47,18 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
     public Servo Latch = null;
 
-    public enum STATUS {FlIPPER, START, TOBLOCK, APPROACH, GETBLOCK, AWAY, TOBUILD, RELEASEBLOCK, PARK, STOP}
+    public enum BUILDSTATUS {FLIPPER, TOFOUNDATION, DRAG, AROUND, PARK, STOP}
+    public enum PLAYERSTATUS {}
 
     protected Accel_Drive accelDrive;
-    public int startPoint = 1;
+    public int startPointBuild = 1;
+    public int startPointPlayer = 1;
     public double x_speed;
     public double y_speed;
     public double w_speed;
     public double auto_x_speed;
     public double auto_y_speed;
     public double auto_w_speed;
-    public double leftSpeedMultiplier = 1;
-    public double rightSpeedMultiplier = 1;
 
     static final double COUNTS_PER_MOTOR_REV = 1440;            // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
@@ -143,10 +143,10 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     // Accepts amount to move left/right (x), move up/down (y), and rotate (w)
 
     public void drive(double x, double y, double w) {
-        FrontLeftDrive.setPower((auto_y_speed * y) * startPoint - (auto_x_speed * x) * startPoint + (auto_w_speed* w));
-        FrontRightDrive.setPower((auto_y_speed * y) * startPoint + (auto_x_speed * x) * startPoint - (auto_w_speed * w));
-        BackLeftDrive.setPower((auto_y_speed * y) * startPoint + (auto_x_speed * x) * startPoint + (auto_w_speed * w));
-        BackRightDrive.setPower((auto_y_speed * y) * startPoint - (auto_x_speed * x) * startPoint - (auto_w_speed * w));
+        FrontLeftDrive.setPower((auto_y_speed * y) * startPointPlayer - (auto_x_speed * x) * startPointBuild + (auto_w_speed* w));
+        FrontRightDrive.setPower((auto_y_speed * y) * startPointPlayer + (auto_x_speed * x) * startPointBuild - (auto_w_speed * w));
+        BackLeftDrive.setPower((auto_y_speed * y) * startPointPlayer + (auto_x_speed * x) * startPointBuild + (auto_w_speed * w));
+        BackRightDrive.setPower((auto_y_speed * y) * startPointPlayer - (auto_x_speed * x) * startPointBuild - (auto_w_speed * w));
     }
 
     public void teleDrive(double x, double y, double w) {
