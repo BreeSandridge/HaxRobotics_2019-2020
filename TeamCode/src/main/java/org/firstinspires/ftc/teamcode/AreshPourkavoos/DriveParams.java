@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.AreshPourkavoos;
 
 // DriveParams class
 
@@ -10,10 +10,20 @@ public class DriveParams {
         this.w = w;
         this.t = t;
     }
+
     DriveParams(DriveParams d){
         this.x = d.x;
         this.y = d.y;
         this.w = d.w;
         this.t = d.t;
     }
+
+    public DriveParams times(double f){
+        return new DriveParams(x*f, y*f, w*f, t);
+    }
+
+    public DriveParams times(DriveParams f){
+        return new DriveParams(x*f.x, y*f.y, w*f.w, t);
+    }
+
 }

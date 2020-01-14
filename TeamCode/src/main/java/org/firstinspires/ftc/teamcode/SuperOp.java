@@ -1,20 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.AreshPourkavoos.Accel_Drive;
-import org.firstinspires.ftc.teamcode.Autonomous.CVCamera;
-import org.firstinspires.ftc.teamcode.Autonomous.CameraParams;
-
-import java.util.List;
+import org.firstinspires.ftc.teamcode.AreshPourkavoos.DriveParams;
 
 // extend OpMode so future classes will extend SuperOp Instead
 // implements is for interfaces
@@ -29,10 +21,10 @@ in a trapezoid drive pattern.
  */
 
 public abstract class SuperOp extends OpMode implements SuperOp_Interface {
-    public DcMotor FrontLeftDrive = null;
-    public DcMotor FrontRightDrive = null;
-    public DcMotor BackLeftDrive = null;
-    public DcMotor BackRightDrive = null;
+    //public DcMotor FrontLeftDrive = null;
+    //public DcMotor FrontRightDrive = null;
+    //public DcMotor BackLeftDrive = null;
+    //public DcMotor BackRightDrive = null;
     public DcMotor LeftStoneRamp = null;
     public DcMotor RightStoneRamp = null;
     public DcMotor LatchMotor = null;
@@ -61,13 +53,15 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
     public boolean isRunning = true;
 
+
+
     @Override
     public void init() {
         // Initialize the hardware variables
-        FrontLeftDrive  = hardwareMap.get(DcMotor.class, "FrontLeftDrive");
-        FrontRightDrive = hardwareMap.get(DcMotor.class, "FrontRightDrive");
-        BackLeftDrive  = hardwareMap.get(DcMotor.class, "BackLeftDrive");
-        BackRightDrive = hardwareMap.get(DcMotor.class, "BackRightDrive");
+        //FrontLeftDrive  = hardwareMap.get(DcMotor.class, "FrontLeftDrive");
+        //FrontRightDrive = hardwareMap.get(DcMotor.class, "FrontRightDrive");
+        //BackLeftDrive  = hardwareMap.get(DcMotor.class, "BackLeftDrive");
+        //BackRightDrive = hardwareMap.get(DcMotor.class, "BackRightDrive");
         LatchMotor = hardwareMap.get(DcMotor.class, "LatchMotor");
         LeftStoneRamp = hardwareMap.get(DcMotor.class, "LeftStoneRamp");
         RightStoneRamp = hardwareMap.get(DcMotor.class, "RightStoneRamp");
@@ -78,32 +72,28 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
         // Reverse directions on the right motors
         // so that "forward" and "backward" are the same number for both sides
-        FrontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        FrontRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        BackLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        //FrontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        //FrontRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        //BackLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        //BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
         x_speed = .8;
         y_speed = .6;
         w_speed = .6;
 
+        accelDrive = new Accel_Drive(hardwareMap, startPoint,
+                x_speed, y_speed, w_speed);
     }
 
     public void setMode(DcMotor.RunMode mode){
-        FrontRightDrive.setMode(mode);
-        FrontLeftDrive.setMode(mode);
-        BackLeftDrive.setMode(mode);
-        BackRightDrive.setMode(mode);
+        accelDrive.setMode(mode);
     }
 
     // Mechanum wheel implementation
     // Accepts amount to move left/right (x), move up/down (y), and rotate (w)
 
     public void drive(double x, double y, double w) {
-        FrontLeftDrive.setPower((y_speed * y) * startPoint - (x_speed * x) * startPoint + (w_speed* w));
-        FrontRightDrive.setPower((y_speed * y) * startPoint + (x_speed * x) * startPoint - (w_speed * w));
-        BackLeftDrive.setPower((y_speed * y) * startPoint + (x_speed * x) * startPoint + (w_speed * w));
-        BackRightDrive.setPower((y_speed * y) * startPoint - (x_speed * x) * startPoint - (w_speed * w));
+        accelDrive.drive(x, y, w);
     }
 
     public void c_drive(){
@@ -124,15 +114,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         }
         catch(InterruptedException e){
         }
-    }
-
-    // Perform a trapezoid drive with a max translational velocity of (x, y)
-    // and max rotation of w lasting t seconds
-    // Would be called by implementation, is not yet
-    @Override
-    public void t_drive(double x, double y, double w, double t) {
-        DriveParams newParams = new DriveParams(x, y, w, t);
-        accelDrive.pushCommand(newParams);
     }
 
     /**
