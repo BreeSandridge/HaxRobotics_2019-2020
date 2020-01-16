@@ -27,7 +27,6 @@ public abstract class BuildSuperOp extends SuperOp {
         telemetry.addData("Back Left: ", BackLeftDrive.getCurrentPosition());
         telemetry.addData("Back Right: ", BackRightDrive.getCurrentPosition());
         telemetry.addData("Front Left: ", FrontLeftDrive.getCurrentPosition());
-        telemetry.addData("Latch Position: ", Latch.getPosition());
 
         currPosition = LatchMotor.getCurrentPosition();
         //switch statements for changing the status of the robot
@@ -54,7 +53,7 @@ public abstract class BuildSuperOp extends SuperOp {
         drive(-.5,0,0);
         if(time.seconds() >= targetTime){
             drive(0,0,0);
-            Latch.setPosition(1);
+            LatchMotor.setPower(0.5);
             time.reset();
         }
     }

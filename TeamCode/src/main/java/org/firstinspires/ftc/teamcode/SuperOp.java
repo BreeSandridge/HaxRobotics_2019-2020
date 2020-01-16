@@ -95,7 +95,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
         //Flipper = hardwareMap.get(Servo.class, "Flipper");
         Trapdoor = hardwareMap.get(Servo.class, "Trapdoor");
-        Latch = hardwareMap.get(Servo.class, "Latch");
 
         // Reverse directions on the right motors
         // so that "forward" and "backward" are the same number for both sides
