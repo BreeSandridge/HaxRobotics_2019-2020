@@ -51,7 +51,7 @@ public abstract class BuildSuperOp extends SuperOp {
     }
     public void toFoundation(){
         targetTime = 1.5;
-        drive(0,-0.5,0);
+        drive(-.5,0,0);
         if(time.seconds() >= targetTime){
             drive(0,0,0);
             Latch.setPosition(1);
@@ -59,7 +59,7 @@ public abstract class BuildSuperOp extends SuperOp {
         }
     }
     public void drag(){
-        drive(0,0.5,0);
+        drive(0.5,0,0);
         if(time.seconds() >= targetTime){
             drive(0,0,0);
             Latch.setPosition(0);
@@ -68,23 +68,23 @@ public abstract class BuildSuperOp extends SuperOp {
     }
     public void around(){
         if(time.seconds() <= 0.5){
-            drive(-0.5,0,0);
+            drive(0,-0.5,0);
         }
         drive(0,0,0);
         sleep_secs(0.4);
         if(time.seconds() <= 1.5 && time.seconds() > 0.5){
-            drive(0,-0.5,0);
+            drive(-0.5,0,0);
 
         }
         drive(0,0,0);
         sleep_secs(0.4);
         if(time.seconds() <= 2 && time.seconds() > 1.5){
-            drive(0.5,0,0);
+            drive(0,0.5,0);
         }
         drive(0,0,0);
         sleep_secs(0.4);
         if(time.seconds() <= 2.5 && time.seconds() > 2){
-            drive(0,0.5,0);
+            drive(0.5,0,0);
         }
         drive(0,0,0);
         sleep_secs(0.4);
