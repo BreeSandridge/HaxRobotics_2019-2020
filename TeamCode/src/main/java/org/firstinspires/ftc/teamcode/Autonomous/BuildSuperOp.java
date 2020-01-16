@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.SuperOp;
 @Autonomous
 public abstract class BuildSuperOp extends SuperOp {
-
     private ElapsedTime time = new ElapsedTime();
     private double targetTime;
     private ElapsedTime arm = new ElapsedTime();
@@ -75,6 +74,7 @@ public abstract class BuildSuperOp extends SuperOp {
         sleep_secs(0.4);
         if(time.seconds() <= 1.5 && time.seconds() > 0.5){
             drive(0,-0.5,0);
+
         }
         drive(0,0,0);
         sleep_secs(0.4);

@@ -47,7 +47,6 @@ public class RedTriangle extends BuildSuperOp {
                 status = BUILDSTATUS.PARK;
                 break;
             case PARK:
-                //time.reset();
                 park();
                 status = BUILDSTATUS.STOP;
                 break;
