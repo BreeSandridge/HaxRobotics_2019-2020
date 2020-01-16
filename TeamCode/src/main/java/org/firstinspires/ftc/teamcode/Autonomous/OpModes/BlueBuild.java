@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomous.OpModes;
+/*package org.firstinspires.ftc.teamcode.Autonomous.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.SuperOp;
 
@@ -126,7 +126,7 @@ public class BlueBuild extends SuperOp {
         */
 
         // set movement values to go towards block
-        if(time.seconds()-targetTime > 0) {
+ /*       if(time.seconds()-targetTime > 0) {
             //stop
             drive(0,0,0);
             //sleep_secs(0.5);
@@ -215,7 +215,7 @@ public class BlueBuild extends SuperOp {
                 LatchMotor.setPower(0);
                 time.reset();
                 status = STATUS.PARK;
-            } */
+            }
         }
     }
     private void release(){
@@ -253,4 +253,4 @@ public class BlueBuild extends SuperOp {
     private void stop1(){
         drive(0,0,0);
     }
-}
+} */

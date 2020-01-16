@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomous.VisionOpModes;
+/*package org.firstinspires.ftc.teamcode.Autonomous.VisionOpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.SuperOp;
 
@@ -77,7 +77,7 @@ public class VisionBlueBuild extends SuperOp {
                 // vision code
                 // if skystone is sighted
                 /*
-                 */
+
 
                 // set movement values to go towards block
                 if(time.seconds()-targetTime > 0 || skystoneAligned()) {
@@ -116,4 +116,4 @@ public class VisionBlueBuild extends SuperOp {
         }
     }
 
-}
+} */

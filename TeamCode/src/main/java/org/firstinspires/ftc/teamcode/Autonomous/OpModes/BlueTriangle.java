@@ -8,7 +8,7 @@ public class BlueTriangle extends BuildSuperOp {
 
     //This uses an enum declared in SuperOp
     //It declares the first STATUS as "START"
-    private BUILDSTATUS status = BUILDSTATUS.FLIPPER;
+    public BUILDSTATUS status = BUILDSTATUS.FLIPPER;
     //create new stopwatch
 
     @Override

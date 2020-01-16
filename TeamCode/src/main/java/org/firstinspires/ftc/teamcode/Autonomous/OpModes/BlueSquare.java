@@ -12,10 +12,10 @@ public class BlueSquare extends PlayerSuperOp {
 
     //This uses an enum declared in SuperOp
     //It declares the first STATUS as "START"
-    private STATUS status = STATUS.FLIPPER;
+    public PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
     @Override
     public void loop() {
-        startPoint = 1;
+        startPointPlayer = 1;
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
@@ -37,33 +37,26 @@ public class BlueSquare extends PlayerSuperOp {
         switch (status) {
             case FLIPPER:
                 flipper();
+                status = PLAYERSTATUS.TOBLOCK;
                 break;
-            case START:
-                start1();
-                break;
-            /*case TOBLOCK:
-                //toBlock();
-                break; */
-            case APPROACH:
-                approach();
-                break;
-            case GETBLOCK:
-                getBlock();
-                //status = STATUS.AWAY;
+            case TOBLOCK:
+                toBlock();
+                status = PLAYERSTATUS.AWAY;
                 break;
             case AWAY:
-                //time.reset();
-                //away();
+                away();
+                status = PLAYERSTATUS.AGAIN;
                 break;
-            case TOBUILD:
-                toBuild();
-                break;
-            case RELEASEBLOCK:
-                release();
-                break;
+            case AGAIN:
+                if (repeat.seconds() < 15) {
+                    again();
+                    status = PLAYERSTATUS.PARK;
+                } else {
+                    status = PLAYERSTATUS.PARK;
+                }
             case PARK:
-                //time.reset();
                 park();
+                status = PLAYERSTATUS.STOP;
                 break;
             case STOP:
                 stop1();

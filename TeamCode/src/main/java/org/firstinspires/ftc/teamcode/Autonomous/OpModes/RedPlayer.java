@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomous.OpModes;
+/*package org.firstinspires.ftc.teamcode.Autonomous.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.SuperOp;
 
@@ -51,7 +51,7 @@ public class RedPlayer extends SuperOp {
                 break;
             /*case TOBLOCK:
                 //toBlock();
-                break; */
+                break;
             case APPROACH:
                 approach();
                 break;
@@ -122,7 +122,7 @@ public class RedPlayer extends SuperOp {
         // vision code
         // if skystone is sighted
         /*
-         */
+
 
         // set movement values to go towards block
         if(time.seconds()-targetTime > 0) {
@@ -214,7 +214,7 @@ public class RedPlayer extends SuperOp {
                 LatchMotor.setPower(0);
                 time.reset();
                 status = STATUS.PARK;
-            } */
+            }
         }
     }
     private void release(){
@@ -252,7 +252,7 @@ public class RedPlayer extends SuperOp {
     private void stop1(){
         drive(0,0,0);
     }
-}
+} */
 
 
 
