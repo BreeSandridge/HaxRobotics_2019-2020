@@ -1,10 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.DriveParams;
-import org.firstinspires.ftc.teamcode.SuperOp;
 
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
@@ -25,7 +21,7 @@ public class Accel_Drive{
     private enum State {STOP, ACCEL, CONST, DECEL};
     private State driveState;
     public ElapsedTime elapsedTime;
-    Queue<DriveParams> commands;
+    Queue<DriveCommand> commands;
 
 
     public Accel_Drive() {
@@ -35,25 +31,25 @@ public class Accel_Drive{
     }
 
     // Called by SuperOp.t_drive()
-    // Pushes a new DriveParams object onto the queue
-    public void pushCommand(DriveParams newCommand){
+    // Pushes a new DriveCommand object onto the queue
+    public void pushCommand(DriveCommand newCommand){
         commands.add(newCommand);
     }
 
     // Begin executing a new command
     // this.x, y, w, t are the values of the current command
-    // but will (probably) later be replaced by a DriveParams object
+    // but will (probably) later be replaced by a DriveCommand object
     // Makes sure that robot is stopped,
     // but should only be called under those circumstances anyway
-    public void set(DriveParams state) {
+    public void set(DriveCommand command) {
         if (driveState != State.STOP) {
             return;
         }
 
-        this.x = state.x;
-        this.y = state.y;
-        this.w = state.w;
-        this.t = state.t;
+        this.x = command.state.x;
+        this.y = command.state.y;
+        this.w = command.state.w;
+        this.t = command.t;
         driveState = State.ACCEL;
         elapsedTime.reset();
     }
@@ -97,7 +93,7 @@ public class Accel_Drive{
                 }
                 break;
             case STOP:
-                DriveParams nextCommand;
+                DriveCommand nextCommand;
                 try{
                     nextCommand = commands.remove();
                 }
@@ -105,6 +101,34 @@ public class Accel_Drive{
                     break;
                 }
                 set(nextCommand);
+        }
+    }
+
+    public static class DriveState {
+        public double x, y, w;
+        DriveState(double x, double y, double w){
+            this.x = x;
+            this.y = y;
+            this.w = w;
+        }
+        public DriveState times(double f){
+            return new DriveState(x*f, y*f, w*f);
+        }
+        public DriveState times(DriveState f){
+            return new DriveState(x*f.x, y*f.y, w*f.w);
+        }
+    }
+
+    public static class DriveCommand {
+        public DriveState state;
+        public double t;
+        DriveCommand(double x, double y, double w, double t){
+            this.state = new DriveState(x, y, w);
+            this.t = t;
+        }
+        DriveCommand(DriveCommand d){
+            this.state = state;
+            this.t = d.t;
         }
     }
 }

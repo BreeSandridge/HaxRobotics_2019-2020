@@ -169,7 +169,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     // Would be called by implementation, is not yet
     @Override
     public void t_drive(double x, double y, double w, double t) {
-        DriveParams newParams = new DriveParams(x, y, w, t);
+        Accel_Drive.DriveCommand newParams = new Accel_Drive.DriveCommand(x, y, w, t);
         accelDrive.pushCommand(newParams);
     }
 
