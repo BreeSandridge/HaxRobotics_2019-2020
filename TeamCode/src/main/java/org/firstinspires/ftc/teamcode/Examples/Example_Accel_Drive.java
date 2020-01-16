@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.Examples;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.SuperOp;
 
 @TeleOp(name="Basic: Linear OpMode", group="Examples")
+@Disabled
 public class Example_Accel_Drive extends SuperOp {
 
     boolean last = false;

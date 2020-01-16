@@ -1,20 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.AreshPourkavoos.Accel_Drive;
-import org.firstinspires.ftc.teamcode.Autonomous.CVCamera;
-import org.firstinspires.ftc.teamcode.Autonomous.CameraParams;
-
-import java.util.List;
 
 // extend OpMode so future classes will extend SuperOp Instead
 // implements is for interfaces
@@ -29,6 +19,10 @@ in a trapezoid drive pattern.
  */
 
 public abstract class SuperOp extends OpMode implements SuperOp_Interface {
+
+    public ElapsedTime timer;
+
+
     public DcMotor FrontLeftDrive = null;
     public DcMotor FrontRightDrive = null;
     public DcMotor BackLeftDrive = null;
@@ -36,9 +30,11 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor LeftStoneRamp = null;
     public DcMotor RightStoneRamp = null;
     public DcMotor LatchMotor = null;
+    public DcMotor FlipperMotor = null;
 
-    public CRServo Flipper = null;
+    //public Servo Flipper = null;
     public Servo Trapdoor = null;
+
     public Servo Latch = null;
 
     public enum STATUS {FlIPPER, START, TOBLOCK, APPROACH, GETBLOCK, AWAY, TOBUILD, RELEASEBLOCK, PARK, STOP}
@@ -48,8 +44,12 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public double x_speed;
     public double y_speed;
     public double w_speed;
+    public double auto_x_speed;
+    public double auto_y_speed;
+    public double auto_w_speed;
     public double leftSpeedMultiplier = 1;
     public double rightSpeedMultiplier = 1;
+    public int tfodMonitorViewId;
 
     static final double COUNTS_PER_MOTOR_REV = 1440;            // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
@@ -71,10 +71,14 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         LatchMotor = hardwareMap.get(DcMotor.class, "LatchMotor");
         LeftStoneRamp = hardwareMap.get(DcMotor.class, "LeftStoneRamp");
         RightStoneRamp = hardwareMap.get(DcMotor.class, "RightStoneRamp");
+        FlipperMotor = hardwareMap.get (DcMotor.class, "FlipperMotor");
 
-        Flipper = hardwareMap.crservo.get("Flipper");
+        //Flipper = hardwareMap.get(Servo.class, "Flipper");
         Trapdoor = hardwareMap.get(Servo.class, "Trapdoor");
         Latch = hardwareMap.get(Servo.class, "Latch");
+
+        tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
         // Reverse directions on the right motors
         // so that "forward" and "backward" are the same number for both sides
@@ -83,9 +87,21 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        x_speed = .8;
-        y_speed = .6;
-        w_speed = .6;
+
+
+        /**changed values **/
+        x_speed = .75;
+        y_speed = .40;
+        w_speed = .45;
+
+        timer = new ElapsedTime();
+
+
+
+        auto_x_speed = .8;
+        auto_y_speed = .6;
+        auto_w_speed = .6;
+
 
     }
 
@@ -94,24 +110,46 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         FrontLeftDrive.setMode(mode);
         BackLeftDrive.setMode(mode);
         BackRightDrive.setMode(mode);
+
+        // Pass the motors to the AccelDrive so it can access them
+        // (may later be bundled into a class or lookup table)
+        //accelDrive = new Accel_Drive();
+
     }
 
     // Mechanum wheel implementation
     // Accepts amount to move left/right (x), move up/down (y), and rotate (w)
 
     public void drive(double x, double y, double w) {
-        FrontLeftDrive.setPower((y_speed * y) * startPoint - (x_speed * x) * startPoint + (w_speed* w));
-        FrontRightDrive.setPower((y_speed * y) * startPoint + (x_speed * x) * startPoint - (w_speed * w));
-        BackLeftDrive.setPower((y_speed * y) * startPoint + (x_speed * x) * startPoint + (w_speed * w));
-        BackRightDrive.setPower((y_speed * y) * startPoint - (x_speed * x) * startPoint - (w_speed * w));
+        FrontLeftDrive.setPower((auto_y_speed * y) * startPoint - (auto_x_speed * x) * startPoint + (auto_w_speed* w));
+        FrontRightDrive.setPower((auto_y_speed * y) * startPoint + (auto_x_speed * x) * startPoint - (auto_w_speed * w));
+        BackLeftDrive.setPower((auto_y_speed * y) * startPoint + (auto_x_speed * x) * startPoint + (auto_w_speed * w));
+        BackRightDrive.setPower((auto_y_speed * y) * startPoint - (auto_x_speed * x) * startPoint - (auto_w_speed * w));
     }
 
+    public void teleDrive(double x, double y, double w) {
+        FrontLeftDrive.setPower((y_speed * y) - (x_speed * x)+ (w_speed* w));
+        FrontRightDrive.setPower((y_speed * y) + (x_speed * x) - (w_speed * w));
+        BackLeftDrive.setPower((y_speed * y) + (x_speed * x) + (w_speed * w));
+        BackRightDrive.setPower((y_speed * y) - (x_speed * x) - (w_speed * w));
+    }
+
+    /**
+     * Uses gamepad1 to use
+     */
     public void c_drive(){
-        drive(
-                gamepad1.left_stick_x,
-                gamepad1.left_stick_y,
-                    gamepad1.right_stick_x
+        teleDrive(
+                -gamepad1.left_stick_x,
+                -gamepad1.left_stick_y,
+                gamepad1.right_stick_x
         );
+    }
+
+    public void drive (double[] motorVals){
+        double x = motorVals[0];
+        double y = motorVals[1];
+        double w = motorVals[2];
+        drive(x, y, w);
     }
 
     // Wait for a given number of seconds (t)
@@ -410,3 +448,4 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackRightDrive.setMode (DcMotor.RunMode.RUN_TO_POSITION);
     }*/
 }
+

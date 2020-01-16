@@ -1,6 +1,8 @@
-package org.firstinspires.ftc.teamcode.Autonomous;
+package org.firstinspires.ftc.teamcode.Autonomous.VisionOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
+import org.firstinspires.ftc.teamcode.Autonomous.VisionOpModes.CVCamera;
 import org.firstinspires.ftc.teamcode.SuperOp;
 
 @Autonomous

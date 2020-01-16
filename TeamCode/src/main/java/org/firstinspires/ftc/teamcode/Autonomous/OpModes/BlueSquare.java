@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomous;
+package org.firstinspires.ftc.teamcode.Autonomous.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.SuperOp;
 
@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous
-public class RedBuild extends SuperOp {
+public class BlueSquare extends SuperOp {
 
     //This uses an enum declared in SuperOp
     //It declares the first STATUS as "START"
@@ -23,7 +23,7 @@ public class RedBuild extends SuperOp {
 
     @Override
     public void loop() {
-        startPoint = -1;
+        startPoint = 1;
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
@@ -49,9 +49,9 @@ public class RedBuild extends SuperOp {
             case START:
                 start1();
                 break;
-            case TOBLOCK:
-                toBlock();
-                break;
+            /*case TOBLOCK:
+                //toBlock();
+                break; */
             case APPROACH:
                 approach();
                 break;
@@ -87,14 +87,15 @@ public class RedBuild extends SuperOp {
             time.reset();
             ran1 = !ran1;
         }
-        targetTime = 2;
-        Flipper.setPower(-1);
+        targetTime = .525;
+        FlipperMotor.setPower(.3);
         if(time.seconds() >= targetTime){
-            Flipper.setPower(0);
+            FlipperMotor.setPower(0);
             status = STATUS.START;
         }
     }
     private void start1(){
+        sleep_secs(10);
         if(ran == false){
             time.reset();
             ran = !ran;
@@ -104,7 +105,7 @@ public class RedBuild extends SuperOp {
         if(time.seconds() >= targetTime){
             drive(0,0,0);
             time.reset();
-            status = STATUS.TOBLOCK;
+            status = STATUS.APPROACH;
             ran = false;
         }
         //targetTime = .5;
@@ -140,7 +141,7 @@ public class RedBuild extends SuperOp {
     //if time >= 1.5 seconds, the robot stops
     //and switches the STATUS to 'GETBLOCK'
     private void approach() {
-        targetTime = 0.9;
+        targetTime = 1.5;
         drive(0.5, 0, 0);
 
         if(time.seconds() >= targetTime) {
@@ -175,7 +176,7 @@ public class RedBuild extends SuperOp {
                 time.reset();
                 ran1 = !ran1;
             }
-            targetTime = 1.1;
+            targetTime = 1.5;
             drive(-0.5, 0, 0);
             if(time.seconds() >= targetTime) {
                 //stop
@@ -202,8 +203,8 @@ public class RedBuild extends SuperOp {
         }
         //sets target position for grabber
         //methods to get the robot back to the build site to place down the block
-        targetTime = 2;
-        drive(0,-0.5,0);
+        targetTime = 1.9;
+        drive(0,0.5,0);
         if(time.seconds() >= targetTime) {
             drive(0, 0, 0);
             arm.reset();
@@ -235,12 +236,13 @@ public class RedBuild extends SuperOp {
     private void park() {
         // vision code to park the robot under the bridge
         //t_drive(0, -1, 0, 1);
-        targetTime = .9;
-        drive(0, 0.5, 0);
+        //targetTime = .9;
+        targetTime = 1.4;
+        drive(0, -0.5, 0);
         if(time.seconds() >= targetTime){
             //stop robot
             drive(0.5,0,0);
-            sleep_secs(0.3);
+            sleep_secs(0.4);
             drive(0,0,0);
             //switch STATUS
             status = STATUS.STOP;
@@ -277,4 +279,4 @@ SPONGEBOB SQUAREPANTS!
 SPONGEBOB SQUAREPANTS!
 SPONGEBOB SQUAREPANTS!
 SPONGEBOB SQUAREPANTS!
- */
+*/
