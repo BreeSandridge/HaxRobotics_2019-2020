@@ -42,60 +42,63 @@ public abstract class PlayerSuperOp extends SuperOp {
     // it resets the elapsed time
     // flips arm/basket down and out of the way
     public void flipper() {
+        // forces code to only run once
         if (ran1) {
             time.reset();
             ran1 = !ran1;
         }
+        // motor goes for .525 seconds and then stops
         targetTime = .525;
         FlipperMotor.setPower(.3);
-
         if (time.seconds() >= targetTime) {
-
-            if (time.seconds() >= targetTime) {
-                FlipperMotor.setPower(0);
-                time.reset();
-            }
+            FlipperMotor.setPower(0);
+            time.reset();
         }
     }
+
+    // strafe towards blocks, deploy latchMotor
     public void toBlock() {
+        // strafe towards blocks for targetTime
         targetTime = 1;
         drive(-.5, 0, 0);
         time.reset();
-
+        // forces method to only run once
         if (!ran) {
             arm.reset();
             ran = !ran;
         }
+        // deploy latch motor to pick up block
         currPosition = LatchMotor.getCurrentPosition();
         LatchMotor.setPower(0.3);
         sleep_secs(.5);
+        // make sure latch motor is is in right position and stop its movement
         if ((currPosition <= targetPosition + 13 && currPosition >= targetPosition - 6) || arm.seconds() > 1) {
             LatchMotor.setPower(0);
+            // forces statment to run once
             if (!ran1) {
                 time.reset();
                 ran1 = !ran1;
             }
+            // strafe away from blocks
             targetTime = 1.1;
             drive(-0.5, 0, 0);
+            // if elapsed time > targetTime, stop all motion
             if (time.seconds() >= targetTime) {
                 drive(0, 0, 0);
                 time.reset();
             }
         }
-
-        targetTime = 1;
-        drive(.5, 0, 0);
-        time.reset();
     }
 
-        public void away () {
+    // drive into build zone and release block
+    public void away () {
         targetTime = 1;
         drive(0, -.5, 0);
         time.reset();
         LatchMotor.setPower(-.3);
     }
 
-        public void again () {
+    public void again () {
         targetTime = 1;
         drive(0,.5,0);
 
@@ -103,50 +106,6 @@ public abstract class PlayerSuperOp extends SuperOp {
         away();
     }
 
-    public void toFoundation(){
-        targetTime = 1.5;
-        drive(0,-0.5,0);
-        if(time.seconds() >= targetTime){
-            drive(0,0,0);
-            Latch.setPosition(1);
-            time.reset();
-        }
-    }
-    public void drag(){
-        drive(0,0.5,0);
-        if(time.seconds() >= targetTime){
-            drive(0,0,0);
-            Latch.setPosition(0);
-            time.reset();
-        }
-    }
-    public void around(){
-        if(time.seconds() <= 0.5){
-            drive(-0.5,0,0);
-        }
-        drive(0,0,0);
-        sleep_secs(0.4);
-        if(time.seconds() <= 1.5 && time.seconds() > 0.5){
-            drive(0,-0.5,0);
-        }
-        drive(0,0,0);
-        sleep_secs(0.4);
-        if(time.seconds() <= 2 && time.seconds() > 1.5){
-            drive(0.5,0,0);
-        }
-        drive(0,0,0);
-        sleep_secs(0.4);
-        if(time.seconds() <= 2.5 && time.seconds() > 2){
-            drive(0,0.5,0);
-        }
-        drive(0,0,0);
-        sleep_secs(0.4);
-        if(time.seconds() <= 3 && time.seconds() > 2.5){
-            drive(0,0,-0.5);
-        }
-        drive(0,0,0);
-        sleep_secs(0.4);
-    }
     //park the robot in the middle of the alliance bridge
     //drive 1.5 seconds forward, then stop
     //switch STATUS to 'STOP'

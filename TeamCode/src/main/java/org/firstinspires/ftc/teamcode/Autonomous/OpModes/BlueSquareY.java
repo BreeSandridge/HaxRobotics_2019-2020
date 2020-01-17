@@ -1,24 +1,28 @@
 package org.firstinspires.ftc.teamcode.Autonomous.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.Autonomous.BuildSuperOp;
+import org.firstinspires.ftc.teamcode.Autonomous.PlayerSuperOp;
+import org.firstinspires.ftc.teamcode.SuperOp;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous
-public class BlueTriangle extends BuildSuperOp {
+public class BlueSquareY extends PlayerSuperOp {
 
     //This uses an enum declared in SuperOp
     //It declares the first STATUS as "START"
-    public BUILDSTATUS status = BUILDSTATUS.FLIPPER;
-    //create new stopwatch
-
+    public PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
     @Override
     public void loop() {
-        startPointBuild = 1;
+        startPointPlayer = 1;
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
+        telemetry.addData("Arm", arm.seconds());
         telemetry.addData("Power", LatchMotor.getPower());
         telemetry.addData("LatchMotor Position: ", LatchMotor.getCurrentPosition());
+        telemetry.addData("Time: ", time.seconds());
         telemetry.addData("Front Right: ", FrontRightDrive.getCurrentPosition());
         telemetry.addData("Back Left: ", BackLeftDrive.getCurrentPosition());
         telemetry.addData("Back Right: ", BackRightDrive.getCurrentPosition());
@@ -26,29 +30,34 @@ public class BlueTriangle extends BuildSuperOp {
         telemetry.addData("Status: ", status);
         telemetry.addData("Latch Position: ", Latch.getPosition());
 
+        currPosition = LatchMotor.getCurrentPosition();
         //switch statements for changing the status of the robot
         //this allows us to use different code for each status
         //there are methods created below the switch statement for easier reading
         switch (status) {
             case FLIPPER:
                 flipper();
-                status = BUILDSTATUS.TOFOUNDATION;
+                status = PLAYERSTATUS.TOBLOCK;
                 break;
-            case TOFOUNDATION:
-                toFoundation();
-                status = BUILDSTATUS.DRAG;
+            case TOBLOCK:
+                toBlock();
+                status = PLAYERSTATUS.AWAY;
                 break;
-            case DRAG:
-                drag();
-                status = BUILDSTATUS.AROUND;
+            case AWAY:
+                away();
+                status = PLAYERSTATUS.AGAIN;
                 break;
-            case AROUND:
-                around();
-                status = BUILDSTATUS.PARKY;
+            case AGAIN:
+                if (repeat.seconds() < 15) {
+                    again();
+                    status = PLAYERSTATUS.PARKY;
+                } else {
+                    status = PLAYERSTATUS.PARKY;
+                }
                 break;
             case PARKY:
                 park();
-                status = BUILDSTATUS.STOP;
+                status = PLAYERSTATUS.STOP;
                 break;
             case STOP:
                 stop1();
@@ -56,4 +65,3 @@ public class BlueTriangle extends BuildSuperOp {
         }
     }
 }
-

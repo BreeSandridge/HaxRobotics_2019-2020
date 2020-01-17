@@ -40,6 +40,7 @@ public abstract class BuildSuperOp extends SuperOp {
     // it resets the elapsed time
     // flips arm/basket down and out of the way
     public void flipper(){
+        // forces code to only run once
         if(ran1){
             time.reset();
             ran1 = !ran1;

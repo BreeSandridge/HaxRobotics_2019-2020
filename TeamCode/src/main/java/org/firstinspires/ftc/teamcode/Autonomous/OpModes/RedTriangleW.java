@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.Autonomous.BuildSuperOp;
 
 @Autonomous
-public class RedTriangle extends BuildSuperOp {
+public class RedTriangleW extends BuildSuperOp {
 
     //This uses an enum declared in SuperOp
     //It declares the first STATUS as "START"
@@ -44,10 +44,10 @@ public class RedTriangle extends BuildSuperOp {
                 break;
             case AROUND:
                 around();
-                status = BUILDSTATUS.PARKY;
+                status = BUILDSTATUS.PARKW;
                 break;
-            case PARKY:
-                park();
+            case PARKW:
+                parkW();
                 status = BUILDSTATUS.STOP;
                 break;
             case STOP:
