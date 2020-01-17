@@ -34,9 +34,9 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
     //public Servo Flipper = null;
     public Servo Trapdoor = null;
-
     public Servo Latch = null;
 
+    // enums used in build/player autonomi
     public enum BUILDSTATUS {FLIPPER, TOFOUNDATION, DRAG, AROUND, MOVE, PARKY, PARKW, STOP}
     public enum PLAYERSTATUS {FLIPPER, TOBLOCK, AWAY, AGAIN, AWAY2, PARKY, PARKW, STOP}
 
