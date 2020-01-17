@@ -132,6 +132,19 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackRightDrive.setPower((y_speed * y) - (x_speed * x) - (w_speed * w));
     }
     */
+
+    public void updateMotors(){
+        FrontLeftDrive.setPower(accelDrive.motorPowers[0]);
+        FrontRightDrive.setPower(accelDrive.motorPowers[1]);
+        BackLeftDrive.setPower(accelDrive.motorPowers[2]);
+        BackRightDrive.setPower(accelDrive.motorPowers[3]);
+    }
+
+    public void updateAndDrive(){
+        accelDrive.update();
+        updateMotors();
+    }
+
     public void drive(double x, double y, double w){
         accelDrive.drive(
                 auto_x_speed*x*startPoint,
@@ -139,6 +152,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
                 auto_w_speed*w);
         updateMotors();
     }
+
     public void teleDrive(double x, double y, double w){
         accelDrive.drive(
                 x_speed*x,
@@ -146,12 +160,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
                 w_speed*w);
         updateMotors();
     }
-    public void updateMotors(){
-        FrontLeftDrive.setPower(accelDrive.motorPowers[0]);
-        FrontRightDrive.setPower(accelDrive.motorPowers[1]);
-        BackLeftDrive.setPower(accelDrive.motorPowers[2]);
-        BackRightDrive.setPower(accelDrive.motorPowers[3]);
-    }
+
     /**
      * Uses gamepad1 to use
      */
@@ -163,12 +172,14 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         );
     }
 
+    /*
     public void drive (double[] motorVals){
         double x = motorVals[0];
         double y = motorVals[1];
         double w = motorVals[2];
         drive(x, y, w);
     }
+     */
 
     // Wait for a given number of seconds (t)
     // Is currently deprecated and will likely remain that way,
