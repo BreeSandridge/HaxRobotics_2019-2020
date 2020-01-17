@@ -16,44 +16,39 @@ The SuperOp class contains an Accel_Drive object to maintain abstraction
 public class Accel_Drive{
 
     // Variable declarations
-    public double[] motorPowers = {0.0, 0.0, 0.0};
-    private double x, y, w, t;
+    private DriveCommand currentCommand;
     private enum State {STOP, ACCEL, CONST, DECEL};
     private State driveState;
-    public ElapsedTime elapsedTime;
-    Queue<DriveCommand> commands;
-
+    private ElapsedTime elapsedTime;
+    private Queue<DriveCommand> commands;
+    public double[] motorPowers = {0, 0, 0, 0};
 
     public Accel_Drive() {
+
         elapsedTime = new ElapsedTime();
         elapsedTime.reset();
         commands = new LinkedList<>();
+
     }
 
     // Called by SuperOp.t_drive()
-    // Pushes a new DriveCommand object onto the queue
+    // Pushes a new DriveState object onto the queue
     public void pushCommand(DriveCommand newCommand){
         commands.add(newCommand);
     }
 
     // Begin executing a new command
     // this.x, y, w, t are the values of the current command
-    // but will (probably) later be replaced by a DriveCommand object
+    // but will (probably) later be replaced by a DriveState object
     // Makes sure that robot is stopped,
     // but should only be called under those circumstances anyway
-    public void set(DriveCommand command) {
-        if (driveState != State.STOP) {
+    public void set(DriveCommand newCommand) {
+        if (driveState != State.STOP)
             return;
-        }
-
-        this.x = command.state.x;
-        this.y = command.state.y;
-        this.w = command.state.w;
-        this.t = command.t;
+        currentCommand = newCommand;
         driveState = State.ACCEL;
         elapsedTime.reset();
     }
-
 
     // This is the bread and butter of the trapezoid drive implementation
     // driveState variable can be one of ACCEL, CONST, DECEL, or STOP
@@ -61,47 +56,52 @@ public class Accel_Drive{
     // If const, does nothing (motors set once at the end of accel period)
     // If stopped, checks the queue for the next command
     public void update() {
-        double portion = elapsedTime.seconds() / t;
+        double buffer = 0.1;
+        double portion = elapsedTime.seconds() / currentCommand.t;
+        DriveState currentState = currentCommand.state;
         switch (driveState){
             case ACCEL:
-                if (portion < 0.1) {
-                    motorPowers[0] = x * portion * 10;
-                    motorPowers[1] = y * portion * 10;
-                    motorPowers[2] = w * portion * 10;
-                }
+                if (portion < buffer)
+                    drive(currentState.times(portion/buffer));
                 else{
-                    motorPowers[0] = x;
-                    motorPowers[1] = y;
-                    motorPowers[2] = w;
+                    drive(currentState);
                     driveState = State.CONST;
                 }
                 break;
             case CONST:
-                if (portion > 0.9)
+                if (portion > 1-buffer)
                     driveState = State.DECEL;
                 break;
             case DECEL:
-                if (portion < 1) {
-                    motorPowers[0] = x * (1 - portion) * 10;
-                    motorPowers[1] = y * (1 - portion) * 10;
-                    motorPowers[2] = w * (1 - portion) * 10;
-                } else{
+                if (portion < 1)
+                    drive(currentState.times((1-portion)/buffer));
+                else{
                     driveState = State.STOP;
-                    motorPowers[0] = 0;
-                    motorPowers[1] = 1;
-                    motorPowers[2] = 2;
+                    drive(0, 0, 0);
                 }
                 break;
             case STOP:
                 DriveCommand nextCommand;
-                try{
+                try {
                     nextCommand = commands.remove();
                 }
                 catch (NoSuchElementException e){
+
                     break;
                 }
                 set(nextCommand);
         }
+    }
+
+    public void drive(DriveState state) {
+        drive(state.x, state.y, state.w);
+    }
+
+    public void drive(double x, double y, double w) {
+        motorPowers[0] = y-x+w;
+        motorPowers[1] = y+x-w;
+        motorPowers[2] = y+x+w;
+        motorPowers[3] = y-x-w;
     }
 
     public static class DriveState {
@@ -127,7 +127,7 @@ public class Accel_Drive{
             this.t = t;
         }
         DriveCommand(DriveCommand d){
-            this.state = state;
+            this.state = d.state;
             this.t = d.t;
         }
     }
