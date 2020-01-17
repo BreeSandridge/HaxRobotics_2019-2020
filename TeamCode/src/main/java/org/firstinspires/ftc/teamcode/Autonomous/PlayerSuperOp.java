@@ -1,16 +1,19 @@
+/* none of this code is tested, use at your own risk
+ * all of these methods are distinctly designed for the Player half of the field
+ * all player autonomi extend this class  */
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.teamcode.SuperOp;
+
 @Autonomous
 public abstract class PlayerSuperOp extends SuperOp {
-
+    // declares elapsed time and other variables
     public ElapsedTime time = new ElapsedTime();
-    public double targetTime;
     public ElapsedTime arm = new ElapsedTime();
     public ElapsedTime repeat = new ElapsedTime();
+    public double targetTime;
     public int currPosition;
     public int targetPosition;
     public boolean ran = false;
@@ -32,18 +35,12 @@ public abstract class PlayerSuperOp extends SuperOp {
         telemetry.addData("Latch Position: ", Latch.getPosition());
 
         currPosition = LatchMotor.getCurrentPosition();
-        //switch statements for changing the status of the robot
-        //this allows us to use different code for each status
-        //there are methods created below the switch statement for easier reading
     }
 
 
-    //this is the first method run
-    //it resets the elapsed time
-    //then switches the status to 'TOBLOCK'
-    //this is the first method run
-    //it resets the elapsed time
-    //then switches the status to 'TOBLOCK'
+    // this is the first method run
+    // it resets the elapsed time
+    // flips arm/basket down and out of the way
     public void flipper() {
         if (ran1) {
             time.reset();
@@ -185,9 +182,10 @@ public abstract class PlayerSuperOp extends SuperOp {
     }
 
 
-    //stop all motion of the robot
-    //set all motor powers to 0
+    // stop all motion of the robot
+    // set all motor powers to 0
     public void stop1(){
+        // stop
         drive(0,0,0);
         telemetry.addData("Emotion", "I hate everything!");
     }

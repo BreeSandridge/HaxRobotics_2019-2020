@@ -1,17 +1,19 @@
+/* none of this code is tested, use at your own risk
+*  all of these methods are distinctly designed for the Build half of the field
+*  all build autonomi extend this class  */
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.teamcode.SuperOp;
+
 @Autonomous
 public abstract class BuildSuperOp extends SuperOp {
+    // declares elapsed time and other variables
     public ElapsedTime time = new ElapsedTime();
     public ElapsedTime arm = new ElapsedTime();
     public double targetTime;
     public int currPosition;
-    public int targetPosition;
-    public boolean ran = false;
     public boolean ran1 = true;
 
     @Override
@@ -33,8 +35,9 @@ public abstract class BuildSuperOp extends SuperOp {
         //this allows us to use different code for each status
         //there are methods created below the switch statement for easier reading
     }
-    //this is the first method run
-    //it resets the elapsed time
+
+    // this is the first method run
+    // it resets the elapsed time
     // flips arm/basket down and out of the way
     public void flipper(){
         if(ran1){
