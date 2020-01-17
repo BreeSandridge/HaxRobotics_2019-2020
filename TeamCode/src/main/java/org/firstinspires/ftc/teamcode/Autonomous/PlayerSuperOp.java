@@ -92,49 +92,58 @@ public abstract class PlayerSuperOp extends SuperOp {
 
     // drive into build zone and release block
     public void away () {
+        // drive into build zone
         targetTime = 1;
         drive(0, -.5, 0);
         time.reset();
+        // release block
         LatchMotor.setPower(-.3);
     }
 
+    // this method only runs if its been less then 15 seconds
+    // it drive forward then calls toBlock() and away()
     public void again () {
+        // drive forward
         targetTime = 1;
         drive(0,.5,0);
-
+        // call methods
         toBlock();
         away();
     }
 
-    //park the robot in the middle of the alliance bridge
-    //drive 1.5 seconds forward, then stop
-    //switch STATUS to 'STOP'
+
+    // park over midline close to neutral bridge
+    // move forward then strafe right
     public void park() {
-        // vision code to park the robot under the bridge
-        //t_drive(0, -1, 0, 1);
-        //targetTime = .9;
+        // move forward a set amount of time
         targetTime = 1.4;
         drive(0, 0.5, 0);
+        // if the elapsed time is greater than the
+        // time the robot moves forward, then the robot strafes left
         if(time.seconds() >= targetTime){
-            //stop robot
             drive(0.5,0,0);
             sleep_secs(0.3);
             drive(0,0,0);
-            //switch STATUS
-        }
-    }
-    public void parkW() {
-        targetTime = 1.4;
-        drive(0, -0.5, 0);
-        if(time.seconds() >= targetTime){
-            //stop robot
-            drive(0.5,0,0);
-            sleep_secs(0.3);
-            drive(0,0,0);
-            //switch STATUS
         }
     }
 
+
+    // park over midline against wall
+    // move forward then strafe left
+    public void parkW() {
+        // move forward a set amount of time
+        targetTime = 1.4;
+        drive(0, -0.5, 0);
+        // if the elapsed time is greater than the
+        // time the robot moves forward, then the robot strafes right
+        if(time.seconds() >= targetTime){
+            drive(0.5,0,0);
+            sleep_secs(0.3);
+            drive(0,0,0);
+        }
+    }
+
+    // move backwards
     public void away2() {
         targetTime = 1;
         drive(0, -0.5, 0);
