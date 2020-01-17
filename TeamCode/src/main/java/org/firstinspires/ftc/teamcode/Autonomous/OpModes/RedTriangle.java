@@ -44,9 +44,9 @@ public class RedTriangle extends BuildSuperOp {
                 break;
             case AROUND:
                 around();
-                status = BUILDSTATUS.PARK;
+                status = BUILDSTATUS.PARKY;
                 break;
-            case PARK:
+            case PARKY:
                 park();
                 status = BUILDSTATUS.STOP;
                 break;

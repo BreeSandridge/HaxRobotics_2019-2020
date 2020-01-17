@@ -50,11 +50,11 @@ public class BlueSquare extends PlayerSuperOp {
             case AGAIN:
                 if (repeat.seconds() < 15) {
                     again();
-                    status = PLAYERSTATUS.PARK;
+                    status = PLAYERSTATUS.PARKY;
                 } else {
-                    status = PLAYERSTATUS.PARK;
+                    status = PLAYERSTATUS.PARKY;
                 }
-            case PARK:
+            case PARKY:
                 park();
                 status = PLAYERSTATUS.STOP;
                 break;
