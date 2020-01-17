@@ -98,13 +98,11 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
         timer = new ElapsedTime();
 
-
-
         auto_x_speed = .8;
         auto_y_speed = .6;
         auto_w_speed = .6;
 
-
+        accelDrive = new Accel_Drive();
     }
 
     public void setMode(DcMotor.RunMode mode){
@@ -121,7 +119,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
     // Mechanum wheel implementation
     // Accepts amount to move left/right (x), move up/down (y), and rotate (w)
-
+    /*
     public void drive(double x, double y, double w) {
         FrontLeftDrive.setPower((auto_y_speed * y) * startPointPlayer - (auto_x_speed * x) * startPointBuild + (auto_w_speed* w));
         FrontRightDrive.setPower((auto_y_speed * y) * startPointPlayer + (auto_x_speed * x) * startPointBuild - (auto_w_speed * w));
@@ -135,7 +133,27 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackLeftDrive.setPower((y_speed * y) + (x_speed * x) + (w_speed * w));
         BackRightDrive.setPower((y_speed * y) - (x_speed * x) - (w_speed * w));
     }
-
+    */
+    public void drive(double x, double y, double w){
+        accelDrive.drive(
+                auto_x_speed*x*startPoint,
+                auto_y_speed*y*startPoint,
+                auto_w_speed*w);
+        updateMotors();
+    }
+    public void teleDrive(double x, double y, double w){
+        accelDrive.drive(
+                x_speed*x,
+                y_speed*y,
+                w_speed*w);
+        updateMotors();
+    }
+    public void updateMotors(){
+        FrontLeftDrive.setPower(accelDrive.motorPowers[0]);
+        FrontRightDrive.setPower(accelDrive.motorPowers[1]);
+        BackLeftDrive.setPower(accelDrive.motorPowers[2]);
+        BackRightDrive.setPower(accelDrive.motorPowers[3]);
+    }
     /**
      * Uses gamepad1 to use
      */
@@ -171,7 +189,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     // Would be called by implementation, is not yet
     @Override
     public void t_drive(double x, double y, double w, double t) {
-        DriveParams newParams = new DriveParams(x, y, w, t);
+        Accel_Drive.DriveCommand newParams = new Accel_Drive.DriveCommand(x, y, w, t);
         accelDrive.pushCommand(newParams);
     }
 
