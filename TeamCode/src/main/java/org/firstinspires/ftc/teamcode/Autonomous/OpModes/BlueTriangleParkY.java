@@ -4,11 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BuildSuperOp;
 @Autonomous
-public class RedTrianglePark extends BuildSuperOp {
+public class BlueTriangleParkY extends BuildSuperOp {
     public BUILDSTATUS status = BUILDSTATUS.FLIPPER;
     @Override
     public void loop() {
-        startPointBuild = -1;
+        startPointBuild = 1;
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
@@ -29,7 +29,7 @@ public class RedTrianglePark extends BuildSuperOp {
                 flipper();
                 status = BUILDSTATUS.TOFOUNDATION;
                 break;
-            case PARK:
+            case PARKY:
                 park();
                 status = BUILDSTATUS.STOP;
                 break;

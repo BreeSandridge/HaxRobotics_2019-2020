@@ -167,6 +167,23 @@ public abstract class PlayerSuperOp extends SuperOp {
             //switch STATUS
         }
     }
+    public void parkW() {
+        targetTime = 1.4;
+        drive(0, -0.5, 0);
+        if(time.seconds() >= targetTime){
+            //stop robot
+            drive(0.5,0,0);
+            sleep_secs(0.3);
+            drive(0,0,0);
+            //switch STATUS
+        }
+    }
+
+    public void away2() {
+        targetTime = 1;
+        drive(0, -0.5, 0);
+    }
+
 
     //stop all motion of the robot
     //set all motor powers to 0

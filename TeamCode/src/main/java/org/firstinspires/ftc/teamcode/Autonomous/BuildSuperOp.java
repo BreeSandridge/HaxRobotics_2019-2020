@@ -65,6 +65,20 @@ public abstract class BuildSuperOp extends SuperOp {
             time.reset();
         }
     }
+    public void move() {
+        if(time.seconds() <= 0.5){
+            drive(0,-0.5,0);
+        }
+        drive(0,0,0);
+        sleep_secs(0.4);
+        if(time.seconds() <= 1.5 && time.seconds() > 0.5){
+            drive(-0.5,0,0);
+
+        }
+        drive(0,0,0);
+        sleep_secs(0.4);
+    }
+
     public void around(){
         if(time.seconds() <= 0.5){
             drive(0,-0.5,0);
@@ -110,6 +124,19 @@ public abstract class BuildSuperOp extends SuperOp {
             //switch STATUS
         }
     }
+
+    public void parkW() {
+        targetTime = 1.4;
+        drive(0, -0.5, 0);
+        if(time.seconds() >= targetTime){
+            //stop robot
+            drive(0.5,0,0);
+            sleep_secs(0.3);
+            drive(0,0,0);
+            //switch STATUS
+        }
+    }
+
 
     //stop all motion of the robot
     //set all motor powers to 0

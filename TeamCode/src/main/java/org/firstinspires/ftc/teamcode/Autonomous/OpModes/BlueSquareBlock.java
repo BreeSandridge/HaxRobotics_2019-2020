@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.Autonomous.OpModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
 import org.firstinspires.ftc.teamcode.Autonomous.PlayerSuperOp;
-@Autonomous
-public class BlueSquarePark extends PlayerSuperOp {
+
+public class BlueSquareBlock extends PlayerSuperOp {
     public PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
     @Override
     public void loop() {
@@ -30,10 +28,18 @@ public class BlueSquarePark extends PlayerSuperOp {
         switch (status) {
             case FLIPPER:
                 flipper();
-                status = PLAYERSTATUS.PARK;
+                status = PLAYERSTATUS.TOBLOCK;
                 break;
-            case PARK:
-                park();
+            case TOBLOCK:
+                toBlock();
+                status = PLAYERSTATUS.AWAY;
+                break;
+            case AWAY:
+                away();
+                status = PLAYERSTATUS.AWAY2;
+                break;
+            case AWAY2:
+                away2();
                 status = PLAYERSTATUS.STOP;
                 break;
             case STOP:
