@@ -57,44 +57,29 @@ public abstract class BuildSuperOp extends SuperOp {
     // move towards foundation and deploy latch
     public void toFoundation(){
         // strafe towards foundation
-        targetTime = 1.5;
-        drive(-.5,0,0);
-        // if elapsed time >1.5, deploy latch
-        if(time.seconds() >= targetTime){
-            drive(0,0,0);
+        accelDrive.pushCommand(-0.5,0,0,1.5);
+        updateAndDrive();
+        if(accelDrive.isEmpty){
             LatchMotor.setPower(0.5);
-            time.reset();
         }
     }
 
     // attach to foundation and drag to triangle
     public void drag(){
         //deploy latch and move as far as possible into triangle
-        drive(0.5,0,0);
-        if(time.seconds() >= targetTime){
-            drive(0,0,0);
-            Latch.setPosition(0);
-            time.reset();
-        }
+        LatchMotor.setPower(0);
+        accelDrive.pushCommand(0.5,0,0, 1.5);
+        updateAndDrive();
     }
 
     // this allows us to simply move out of the way of a partner
     public void move() {
         // if elapsed time >.5, move closer to build zone
-        if(time.seconds() <= 0.5){
-            drive(0,-0.5,0);
-        }
-        // stop all motion for .4 seconds
-        drive(0,0,0);
-        sleep_secs(0.4);
-        // if elapsed time <.5 but  >1.5 strafe right
-        if(time.seconds() <= 1.5 && time.seconds() > 0.5){
-            drive(-0.5,0,0);
+        accelDrive.pushCommand(0,-0.5,0,.5);
+        accelDrive.pushCommand(-0.5,0,0,1);
+        if(accelDrive.isEmpty){
 
         }
-        // stop all motion for .4 seconds
-        drive(0,0,0);
-        sleep_secs(0.4);
     }
 
     // allows the robot to move around the foundation and then push

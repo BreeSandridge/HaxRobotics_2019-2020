@@ -40,7 +40,9 @@ public class BlueTriangleW extends BuildSuperOp {
                 break;
             case DRAG:
                 drag();
-                status = BUILDSTATUS.AROUND;
+                if(accelDrive.isEmpty) {
+                    status = BUILDSTATUS.AROUND;
+                }
                 break;
             case AROUND:
                 around();
