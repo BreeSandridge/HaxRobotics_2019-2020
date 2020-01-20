@@ -20,5 +20,6 @@ public class CVTest extends SuperOp {
     @Override
     public void loop(){
         telemetry.addData("aligned: ", "%b", cvCamera.skystoneAligned());
+        telemetry.update();
     }
 }
