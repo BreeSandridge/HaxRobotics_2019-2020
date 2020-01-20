@@ -22,6 +22,7 @@ public class Accel_Drive{
     private ElapsedTime elapsedTime;
     private Queue<DriveCommand> commands;
     public double[] motorPowers = {0, 0, 0, 0};
+    public boolean isEmpty = true;
 
     public Accel_Drive() {
 
@@ -33,8 +34,13 @@ public class Accel_Drive{
 
     // Called by SuperOp.t_drive()
     // Pushes a new DriveState object onto the queue
+    public void pushCommand(double x, double y, double w, double t){
+        pushCommand(new DriveCommand(x, y, w, t));
+    }
+
     public void pushCommand(DriveCommand newCommand){
         commands.add(newCommand);
+        isEmpty = false;
     }
 
     // Begin executing a new command
@@ -84,12 +90,11 @@ public class Accel_Drive{
                 DriveCommand nextCommand;
                 try {
                     nextCommand = commands.remove();
+                    set(nextCommand);
                 }
                 catch (NoSuchElementException e){
-
-                    break;
+                    isEmpty = true;
                 }
-                set(nextCommand);
         }
     }
 
