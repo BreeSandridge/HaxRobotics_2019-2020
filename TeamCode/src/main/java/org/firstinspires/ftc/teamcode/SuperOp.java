@@ -42,7 +42,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
     protected Accel_Drive accelDrive;
     public int startPointBuild = 1;
-    public int startPointPlayer = 1;
+    public int startPoint = 1;
     public double x_speed;
     public double y_speed;
     public double w_speed;
@@ -121,10 +121,10 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     // Accepts amount to move left/right (x), move up/down (y), and rotate (w)
     /*
     public void drive(double x, double y, double w) {
-        FrontLeftDrive.setPower((auto_y_speed * y) * startPointPlayer - (auto_x_speed * x) * startPointBuild + (auto_w_speed* w));
-        FrontRightDrive.setPower((auto_y_speed * y) * startPointPlayer + (auto_x_speed * x) * startPointBuild - (auto_w_speed * w));
-        BackLeftDrive.setPower((auto_y_speed * y) * startPointPlayer + (auto_x_speed * x) * startPointBuild + (auto_w_speed * w));
-        BackRightDrive.setPower((auto_y_speed * y) * startPointPlayer - (auto_x_speed * x) * startPointBuild - (auto_w_speed * w));
+        FrontLeftDrive.setPower((auto_y_speed * y) * startPoint - (auto_x_speed * x) * startPointBuild + (auto_w_speed* w));
+        FrontRightDrive.setPower((auto_y_speed * y) * startPoint + (auto_x_speed * x) * startPointBuild - (auto_w_speed * w));
+        BackLeftDrive.setPower((auto_y_speed * y) * startPoint + (auto_x_speed * x) * startPointBuild + (auto_w_speed * w));
+        BackRightDrive.setPower((auto_y_speed * y) * startPoint - (auto_x_speed * x) * startPointBuild - (auto_w_speed * w));
     }
 
     public void teleDrive(double x, double y, double w) {
@@ -149,8 +149,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
     public void drive(double x, double y, double w){
         accelDrive.drive(
-                auto_x_speed*x*startPointBuild,
-                auto_y_speed*y*startPointPlayer,
+                auto_x_speed*x,
+                auto_y_speed*y* startPoint,
                 auto_w_speed*w);
         updateMotors();
     }

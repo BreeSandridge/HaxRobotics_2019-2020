@@ -2,10 +2,6 @@ package org.firstinspires.ftc.teamcode.Autonomous.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Autonomous.PlayerSuperOp;
-import org.firstinspires.ftc.teamcode.SuperOp;
-
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous
 public class RedSquareY extends PlayerSuperOp {
@@ -18,7 +14,7 @@ public class RedSquareY extends PlayerSuperOp {
 
     @Override
     public void loop() {
-        startPointPlayer = -1;
+        startPoint = -1;
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life

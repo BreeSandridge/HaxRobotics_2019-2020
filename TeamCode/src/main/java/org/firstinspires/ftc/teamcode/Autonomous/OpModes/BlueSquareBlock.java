@@ -6,7 +6,7 @@ public class BlueSquareBlock extends PlayerSuperOp {
     public PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
     @Override
     public void loop() {
-        startPointPlayer = 1;
+        startPoint = 1;
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
@@ -32,15 +32,23 @@ public class BlueSquareBlock extends PlayerSuperOp {
                 break;
             case TOBLOCK:
                 toBlock();
-                status = PLAYERSTATUS.AWAY;
+                if(accelDrive.isEmpty){
+                    grab();
+                    status = PLAYERSTATUS.AWAY;
+                } else updateAndDrive();
                 break;
             case AWAY:
                 away();
-                status = PLAYERSTATUS.AWAY2;
+                if(accelDrive.isEmpty){
+                    release();
+                    status = PLAYERSTATUS.AWAY2;
+                } else updateAndDrive();
                 break;
             case AWAY2:
                 away2();
-                status = PLAYERSTATUS.STOP;
+                if(accelDrive.isEmpty){
+                    status = PLAYERSTATUS.STOP;
+                } else updateAndDrive();
                 break;
             case STOP:
                 stop1();

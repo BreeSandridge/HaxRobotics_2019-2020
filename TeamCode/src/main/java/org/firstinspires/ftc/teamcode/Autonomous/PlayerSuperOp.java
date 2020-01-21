@@ -59,56 +59,54 @@ public abstract class PlayerSuperOp extends SuperOp {
     // strafe towards blocks, deploy latchMotor
     public void toBlock() {
         // strafe towards blocks for targetTime
-        targetTime = 1;
-        drive(-.5, 0, 0);
-        time.reset();
+        accelDrive.pushCommand(0.5, 0, 0, 1);
         // forces method to only run once
+    }
+    public void grab(){
         if (!ran) {
-            arm.reset();
+            time.reset();
             ran = !ran;
         }
         // deploy latch motor to pick up block
-        currPosition = LatchMotor.getCurrentPosition();
+        targetTime = 0.5;
         LatchMotor.setPower(0.3);
-        sleep_secs(.5);
         // make sure latch motor is is in right position and stop its movement
-        if ((currPosition <= targetPosition + 13 && currPosition >= targetPosition - 6) || arm.seconds() > 1) {
+        if (time.seconds() >= targetTime) { // why this? you can use elapsed time remember..?
             LatchMotor.setPower(0);
             // forces statment to run once
-            if (!ran1) {
-                time.reset();
-                ran1 = !ran1;
-            }
             // strafe away from blocks
-            targetTime = 1.1;
-            drive(-0.5, 0, 0);
-            // if elapsed time > targetTime, stop all motion
-            if (time.seconds() >= targetTime) {
-                drive(0, 0, 0);
-                time.reset();
-            }
+            accelDrive.pushCommand(-0.5,0,0,1.1);
         }
     }
 
     // drive into build zone and release block
     public void away () {
         // drive into build zone
-        targetTime = 1;
-        drive(0, -.5, 0);
-        time.reset();
+        accelDrive.pushCommand(0, -0.5, 0, 1);
+    }
+    public void release(){
         // release block
-        LatchMotor.setPower(-.3);
+        if (!ran) {
+            time.reset();
+            ran = !ran;
+        }
+        // deploy latch motor to pick up block
+        LatchMotor.setPower(-0.3);
+        // make sure latch motor is is in right position and stop its movement
+        if (time.seconds() >= targetTime) { // elapsed time...
+            LatchMotor.setPower(0);
+            // forces statment to run once
+            // strafe away from blocks
+        }
     }
 
     // this method only runs if its been less then 15 seconds
     // it drive forward then calls toBlock() and away()
     public void again () {
+        accelDrive.pushCommand(0,0.5,0,1);
+        accelDrive.pushCommand(0.5, 0, 0, 1);
+        accelDrive.pushCommand(0, -0.5, 0, 1);
         // drive forward
-        targetTime = 1;
-        drive(0,.5,0);
-        // call methods
-        toBlock();
-        away();
     }
 
 
@@ -116,37 +114,21 @@ public abstract class PlayerSuperOp extends SuperOp {
     // move forward then strafe right
     public void park() {
         // move forward a set amount of time
-        targetTime = 1.4;
-        drive(0, 0.5, 0);
-        // if the elapsed time is greater than the
-        // time the robot moves forward, then the robot strafes left
-        if(time.seconds() >= targetTime){
-            drive(0.5,0,0);
-            sleep_secs(0.3);
-            drive(0,0,0);
-        }
+        accelDrive.pushCommand(0,0.5,0,1.4);
+        accelDrive.pushCommand(0.5,0,0,0.3);
     }
 
 
     // park over midline against wall
     // move forward then strafe left
     public void parkW() {
-        // move forward a set amount of time
-        targetTime = 1.4;
-        drive(0, -0.5, 0);
-        // if the elapsed time is greater than the
-        // time the robot moves forward, then the robot strafes right
-        if(time.seconds() >= targetTime){
-            drive(0.5,0,0);
-            sleep_secs(0.3);
-            drive(0,0,0);
-        }
+        accelDrive.pushCommand(0,-0.5,0,1.4);
+        accelDrive.pushCommand(0.5,0,0,0.3);
     }
 
     // move backwards
     public void away2() {
-        targetTime = 1;
-        drive(0, -0.5, 0);
+        accelDrive.pushCommand(0,-0.5,0,1);
     }
 
 
@@ -155,6 +137,6 @@ public abstract class PlayerSuperOp extends SuperOp {
     public void stop1(){
         // stop
         drive(0,0,0);
-        telemetry.addData("Emotion", "I hate everything!");
+        telemetry.addData("Emotion: ", "I hate everything!");
     }
 }

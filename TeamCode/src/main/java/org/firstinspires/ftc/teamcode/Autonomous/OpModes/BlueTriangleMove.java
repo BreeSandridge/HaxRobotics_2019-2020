@@ -32,11 +32,13 @@ public class BlueTriangleMove extends BuildSuperOp {
         switch (status) {
             case FLIPPER:
                 flipper();
-                status = BUILDSTATUS.TOFOUNDATION;
+                status = BUILDSTATUS.AROUND;
                 break;
             case AROUND:
                 around();
-                status = BUILDSTATUS.MOVE;
+                if(accelDrive.isEmpty){
+                    status = BUILDSTATUS.MOVE;
+                } else updateAndDrive();
                 break;
             case MOVE:
                 move();

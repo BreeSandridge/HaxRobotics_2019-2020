@@ -57,19 +57,15 @@ public abstract class BuildSuperOp extends SuperOp {
     // move towards foundation and deploy latch
     public void toFoundation(){
         // strafe towards foundation
-        accelDrive.pushCommand(-0.5,0,0,1.5);
-        updateAndDrive();
-        if(accelDrive.isEmpty){
-            LatchMotor.setPower(0.5);
-        }
+        accelDrive.pushCommand(0.5,0,0,1.5);
     }
+
+    // currently, we never deploy the latch
 
     // attach to foundation and drag to triangle
     public void drag(){
         //deploy latch and move as far as possible into triangle
-        LatchMotor.setPower(0);
         accelDrive.pushCommand(0.5,0,0, 1.5);
-        updateAndDrive();
     }
 
     // this allows us to simply move out of the way of a partner
@@ -77,9 +73,6 @@ public abstract class BuildSuperOp extends SuperOp {
         // if elapsed time >.5, move closer to build zone
         accelDrive.pushCommand(0,-0.5,0,.5);
         accelDrive.pushCommand(-0.5,0,0,1);
-        if(accelDrive.isEmpty){
-
-        }
     }
 
     // allows the robot to move around the foundation and then push
@@ -87,73 +80,28 @@ public abstract class BuildSuperOp extends SuperOp {
     // Moves toward the midline, then strafes right around it
     // moves farther into the build zone and pushes the foundation
     // farther into the build zone
-    public void around(){
-        // if elapsed time is >.5, move toward midline
-        if(time.seconds() <= 0.5){
-            drive(0,-0.5,0);
-        }
-        // stop all motion for .4 seconds
-        drive(0,0,0);
-        sleep_secs(0.4);
-        // if elapsed time is <.5 but >1.5, strafes toward alliance bridge
-        if(time.seconds() <= 1.5 && time.seconds() > 0.5){
-            drive(-0.5,0,0);
-        }
-        // stop all motion for .4 seconds
-        drive(0,0,0);
-        sleep_secs(0.4);
-        // if elapsed time <1.5 but >2, move farther into build zone
-        if(time.seconds() <= 2 && time.seconds() > 1.5){
-            drive(0,0.5,0);
-        }
-        // stop all motion for .4 seconds
-        drive(0,0,0);
-        sleep_secs(0.4);
-        // if elapsed time <2 but >2.5, strafe left
-        if(time.seconds() <= 2.5 && time.seconds() > 2){
-            drive(0.5,0,0);
-        }
-        // stop motion for .4 seconds
-        drive(0,0,0);
-        sleep_secs(0.4);
-        // if elapsed time <2.5 but >3, turn counter(?)clockwise
-        // this allows for more efficient parking and it makes it
-        // easier for alliance partners to park too
-        if(time.seconds() <= 3 && time.seconds() > 2.5){
-            drive(0,0,-0.5);
-        }
-        drive(0,0,0);
-        sleep_secs(0.4);
+    public void around(){ // never releases latch
+        accelDrive.pushCommand(0,-0.5,0,0.5);
+        accelDrive.pushCommand(-0.5,0,0,1);
+        accelDrive.pushCommand(0,0.5,0,0.5);
+        accelDrive.pushCommand(0.5,0,0,0.5);
+        accelDrive.pushCommand(0,0,-0.5,0.5);
     }
 
     // park over midline close to neutral bridge
     // move forward then strafe right
     public void park() {
         // move forward a set amount of time
-        targetTime = 1.4;
-        drive(0, -0.5, 0);
-        // if the elapsed time is greater than the
-        // time the robot moves forward, then the robot strafes right
-        if(time.seconds() >= targetTime){
-            drive(0.5,0,0);
-            sleep_secs(0.3);
-            drive(0,0,0);
-        }
+        accelDrive.pushCommand(0,-0.5,0,1.4);
+        accelDrive.pushCommand(0.5,0,0,0.3);
     }
 
     // park over midline against wall
     // move forward then strafe left
     public void parkW() {
         // move forward for  a set amount of time
-        targetTime = 1.4;
-        drive(0, -0.5, 0);
-        // if the elapsed time is greater than the
-        // time the robot moves forward, the robot strafes left
-        if(time.seconds() >= targetTime){
-            drive(0.5,0,0);
-            sleep_secs(0.3);
-            drive(0,0,0);
-        }
+        accelDrive.pushCommand(0,-0.5,0,1.4);
+        accelDrive.pushCommand(-0.5,0,0,0.3);
     }
 
     // stop all motion of the robot
