@@ -6,7 +6,7 @@ public class RedSquareBlock extends PlayerSuperOp {
     public PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
     @Override
     public void loop() {
-        startPoint = -1;
+        startPoint = 1;
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life

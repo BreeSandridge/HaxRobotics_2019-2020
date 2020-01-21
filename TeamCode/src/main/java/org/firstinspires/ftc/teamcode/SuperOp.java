@@ -41,7 +41,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public enum PLAYERSTATUS {FLIPPER, TOBLOCK, AWAY, AGAIN, AWAY2, PARKY, PARKW, STOP}
 
     protected Accel_Drive accelDrive;
-    public int startPointBuild = 1;
     public int startPoint = 1;
     public double x_speed;
     public double y_speed;
