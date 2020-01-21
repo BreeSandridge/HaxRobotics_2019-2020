@@ -60,6 +60,7 @@ public abstract class PlayerSuperOp extends SuperOp {
     public void toBlock() {
         // strafe towards blocks for targetTime
         accelDrive.pushCommand(0.5, 0, 0, 1);
+
         // forces method to only run once
     }
     public void grab(){
@@ -127,8 +128,9 @@ public abstract class PlayerSuperOp extends SuperOp {
     }
 
     // move backwards
+    //needs to be changed dont know to what yet
     public void away2() {
-        accelDrive.pushCommand(0,-0.5,0,1);
+        accelDrive.pushCommand(0,0,0,1);
     }
 
 

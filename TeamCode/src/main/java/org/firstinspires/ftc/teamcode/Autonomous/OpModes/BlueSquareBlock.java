@@ -27,28 +27,33 @@ public class BlueSquareBlock extends PlayerSuperOp {
         //there are methods created below the switch statement for easier reading
         switch (status) {
             case FLIPPER:
-                flipper();
+                toBlock();
                 status = PLAYERSTATUS.TOBLOCK;
                 break;
             case TOBLOCK:
-                toBlock();
                 if(accelDrive.isEmpty){
                     grab();
+                    away();
                     status = PLAYERSTATUS.AWAY;
-                } else updateAndDrive();
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case AWAY:
-                away();
                 if(accelDrive.isEmpty){
                     release();
+                    away2();
                     status = PLAYERSTATUS.AWAY2;
-                } else updateAndDrive();
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case AWAY2:
-                away2();
                 if(accelDrive.isEmpty){
                     status = PLAYERSTATUS.STOP;
-                } else updateAndDrive();
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case STOP:
                 stop1();
