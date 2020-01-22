@@ -31,26 +31,39 @@ public class BlueTriangleW extends BuildSuperOp {
         //there are methods created below the switch statement for easier reading
         switch (status) {
             case FLIPPER:
-                flipper();
+                toFoundation();
                 status = BUILDSTATUS.TOFOUNDATION;
                 break;
             case TOFOUNDATION:
-                toFoundation();
-                status = BUILDSTATUS.DRAG;
+                if(accelDrive.isEmpty) {
+                    drag();
+                    status = BUILDSTATUS.DRAG;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case DRAG:
-                drag();
                 if(accelDrive.isEmpty) {
+                    around();
                     status = BUILDSTATUS.AROUND;
+                } else {
+                    updateAndDrive();
                 }
                 break;
             case AROUND:
-                around();
-                status = BUILDSTATUS.PARKW;
+                if(accelDrive.isEmpty) {
+                    parkW();
+                    status = BUILDSTATUS.PARKW;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case PARKW:
-                parkW();
-                status = BUILDSTATUS.STOP;
+                if(accelDrive.isEmpty) {
+                    status = BUILDSTATUS.STOP;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case STOP:
                 stop1();

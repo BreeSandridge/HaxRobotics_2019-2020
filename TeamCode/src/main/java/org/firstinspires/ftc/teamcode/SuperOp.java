@@ -38,7 +38,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
     // enums used in build/player autonomi
     public enum BUILDSTATUS {FLIPPER, TOFOUNDATION, DRAG, AROUND, MOVE, PARKY, PARKW, STOP}
-    public enum PLAYERSTATUS {FLIPPER, TOBLOCK, AWAY, AGAIN, AWAY2, PARKY, PARKW, STOP}
+    public enum PLAYERSTATUS {FLIPPER, TOBLOCK, AWAY, AGAIN, AWAY2, DECISION, PARKY, PARKW, STOP}
 
     protected Accel_Drive accelDrive;
     public int startPoint = 1;

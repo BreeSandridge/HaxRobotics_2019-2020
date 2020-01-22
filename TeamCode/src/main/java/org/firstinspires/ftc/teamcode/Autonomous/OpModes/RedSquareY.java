@@ -35,28 +35,48 @@ public class RedSquareY extends PlayerSuperOp {
         //there are methods created below the switch statement for easier reading
         switch (status) {
             case FLIPPER:
-                flipper();
+                toBlock();
                 status = PLAYERSTATUS.TOBLOCK;
                 break;
             case TOBLOCK:
-                toBlock();
-                status = PLAYERSTATUS.AWAY;
+                if(accelDrive.isEmpty){
+                    grab();
+                    away();
+                    status = PLAYERSTATUS.AWAY;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case AWAY:
-                away();
-                status = PLAYERSTATUS.AGAIN;
+                if(accelDrive.isEmpty){
+                    release();
+                    status = PLAYERSTATUS.DECISION;
+                } else {
+                    updateAndDrive();
+                }
                 break;
-            case AGAIN:
+            case DECISION:
                 if (repeat.seconds() < 15) {
                     again();
+                    status = PLAYERSTATUS.AGAIN;
+                } else {
+                    parkW();
+                    status = PLAYERSTATUS.PARKW;
+                }
+            case AGAIN:
+                if(accelDrive.isEmpty){
+                    park();
                     status = PLAYERSTATUS.PARKY;
                 } else {
-                    status = PLAYERSTATUS.PARKY;
+                    updateAndDrive();
                 }
                 break;
             case PARKY:
-                park();
-                status = PLAYERSTATUS.STOP;
+                if(accelDrive.isEmpty){
+                    status = PLAYERSTATUS.STOP;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case STOP:
                 stop1();

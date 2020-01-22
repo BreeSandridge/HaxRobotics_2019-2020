@@ -26,12 +26,15 @@ public class BlueTriangleParkY extends BuildSuperOp {
         //there are methods created below the switch statement for easier reading
         switch (status) {
             case FLIPPER:
-                flipper();
-                status = BUILDSTATUS.TOFOUNDATION;
+                park();
+                status = BUILDSTATUS.PARKY;
                 break;
             case PARKY:
-                park();
-                status = BUILDSTATUS.STOP;
+                if(accelDrive.isEmpty) {
+                    status = BUILDSTATUS.STOP;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case STOP:
                 stop1();

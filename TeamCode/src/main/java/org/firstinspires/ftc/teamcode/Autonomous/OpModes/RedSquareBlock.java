@@ -27,20 +27,33 @@ public class RedSquareBlock extends PlayerSuperOp {
         //there are methods created below the switch statement for easier reading
         switch (status) {
             case FLIPPER:
-                flipper();
+                toBlock();
                 status = PLAYERSTATUS.TOBLOCK;
                 break;
             case TOBLOCK:
-                toBlock();
-                status = PLAYERSTATUS.AWAY;
+                if(accelDrive.isEmpty){
+                    grab();
+                    away();
+                    status = PLAYERSTATUS.AWAY;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case AWAY:
-                away();
-                status = PLAYERSTATUS.AWAY2;
+                if(accelDrive.isEmpty){
+                    release();
+                    away2();
+                    status = PLAYERSTATUS.AWAY2;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case AWAY2:
-                away2();
-                status = PLAYERSTATUS.STOP;
+                if(accelDrive.isEmpty){
+                    status = PLAYERSTATUS.STOP;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case STOP:
                 stop1();

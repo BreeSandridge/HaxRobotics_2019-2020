@@ -29,12 +29,15 @@ public class BlueSquareParkW extends PlayerSuperOp {
         //there are methods created below the switch statement for easier reading
         switch (status) {
             case FLIPPER:
-                flipper();
+                parkW();
                 status = PLAYERSTATUS.PARKW;
                 break;
             case PARKW:
-                park();
-                status = PLAYERSTATUS.STOP;
+                if(accelDrive.isEmpty){
+                    status = PLAYERSTATUS.STOP;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case STOP:
                 stop1();

@@ -71,6 +71,7 @@ public abstract class PlayerSuperOp extends SuperOp {
         // deploy latch motor to pick up block
         targetTime = 0.5;
         LatchMotor.setPower(0.3);
+        sleep_secs(0.3);
         // make sure latch motor is is in right position and stop its movement
         if (time.seconds() >= targetTime) { // why this? you can use elapsed time remember..?
             LatchMotor.setPower(0);
@@ -91,13 +92,13 @@ public abstract class PlayerSuperOp extends SuperOp {
             time.reset();
             ran = !ran;
         }
+        targetTime = 0.5;
         // deploy latch motor to pick up block
         LatchMotor.setPower(-0.3);
+        sleep_secs(0.3);
         // make sure latch motor is is in right position and stop its movement
         if (time.seconds() >= targetTime) { // elapsed time...
             LatchMotor.setPower(0);
-            // forces statment to run once
-            // strafe away from blocks
         }
     }
 

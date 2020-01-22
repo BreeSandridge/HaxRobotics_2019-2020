@@ -31,18 +31,23 @@ public class BlueTriangleMove extends BuildSuperOp {
         //there are methods created below the switch statement for easier reading
         switch (status) {
             case FLIPPER:
-                flipper();
+                around();
                 status = BUILDSTATUS.AROUND;
                 break;
             case AROUND:
-                around();
                 if(accelDrive.isEmpty){
+                    move();
                     status = BUILDSTATUS.MOVE;
-                } else updateAndDrive();
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case MOVE:
-                move();
-                status = BUILDSTATUS.STOP;
+                if(accelDrive.isEmpty) {
+                    status = BUILDSTATUS.STOP;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case STOP:
                 stop1();

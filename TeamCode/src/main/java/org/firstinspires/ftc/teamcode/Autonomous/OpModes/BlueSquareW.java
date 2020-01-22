@@ -50,19 +50,26 @@ public class BlueSquareW extends PlayerSuperOp {
                 break;
             case AWAY:
                 if(accelDrive.isEmpty){
-
+                    release();
+                    status = PLAYERSTATUS.DECISION;
                 } else {
                     updateAndDrive();
                 }
-                status = PLAYERSTATUS.AGAIN;
                 break;
-            case AGAIN:
+            case DECISION:
                 if (repeat.seconds() < 15) {
                     again();
-                    status = PLAYERSTATUS.PARKW;
+                    status = PLAYERSTATUS.AGAIN;
                 } else {
                     parkW();
                     status = PLAYERSTATUS.PARKW;
+                }
+            case AGAIN:
+                if(accelDrive.isEmpty){
+                    parkW();
+                    status = PLAYERSTATUS.PARKW;
+                } else {
+                    updateAndDrive();
                 }
                 break;
             case PARKW:

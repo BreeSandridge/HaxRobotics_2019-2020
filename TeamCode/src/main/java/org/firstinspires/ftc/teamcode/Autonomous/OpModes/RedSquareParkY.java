@@ -29,12 +29,15 @@ public class RedSquareParkY extends PlayerSuperOp {
         //there are methods created below the switch statement for easier reading
         switch (status) {
             case FLIPPER:
-                flipper();
+                park();
                 status = PLAYERSTATUS.PARKY;
                 break;
             case PARKY:
-                park();
-                status = PLAYERSTATUS.STOP;
+                if(accelDrive.isEmpty){
+                    status = PLAYERSTATUS.STOP;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case STOP:
                 stop1();
