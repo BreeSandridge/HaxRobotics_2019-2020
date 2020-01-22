@@ -54,17 +54,16 @@ public abstract class BuildSuperOp extends SuperOp {
         }
     }
 
-    // move towards foundation and deploy latch
+    // move towards foundation
     public void toFoundation(){
         // strafe towards foundation
         accelDrive.pushCommand(0.5,0,0,1.5);
     }
 
-    // currently, we never deploy the latch
 
     // attach to foundation and drag to triangle
     public void drag(){
-        //deploy latch and move as far as possible into triangle
+        //and move as far as possible into triangle
         accelDrive.pushCommand(0.5,0,0, 1.5);
     }
 
@@ -80,7 +79,7 @@ public abstract class BuildSuperOp extends SuperOp {
     // Moves toward the midline, then strafes right around it
     // moves farther into the build zone and pushes the foundation
     // farther into the build zone
-    public void around(){ // never releases latch
+    public void around(){
         accelDrive.pushCommand(0,-0.5,0,0.5);
         accelDrive.pushCommand(-0.5,0,0,1);
         accelDrive.pushCommand(0,0.5,0,0.5);
@@ -99,8 +98,9 @@ public abstract class BuildSuperOp extends SuperOp {
     // park over midline against wall
     // move forward then strafe left
     public void parkW() {
-        // move forward for  a set amount of time
+        // move forward for 1.4 sec
         accelDrive.pushCommand(0,-0.5,0,1.4);
+        //strafe left for 0.3 sec
         accelDrive.pushCommand(-0.5,0,0,0.3);
     }
 

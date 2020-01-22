@@ -19,7 +19,7 @@ in a trapezoid drive pattern.
  */
 
 public abstract class SuperOp extends OpMode implements SuperOp_Interface {
-
+    //stopwatch class
     public ElapsedTime timer;
 
 
@@ -32,7 +32,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor LatchMotor = null;
     public DcMotor FlipperMotor = null;
 
-    //public Servo Flipper = null;
     public Servo Trapdoor = null;
     public Servo Latch = null;
 
@@ -61,7 +60,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
-    public boolean isRunning = true;
 
     @Override
     public void init() {
@@ -75,7 +73,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         RightStoneRamp = hardwareMap.get(DcMotor.class, "RightStoneRamp");
         FlipperMotor = hardwareMap.get (DcMotor.class, "FlipperMotor");
 
-        //Flipper = hardwareMap.get(Servo.class, "Flipper");
         Trapdoor = hardwareMap.get(Servo.class, "Trapdoor");
 
         tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(

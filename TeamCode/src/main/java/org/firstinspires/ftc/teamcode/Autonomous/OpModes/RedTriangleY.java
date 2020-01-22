@@ -36,6 +36,9 @@ public class RedTriangleY extends BuildSuperOp {
                 break;
             case TOFOUNDATION:
                 if(accelDrive.isEmpty) {
+                    LatchMotor.setPower(0.3);
+                    sleep_secs(0.5);
+                    LatchMotor.setPower(0);
                     drag();
                     status = BUILDSTATUS.DRAG;
                 } else {
@@ -44,6 +47,9 @@ public class RedTriangleY extends BuildSuperOp {
                 break;
             case DRAG:
                 if(accelDrive.isEmpty) {
+                    LatchMotor.setPower(-0.3);
+                    sleep_secs(0.5);
+                    LatchMotor.setPower(0);
                     around();
                     status = BUILDSTATUS.AROUND;
                 } else {

@@ -62,8 +62,7 @@ public class BlueSquareY extends PlayerSuperOp {
                 }
             case AGAIN:
                 if(accelDrive.isEmpty){
-                    park();
-                    status = PLAYERSTATUS.PARKY;
+                    status = PLAYERSTATUS.FLIPPER;
                 } else {
                     updateAndDrive();
                 }

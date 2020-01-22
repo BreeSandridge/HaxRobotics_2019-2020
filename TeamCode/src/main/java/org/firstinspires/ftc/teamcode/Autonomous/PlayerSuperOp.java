@@ -73,7 +73,7 @@ public abstract class PlayerSuperOp extends SuperOp {
         LatchMotor.setPower(0.3);
         sleep_secs(0.3);
         // make sure latch motor is is in right position and stop its movement
-        if (time.seconds() >= targetTime) { // why this? you can use elapsed time remember..?
+        if (time.seconds() >= targetTime) {
             LatchMotor.setPower(0);
             // forces statment to run once
             // strafe away from blocks
@@ -103,11 +103,9 @@ public abstract class PlayerSuperOp extends SuperOp {
     }
 
     // this method only runs if its been less then 15 seconds
-    // it drive forward then calls toBlock() and away()
+    // it drive forward then repeats the commands done in toBlock() and away()
     public void again () {
         accelDrive.pushCommand(0,0.5,0,1);
-        accelDrive.pushCommand(0.5, 0, 0, 1);
-        accelDrive.pushCommand(0, -0.5, 0, 1);
         // drive forward
     }
 

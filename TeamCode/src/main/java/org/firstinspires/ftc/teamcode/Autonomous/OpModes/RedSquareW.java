@@ -65,8 +65,7 @@ public class RedSquareW extends PlayerSuperOp {
                 }
             case AGAIN:
                 if(accelDrive.isEmpty){
-                    parkW();
-                    status = PLAYERSTATUS.PARKW;
+                    status = PLAYERSTATUS.FLIPPER;
                 } else {
                     updateAndDrive();
                 }
