@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -31,9 +32,10 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor RightStoneRamp = null;
     public DcMotor LatchMotor = null;
     public DcMotor FlipperMotor = null;
+    public DcMotor SlideMotor = null;
 
-    public Servo Trapdoor = null;
-    public Servo Latch = null;
+    public Servo Gripper = null;
+    public CRServo Extension  = null;
 
     // enums used in build/player autonomi
     public enum BUILDSTATUS {FLIPPER, TOFOUNDATION, DRAG, AROUND, MOVE, PARKY, PARKW, STOP}
@@ -72,8 +74,11 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         LeftStoneRamp = hardwareMap.get(DcMotor.class, "LeftStoneRamp");
         RightStoneRamp = hardwareMap.get(DcMotor.class, "RightStoneRamp");
         FlipperMotor = hardwareMap.get (DcMotor.class, "FlipperMotor");
+        SlideMotor = hardwareMap.get(DcMotor.class, "SlideMotor");
 
-        Trapdoor = hardwareMap.get(Servo.class, "Trapdoor");
+        Extension = hardwareMap.get(CRServo.class, "Extension");
+
+        Gripper = hardwareMap.get(Servo.class, "Gripper");
 
         tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
