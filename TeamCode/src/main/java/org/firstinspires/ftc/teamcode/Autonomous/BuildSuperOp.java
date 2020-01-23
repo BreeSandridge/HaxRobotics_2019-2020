@@ -31,9 +31,6 @@ public abstract class BuildSuperOp extends SuperOp {
         telemetry.addData("Front Left: ", FrontLeftDrive.getCurrentPosition());
 
         currPosition = LatchMotor.getCurrentPosition();
-        //switch statements for changing the status of the robot
-        //this allows us to use different code for each status
-        //there are methods created below the switch statement for easier reading
     }
 
     // this is the first method run
