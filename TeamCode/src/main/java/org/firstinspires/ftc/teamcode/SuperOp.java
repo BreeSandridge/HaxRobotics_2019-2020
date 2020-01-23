@@ -142,24 +142,24 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackRightDrive.setPower(accelDrive.motorPowers[3]);
     }
 
-    public void updateAndDrive(){
-        accelDrive.update();
-        updateMotors();
-    }
-
     public void drive(double x, double y, double w){
-        accelDrive.drive(
+        genericDrive(
                 auto_x_speed*x*startPointBuild,
                 auto_y_speed*y*startPointPlayer,
                 auto_w_speed*w);
-        updateMotors();
     }
 
     public void teleDrive(double x, double y, double w){
-        accelDrive.drive(
-                x_speed*x,
-                y_speed*y,
-                w_speed*w);
+        genericDrive(x_speed*x, y_speed*y, w_speed*w);
+    }
+
+    public void genericDrive(double x, double y, double w){
+        accelDrive.drive(x, y, w);
+        updateMotors();
+    }
+
+    public void updateAndDrive(){
+        accelDrive.update();
         updateMotors();
     }
 

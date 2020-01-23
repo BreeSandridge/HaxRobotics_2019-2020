@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomous.VisionOpModes;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
@@ -9,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.CameraParams;
 
 import java.util.List;
 
-public class CVCamera {
+public class CVInternal {
 
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
@@ -21,29 +20,27 @@ public class CVCamera {
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
     private int tfodMonitorViewId;
+    public double blockPos;
+    public float left, top, right, bottom;
+    public float ww, hh;
+    private VuforiaLocalizer.Parameters parameters;
 
-    CVCamera(int tfodMonitorViewId){
+    CVInternal(int tfodMonitorViewId){
         this.tfodMonitorViewId = tfodMonitorViewId;
         initVuforia();
         initTfod();
         tfod.activate();
-        cameraParams = new CameraParams(0, 0, 0, 1280, 720, 1080);
+        cameraParams = new CameraParams(1280, 720, 1080);
     }
+
     private void initVuforia() {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-
-        // Internal:
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-
-        // Webcam:
-        //parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
-
-
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
@@ -74,9 +71,13 @@ public class CVCamera {
             String label = recognition.getLabel();
             if (!label.equals("Skystone"))
                 continue;
-            float left = recognition.getLeft(), top = recognition.getTop();
-            float right = recognition.getRight(), bottom = recognition.getBottom();
-            double blockPos = cameraParams.undoPerspective(left, top, right, bottom);
+            left = recognition.getLeft();
+            top = recognition.getTop();
+            right = recognition.getRight();
+            bottom = recognition.getBottom();
+            ww = recognition.getImageWidth();
+            hh = recognition.getImageHeight();
+            blockPos = cameraParams.undoPerspective(left, top, right, bottom);
             double armOffset = 10;
             if (blockPos > armOffset)
                 return true;
