@@ -19,7 +19,6 @@ public class RedTriangleParkY extends BuildSuperOp {
         telemetry.addData("Back Right: ", BackRightDrive.getCurrentPosition());
         telemetry.addData("Front Left: ", FrontLeftDrive.getCurrentPosition());
         telemetry.addData("Status: ", status);
-        telemetry.addData("Latch Position: ", Latch.getPosition());
 
         //switch statements for changing the status of the robot
         //this allows us to use different code for each status

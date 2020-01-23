@@ -32,7 +32,6 @@ public abstract class PlayerSuperOp extends SuperOp {
         telemetry.addData("Back Left: ", BackLeftDrive.getCurrentPosition());
         telemetry.addData("Back Right: ", BackRightDrive.getCurrentPosition());
         telemetry.addData("Front Left: ", FrontLeftDrive.getCurrentPosition());
-        telemetry.addData("Latch Position: ", Latch.getPosition());
 
         currPosition = LatchMotor.getCurrentPosition();
     }

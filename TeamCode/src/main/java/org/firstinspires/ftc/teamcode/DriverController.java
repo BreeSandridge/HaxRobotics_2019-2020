@@ -55,19 +55,6 @@ public class DriverController extends SuperOp {
 //           timer.reset();
 //       }
 
-        if (gamepad2.a) {
-            Trapdoor.setPosition(1);
-        } else {
-            Trapdoor.setPosition(0);
-        }
-
-        if (gamepad2.b && timer.milliseconds() > latch_cd) {
-            // sets to 1 if trapdoor state is == to true
-            // otherwise set to 0
-            Latch.setPosition(latchState ? 1 : 0);
-            latchState = !latchState;
-            timer.reset();
-        }
 
 
         //telemetry.addData("> Flipper pos: ", Flipper.getPosition());
