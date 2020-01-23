@@ -54,7 +54,7 @@ public class TeleOpMotor extends SuperOp {
 //           trapdoorState = !trapdoorState;
 //           timer.reset();
 //       }
-        
+
 
 
         //telemetry.addData("> Flipper pos: ", Flipper.getPosition());
