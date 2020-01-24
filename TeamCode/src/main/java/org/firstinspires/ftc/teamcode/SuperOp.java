@@ -42,7 +42,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public enum BUILDSTATUS {FLIPPER, TOFOUNDATION, DRAG, AROUND, MOVE, PARKY, PARKW, STOP}
     public enum PLAYERSTATUS {FLIPPER, TOBLOCK, AWAY, AGAIN, AWAY2, DECISION, PARKY, PARKW, STOP}
 
-    protected Accel_Drive accelDrive;
+    public Accel_Drive accelDrive;
     public int startPoint = 1;
     public double x_speed;
     public double y_speed;
@@ -51,8 +51,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public double auto_y_speed;
     public double auto_w_speed;
 
-    public double leftSpeedMultiplier = 1;
-    public double rightSpeedMultiplier = 1;
     public int tfodMonitorViewId;
 
     static final double COUNTS_PER_MOTOR_REV = 1440;            // eg: TETRIX Motor Encoder

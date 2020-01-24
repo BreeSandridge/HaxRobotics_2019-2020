@@ -59,13 +59,13 @@ public class TeleOpMotor extends SuperOp {
 
         //telemetry.addData("> Flipper pos: ", Flipper.getPosition());
         telemetry.addData("> gamepad2 pos: ", gamepad2.left_stick_y);
-        if (gamepad2.left_stick_y > .05) {
+        /*if (gamepad2.left_stick_y > .05) {
             FlipperMotor.setPower(-.3);
         } else if (gamepad2.left_stick_y < - .05) {
             FlipperMotor.setPower(.35);
         } else {
             FlipperMotor.setPower(0);
-        }
+        }*/
 
        /* Flipper.setPosition(gamepad2.left_stick_y > .01 ?
                 Flipper.getPosition() + .02 < .8 ? Flipper.getPosition() + .02 : .8
