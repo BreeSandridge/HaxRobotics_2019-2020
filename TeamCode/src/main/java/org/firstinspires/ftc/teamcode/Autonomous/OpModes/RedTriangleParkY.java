@@ -12,7 +12,6 @@ public class RedTriangleParkY extends BuildSuperOp {
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
-        telemetry.addData("Power", LatchMotor.getPower());
         telemetry.addData("LatchMotor Position: ", LatchMotor.getCurrentPosition());
         telemetry.addData("Front Right: ", FrontRightDrive.getCurrentPosition());
         telemetry.addData("Back Left: ", BackLeftDrive.getCurrentPosition());
