@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.util.Queue;
+
 
 // extend OpMode so future classes will extend SuperOp Instead
 // implements is for interfaces
@@ -31,7 +33,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor LeftStoneRamp = null;
     public DcMotor RightStoneRamp = null;
     public DcMotor LatchMotor = null;
-    public DcMotor FlipperMotor = null;
     public DcMotor SlideMotor = null;
 
     public Servo Gripper = null;
@@ -73,7 +74,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         LatchMotor = hardwareMap.get(DcMotor.class, "LatchMotor");
         LeftStoneRamp = hardwareMap.get(DcMotor.class, "LeftStoneRamp");
         RightStoneRamp = hardwareMap.get(DcMotor.class, "RightStoneRamp");
-        FlipperMotor = hardwareMap.get (DcMotor.class, "FlipperMotor");
         SlideMotor = hardwareMap.get(DcMotor.class, "SlideMotor");
 
         Extension = hardwareMap.get(CRServo.class, "Extension");
@@ -104,6 +104,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         auto_w_speed = .6;
 
         accelDrive = new Accel_Drive();
+
     }
 
     public void setMode(DcMotor.RunMode mode){

@@ -25,27 +25,13 @@ public abstract class PlayerSuperOp extends SuperOp {
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
 
-        currPosition = LatchMotor.getCurrentPosition();
+        //currPosition = LatchMotor.getCurrentPosition();
     }
 
 
     // this is the first method run
     // it resets the elapsed time
     // flips arm/basket down and out of the way
-    public void flipper() {
-        // forces code to only run once
-        if (ran1) {
-            time.reset();
-            ran1 = !ran1;
-        }
-        // motor goes for .525 seconds and then stops
-        targetTime = .525;
-        FlipperMotor.setPower(.3);
-        if (time.seconds() >= targetTime) {
-            FlipperMotor.setPower(0);
-            time.reset();
-        }
-    }
 
     // strafe towards blocks, deploy latchMotor
     public void toBlock() {
