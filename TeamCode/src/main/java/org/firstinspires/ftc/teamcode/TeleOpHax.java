@@ -11,8 +11,8 @@ public class TeleOpHax extends SuperOp {
 
     // Modifier values for linear slide
     //prolly around .9
-    final private double positiveLinearSlideModifier = .9;
-    final private double negativeLinearSlideModifier = .4;
+    final private double positiveLinearSlideModifier = 1;
+    final private double negativeLinearSlideModifier = .7;
 
     // true == Open && false == Closed
     private boolean grabberState = false;
@@ -23,26 +23,14 @@ public class TeleOpHax extends SuperOp {
 
     @Override
     public void loop() {
-        //controllerDrive();
-        controllerDriveDebug();
+        controllerDrive();
+        //controllerDriveDebug();
 
-//        LeftStoneRamp.setPower(.4);
+        //controllerExtensionDebug();
 
-        /*
-        public DcMotor FrontLeftDrive = null;
-        public DcMotor FrontRightDrive = null;
-        public DcMotor BackLeftDrive = null;
-        public DcMotor BackRightDrive = null;
+        //controllerGrabberDebug();
 
-        public DcMotor LeftStoneRamp = null;
-        public DcMotor RightStoneRamp = null;
-        public DcMotor LatchMotor = null;
-        public DcMotor FlipperMotor = null;
-        public DcMotor SlideMotor = null;
-
-        public Servo Gripper = null;
-        public CRServo Extension  = null;
-        */
+        telemetry.update();
     }
 
 
@@ -118,7 +106,7 @@ public class TeleOpHax extends SuperOp {
 
     // Controls linear slide
     private void controllerLinearSlide(){
-        SlideMotor.setPower(linearSlidePowerConverter(gamepad2.left_stick_y));
+        SlideMotor.setPower(-linearSlidePowerConverter(gamepad2.left_stick_y));
     }
     private void controllerLinearSlideUnitTest(){
         SlideMotor.setPower(linearSlidePowerConverter(1));
@@ -185,10 +173,13 @@ public class TeleOpHax extends SuperOp {
 
     // Controls the Block Grabber
     private void controllerGrabberDebug() {
-        if (gamepad2.dpad_right) {
-            Gripper.setPosition(Gripper.getPosition()+1);
-        } else if (gamepad2.dpad_left) {
-            Gripper.setPosition(Gripper.getPosition() - 1);
+        if (gamepad2.a) {
+            Gripper.setPosition(1);
+            telemetry.addLine("Gripper is up");
+        } else if (gamepad2.b) {
+            Gripper.setPosition(0);
+            telemetry.addLine("Gripper is down");
+
         }
 
         telemetry.addData("> Grabber Position: ", Gripper.getPosition());
@@ -198,6 +189,7 @@ public class TeleOpHax extends SuperOp {
     private void controllerExtensionDebug(){
 
         Extension.setPower(gamepad2.right_stick_y);
+
         telemetry.addData("> Extension Power: ", Extension.getPower());
     }
 
