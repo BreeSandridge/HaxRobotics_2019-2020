@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.Autonomous;
+/*package org.firstinspires.ftc.teamcode.Autonomous.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.SuperOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-@Autonomous
+@Disabled
 public class RedPlayer extends SuperOp {
 
     //This uses an enum declared in SuperOp
@@ -51,7 +51,7 @@ public class RedPlayer extends SuperOp {
                 break;
             /*case TOBLOCK:
                 //toBlock();
-                break; */
+                break;
             case APPROACH:
                 approach();
                 break;
@@ -88,9 +88,9 @@ public class RedPlayer extends SuperOp {
             ran1 = !ran1;
         }
         targetTime = 2;
-        Flipper.setPower(-1);
+        //Flipper.setPosition(0);
         if(time.seconds() >= targetTime){
-            Flipper.setPower(0);
+           FlipperMotor.setPower(0);
             status = STATUS.START;
         }
     }
@@ -122,7 +122,7 @@ public class RedPlayer extends SuperOp {
         // vision code
         // if skystone is sighted
         /*
-         */
+
 
         // set movement values to go towards block
         if(time.seconds()-targetTime > 0) {
@@ -214,7 +214,7 @@ public class RedPlayer extends SuperOp {
                 LatchMotor.setPower(0);
                 time.reset();
                 status = STATUS.PARK;
-            } */
+            }
         }
     }
     private void release(){
@@ -252,7 +252,7 @@ public class RedPlayer extends SuperOp {
     private void stop1(){
         drive(0,0,0);
     }
-}
+} */
 
 
 

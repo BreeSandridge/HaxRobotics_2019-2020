@@ -1,12 +1,13 @@
-package org.firstinspires.ftc.teamcode.Autonomous;
+/*package org.firstinspires.ftc.teamcode.Autonomous.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.SuperOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous
-public class BlueBuild extends SuperOp {
+@Disabled
+public class BluePlayer extends SuperOp {
 
     //This uses an enum declared in SuperOp
     //It declares the first STATUS as "START"
@@ -46,11 +47,11 @@ public class BlueBuild extends SuperOp {
             case FlIPPER:
                 flipper();
                 break;
-             case START:
+            case START:
                 start1();
                 break;
-            case TOBLOCK:
-                toBlock();
+            /*case TOBLOCK:
+                //toBlock();
                 break;
             case APPROACH:
                 approach();
@@ -88,9 +89,9 @@ public class BlueBuild extends SuperOp {
             ran1 = !ran1;
         }
         targetTime = 2;
-        Flipper.setPower(-1);
+        //Flipper.setPosition(0);
         if(time.seconds() >= targetTime){
-            Flipper.setPower(0);
+            //Flipper.setPower();
             status = STATUS.START;
         }
     }
@@ -104,7 +105,7 @@ public class BlueBuild extends SuperOp {
         if(time.seconds() >= targetTime){
             drive(0,0,0);
             time.reset();
-            status = STATUS.TOBLOCK;
+            status = STATUS.APPROACH;
             ran = false;
         }
         //targetTime = .5;
@@ -122,7 +123,7 @@ public class BlueBuild extends SuperOp {
         // vision code
         // if skystone is sighted
         /*
-        */
+
 
         // set movement values to go towards block
         if(time.seconds()-targetTime > 0) {
@@ -156,7 +157,7 @@ public class BlueBuild extends SuperOp {
     //rotate the arm down
     //check to see if the arm is in position
     //pull the block in and switch STATUS to 'AWAY'
-     private void getBlock() {
+    private void getBlock() {
         if(!ran){
             arm.reset();
             ran = !ran;
@@ -202,7 +203,7 @@ public class BlueBuild extends SuperOp {
         }
         //sets target position for grabber
         //methods to get the robot back to the build site to place down the block
-        targetTime = 2;
+        targetTime = 1.9;
         drive(0,-0.5,0);
         if(time.seconds() >= targetTime) {
             drive(0, 0, 0);
@@ -214,7 +215,7 @@ public class BlueBuild extends SuperOp {
                 LatchMotor.setPower(0);
                 time.reset();
                 status = STATUS.PARK;
-            } */
+            }
         }
     }
     private void release(){
@@ -240,7 +241,7 @@ public class BlueBuild extends SuperOp {
         if(time.seconds() >= targetTime){
             //stop robot
             drive(0.5,0,0);
-            sleep_secs(0.3);
+            sleep_secs(0.4);
             drive(0,0,0);
             //switch STATUS
             status = STATUS.STOP;
@@ -252,7 +253,7 @@ public class BlueBuild extends SuperOp {
     private void stop1(){
         drive(0,0,0);
     }
-}
+} */
 
 
 

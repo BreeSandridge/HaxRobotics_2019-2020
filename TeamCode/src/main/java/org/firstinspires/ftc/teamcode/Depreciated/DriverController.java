@@ -1,6 +1,8 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Depreciated;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.SuperOp;
 
 @TeleOp(name="Driver Controller")
 public class DriverController extends SuperOp {
@@ -55,22 +57,19 @@ public class DriverController extends SuperOp {
 //           timer.reset();
 //       }
 
-        if (gamepad2.a) {
-            Trapdoor.setPosition(1);
-        } else {
-            Trapdoor.setPosition(0);
-        }
-
-        if (gamepad2.b && timer.milliseconds() > latch_cd) {
-            // sets to 1 if trapdoor state is == to true
-            // otherwise set to 0
-            Latch.setPosition(latchState ? 1 : 0);
-            latchState = !latchState;
-            timer.reset();
-        }
 
 
-        Flipper.setPower (-gamepad2.left_stick_y);
+        //telemetry.addData("> Flipper pos: ", Flipper.getPosition());
+        telemetry.addData("> gamepad2 pos: ", gamepad2.left_stick_y);
+        /*Flipper.setPosition(gamepad2.left_stick_y > .01 ?
+                Flipper.getPosition() + .02 < .8 ? Flipper.getPosition() + .02 : .8
+                : gamepad2.left_stick_y < -0.01 ?
+                Flipper.getPosition() - .02 > .03 ? Flipper.getPosition() -.02 : .03
+                : Flipper.getPosition()); */
+//        Flipper.setPosition(gamepad2.left_stick_y > .01 ? .80  : gamepad2.left_stick_y < -0.01 ? 0 : Flipper.getPosition());
+
+        //}
+
 //       telemetry.addData(" > Flipper Power: ", Flipper.getPower());
 //       telemetry.update();
 
@@ -83,7 +82,7 @@ public class DriverController extends SuperOp {
 
     // Intake
     private void intake(float power){
-        RightStoneRamp.setPower(power);
+        RightStoneRamp.setPower(-power);
         LeftStoneRamp.setPower(power);
     }
 }

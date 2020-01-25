@@ -1,12 +1,15 @@
-package org.firstinspires.ftc.teamcode.Autonomous;
+package org.firstinspires.ftc.teamcode.Examples;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.SuperOp;
 
+
 @TeleOp(name="BasicAuto", group="Test")
+@Disabled
 public class BasicAuto extends SuperOp {
 
     public void rightTurn () {
