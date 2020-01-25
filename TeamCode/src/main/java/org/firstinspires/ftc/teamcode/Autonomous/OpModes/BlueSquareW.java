@@ -4,9 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.Autonomous.PlayerSuperOp;
 import org.firstinspires.ftc.teamcode.SuperOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+@Disabled
 @Autonomous
 public class BlueSquareW extends PlayerSuperOp {
 

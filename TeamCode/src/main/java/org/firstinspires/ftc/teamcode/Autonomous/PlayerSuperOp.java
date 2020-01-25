@@ -105,6 +105,7 @@ public abstract class PlayerSuperOp extends SuperOp {
     // it drive forward then repeats the commands done in toBlock() and away()
     public void again () {
         accelDrive.pushCommand(0,0.5,0,1);
+
         // drive forward
     }
 
@@ -121,12 +122,12 @@ public abstract class PlayerSuperOp extends SuperOp {
     // park over midline against wall
     // move forward then strafe left
     public void parkW() {
-        accelDrive.pushCommand(0,-0.5,0,1.4);
-        accelDrive.pushCommand(0.5,0,0,0.3);
+        accelDrive.pushCommand(0,0.5,0,1.4);
+        accelDrive.pushCommand(-0.5,0,0,0.3);
     }
 
     // move backwards
-    //needs to be changed dont know to what yet
+    // needs to be changed don't know to what yet
     public void away2() {
         accelDrive.pushCommand(0,0,0,1);
     }

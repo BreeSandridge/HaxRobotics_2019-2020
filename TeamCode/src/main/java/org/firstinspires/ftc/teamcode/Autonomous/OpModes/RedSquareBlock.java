@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.Autonomous.OpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import org.firstinspires.ftc.teamcode.Autonomous.PlayerSuperOp;
 
+@Disabled
 public class RedSquareBlock extends PlayerSuperOp {
     public PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
     @Override

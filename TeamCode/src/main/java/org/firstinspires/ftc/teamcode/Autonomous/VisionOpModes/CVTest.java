@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.Autonomous.VisionOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Autonomous.VisionOpModes.CVCamera;
 import org.firstinspires.ftc.teamcode.SuperOp;
 
+@Disabled
 @Autonomous
 public class CVTest extends SuperOp {
 
