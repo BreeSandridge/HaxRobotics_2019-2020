@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -28,6 +29,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor FrontRightDrive = null;
     public DcMotor BackLeftDrive = null;
     public DcMotor BackRightDrive = null;
+
     public DcMotor LeftStoneRamp = null;
     public DcMotor RightStoneRamp = null;
     public DcMotor LatchMotor = null;
@@ -50,6 +52,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public double auto_y_speed;
     public double auto_w_speed;
 
+    public double deadZone;
+
     public double leftSpeedMultiplier = 1;
     public double rightSpeedMultiplier = 1;
     public int tfodMonitorViewId;
@@ -63,6 +67,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     static final double     TURN_SPEED              = 0.5;
 
 
+
+
     @Override
     public void init() {
         // Initialize the hardware variables
@@ -70,15 +76,28 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         FrontRightDrive = hardwareMap.get(DcMotor.class, "FrontRightDrive");
         BackLeftDrive  = hardwareMap.get(DcMotor.class, "BackLeftDrive");
         BackRightDrive = hardwareMap.get(DcMotor.class, "BackRightDrive");
+
+        // autonomous arm
         LatchMotor = hardwareMap.get(DcMotor.class, "LatchMotor");
+
+        // Intake
         LeftStoneRamp = hardwareMap.get(DcMotor.class, "LeftStoneRamp");
         RightStoneRamp = hardwareMap.get(DcMotor.class, "RightStoneRamp");
-        FlipperMotor = hardwareMap.get (DcMotor.class, "FlipperMotor");
+
+        // Basket (no longer used)
+        //FlipperMotor = hardwareMap.get (DcMotor.class, "FlipperMotor");
+
+        // Linear slide
         SlideMotor = hardwareMap.get(DcMotor.class, "SlideMotor");
 
+        // System to move the gripper out
         Extension = hardwareMap.get(CRServo.class, "Extension");
 
+        // gripper on arm
         Gripper = hardwareMap.get(Servo.class, "Gripper");
+
+
+
 
         tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -87,8 +106,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         // so that "forward" and "backward" are the same number for both sides
         FrontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         FrontRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        BackLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        BackLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        BackRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
 
 
@@ -104,6 +123,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         auto_w_speed = .6;
 
         accelDrive = new Accel_Drive();
+
+        deadZone = .05;
     }
 
     public void setMode(DcMotor.RunMode mode){
@@ -157,22 +178,34 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     }
 
     public void teleDrive(double x, double y, double w){
-        accelDrive.drive(
-                x_speed*x,
-                y_speed*y,
-                w_speed*w);
-        updateMotors();
+        FrontLeftDrive.setPower((y_speed * y) - (x_speed * x)+ (w_speed* w));
+        FrontRightDrive.setPower((y_speed * y) + (x_speed * x) - (w_speed * w));
+        BackLeftDrive.setPower((y_speed * y) + (x_speed * x) + (w_speed * w));
+        BackRightDrive.setPower((y_speed * y) - (x_speed * x) - (w_speed * w));
     }
+
 
     /**
      * Uses gamepad1 to use
      */
+    public void c_driveDebug(){
+        c_drive();
+
+        telemetry.addData("> x: ", gamepad1.left_stick_x);
+        telemetry.addData("> y: ", gamepad1.left_stick_y);
+        telemetry.addData("> w: ", gamepad1.right_stick_x);
+
+    }
+
     public void c_drive(){
-        teleDrive(
-                -gamepad1.left_stick_x,
-                -gamepad1.left_stick_y,
-                gamepad1.right_stick_x
-        );
+        double x = (gamepad1.left_stick_x > .05 || gamepad1.left_stick_x < .05) ?
+                -gamepad1.left_stick_x : 0;
+        double y = (gamepad1.left_stick_y > .05 || gamepad1.left_stick_y < .05) ?
+                -gamepad1.left_stick_y : 0;
+        double w = (gamepad1.right_stick_x > .05 || gamepad1.right_stick_x < .05) ?
+                gamepad1.right_stick_x : 0;
+
+        teleDrive(x, y, w);
     }
 
     /*

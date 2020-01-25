@@ -1,6 +1,8 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Depreciated;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.SuperOp;
 
 @TeleOp(name="Driver Controller")
 public class DriverController extends SuperOp {
