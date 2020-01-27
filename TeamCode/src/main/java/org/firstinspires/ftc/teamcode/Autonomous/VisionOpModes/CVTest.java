@@ -11,16 +11,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 @Autonomous(name="Computer Vision Test")
 public class CVTest extends OpMode {
 
-    private CVInternal cvCamera;
-    //private CVWebcam cvCamera;
+    //private CVInternal cvCamera;
+    private CVWebcam cvCamera;
     private static final String VUFORIA_KEY =
             "AUAq88//////AAABmU+bO6dpUU4BreRJC5efYI1U4Fc5EvLiP5eGiT94wpCspMiACoccxAAVAgEOcCw87pTuHz671RvMDs3dtUBYrJNGI/x/bm60AsIdy3J7prt5EP8xeJuiKjWX32EoIhEsRnqZPpQOmCh11Q5vboZhsCNkNGMNWUIufrVa2g4SKwkSAjaAdOla8w/LwPKbiQBYvwbikpCb01LQg8iVYzWJHBfWLbQcXbuEBQIG9VSgGzyz4RStzgfG5mCTO4UZQbs7P3b/oJIf2rSzd7Ng1HmpHjldX8uFnLMuvIjgG/mJENP/edAw51wRui/21dV8QNdhV8KwP+KBdgpyVBMj44+OlN4ZrGGRkxYDNzd7yptjiGfe";
 
     public void init(){
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        cvCamera = new CVInternal(tfodMonitorViewId);
-        //cvCamera = new CVWebcam(tfodMonitorViewId);
+        //cvCamera = new CVInternal(tfodMonitorViewId);
+        cvCamera = new CVWebcam(tfodMonitorViewId);
         initVuforia(cvCamera);
         cvCamera.initTfod();
         cvCamera.tfod.activate();

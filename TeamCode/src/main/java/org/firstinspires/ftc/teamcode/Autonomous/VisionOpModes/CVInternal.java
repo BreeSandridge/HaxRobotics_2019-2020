@@ -15,45 +15,16 @@ public class CVInternal {
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
     CameraParams cameraParams;
 
-    //private static final String VUFORIA_KEY =
-    //        "AUAq88//////AAABmU+bO6dpUU4BreRJC5efYI1U4Fc5EvLiP5eGiT94wpCspMiACoccxAAVAgEOcCw87pTuHz671RvMDs3dtUBYrJNGI/x/bm60AsIdy3J7prt5EP8xeJuiKjWX32EoIhEsRnqZPpQOmCh11Q5vboZhsCNkNGMNWUIufrVa2g4SKwkSAjaAdOla8w/LwPKbiQBYvwbikpCb01LQg8iVYzWJHBfWLbQcXbuEBQIG9VSgGzyz4RStzgfG5mCTO4UZQbs7P3b/oJIf2rSzd7Ng1HmpHjldX8uFnLMuvIjgG/mJENP/edAw51wRui/21dV8QNdhV8KwP+KBdgpyVBMj44+OlN4ZrGGRkxYDNzd7yptjiGfe";
     VuforiaLocalizer vuforia;
     TFObjectDetector tfod;
     private int tfodMonitorViewId;
     public double blockPos;
     public float left, top, right, bottom;
     public float ww, hh;
-    //private VuforiaLocalizer.Parameters parameters;
 
     CVInternal(int tfodMonitorViewId){
         this.tfodMonitorViewId = tfodMonitorViewId;
-        //initVuforia();
-        //initTfod();
-        //tfod.activate();
         cameraParams = new CameraParams(1280, 720, 1080);
-    }
-
-    /*
-    private void initVuforia() {
-        parameters = new VuforiaLocalizer.Parameters();
-
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-        //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
-    }
-    */
-
-    /**
-     * Initialize the TensorFlow Object Detection engine.
-     */
-    void initTfod() {
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minimumConfidence = 0.8;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
 
     boolean skystoneAligned() {
@@ -91,5 +62,15 @@ public class CVInternal {
              */
         }
         return false;
+    }
+
+    /**
+     * Initialize the TensorFlow Object Detection engine.
+     */
+    void initTfod() {
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minimumConfidence = 0.8;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
 }
