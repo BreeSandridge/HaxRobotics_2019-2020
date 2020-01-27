@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.SuperOp;
 @Autonomous
 public abstract class BuildSuperOp extends SuperOp {
     // declares elapsed time and other variables
+    public int parkPos;
     public ElapsedTime time = new ElapsedTime();
     public ElapsedTime arm = new ElapsedTime();
     public double targetTime;
@@ -62,21 +63,12 @@ public abstract class BuildSuperOp extends SuperOp {
         accelDrive.pushCommand(0,0,-0.5,0.5);
     }
 
-    // park over midline close to neutral bridge
+    // parkY over midline close to neutral bridge
     // move forward then strafe right
     public void park() {
         // move forward a set amount of time
         accelDrive.pushCommand(0,-0.5,0,1.4);
-        accelDrive.pushCommand(0.5,0,0,0.3);
-    }
-
-    // park over midline against wall
-    // move forward then strafe left
-    public void parkW() {
-        // move forward for 1.4 sec
-        accelDrive.pushCommand(0,-0.5,0,1.4);
-        //strafe left for 0.3 sec
-        accelDrive.pushCommand(-0.5,0,0,0.3);
+        accelDrive.pushCommand(parkPos*0.5,0,0,0.3);
     }
 
     // stop all motion of the robot

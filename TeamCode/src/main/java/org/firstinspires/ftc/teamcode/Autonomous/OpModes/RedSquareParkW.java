@@ -4,8 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Autonomous.PlayerSuperOp;
 @Autonomous
-public class RedSquareParkW extends PlayerSuperOp {
-    public PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
+public class RedSquareParkW extends RedSquarePark {
+    @Override
+    public void init() {
+        super.init();
+        parkPos = -1;
+    }
+    /*public PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
     @Override
     public void loop() {
         startPoint = 1;
@@ -27,10 +32,10 @@ public class RedSquareParkW extends PlayerSuperOp {
         //there are methods created below the switch statement for easier reading
         switch (status) {
             case FLIPPER:
-                parkW();
-                status = PLAYERSTATUS.PARKW;
+                park();
+                status = PLAYERSTATUS.PARK;
                 break;
-            case PARKW:
+            case PARK:
                 if(accelDrive.isEmpty){
                     status = PLAYERSTATUS.STOP;
                 } else {
@@ -41,5 +46,5 @@ public class RedSquareParkW extends PlayerSuperOp {
                 stop1();
                 break;
         }
-    }
+    }*/
 }

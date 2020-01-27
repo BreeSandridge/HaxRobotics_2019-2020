@@ -57,12 +57,12 @@ public class RedTriangleY extends BuildSuperOp {
             case AROUND:
                 if(accelDrive.isEmpty) {
                     park();
-                    status = BUILDSTATUS.PARKY;
+                    status = BUILDSTATUS.PARK;
                 } else {
                     updateAndDrive();
                 }
                 break;
-            case PARKY:
+            case PARK:
                 if(accelDrive.isEmpty) {
                     status = BUILDSTATUS.STOP;
                 } else {

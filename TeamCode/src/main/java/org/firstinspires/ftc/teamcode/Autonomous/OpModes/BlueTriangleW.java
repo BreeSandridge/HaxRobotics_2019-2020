@@ -55,13 +55,13 @@ public class BlueTriangleW extends BuildSuperOp {
                 break;
             case AROUND:
                 if(accelDrive.isEmpty) {
-                    parkW();
-                    status = BUILDSTATUS.PARKW;
+                    park();
+                    status = BUILDSTATUS.PARK;
                 } else {
                     updateAndDrive();
                 }
                 break;
-            case PARKW:
+            case PARK:
                 if(accelDrive.isEmpty) {
                     status = BUILDSTATUS.STOP;
                 } else {

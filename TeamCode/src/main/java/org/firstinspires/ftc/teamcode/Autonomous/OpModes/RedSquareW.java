@@ -58,8 +58,8 @@ public class RedSquareW extends PlayerSuperOp {
                     again();
                     status = PLAYERSTATUS.AGAIN;
                 } else {
-                    parkW();
-                    status = PLAYERSTATUS.PARKW;
+                    park();
+                    status = PLAYERSTATUS.PARK;
                 }
             case AGAIN:
                 if(accelDrive.isEmpty){
@@ -68,7 +68,7 @@ public class RedSquareW extends PlayerSuperOp {
                     updateAndDrive();
                 }
                 break;
-            case PARKW:
+            case PARK:
                 if(accelDrive.isEmpty){
                     status = PLAYERSTATUS.STOP;
                 } else {

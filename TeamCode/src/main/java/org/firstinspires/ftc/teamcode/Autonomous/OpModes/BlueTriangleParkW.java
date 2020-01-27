@@ -4,8 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BuildSuperOp;
 @Autonomous
-public class BlueTriangleParkW extends BuildSuperOp {
-    public BUILDSTATUS status = BUILDSTATUS.FLIPPER;
+public class BlueTriangleParkW extends BlueTrianglePark {
+    @Override
+    public void init() {
+        super.init();
+        parkPos = -1;
+    }
+    /*public BUILDSTATUS status = BUILDSTATUS.FLIPPER;
     @Override
     public void loop() {
         startPoint = 1;
@@ -24,10 +29,10 @@ public class BlueTriangleParkW extends BuildSuperOp {
         //there are methods created below the switch statement for easier reading
         switch (status) {
             case FLIPPER:
-                parkW();
-                status = BUILDSTATUS.PARKW;
+                park();
+                status = BUILDSTATUS.PARK;
                 break;
-            case PARKW:
+            case PARK:
                 if(accelDrive.isEmpty){
                     status = BUILDSTATUS.STOP;
                 } else {
@@ -38,6 +43,6 @@ public class BlueTriangleParkW extends BuildSuperOp {
                 stop1();
                 break;
         }
-    }
+    }*/
 }
 

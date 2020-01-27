@@ -72,7 +72,7 @@ public class RedBuild extends SuperOp {
                 break;
             case PARK:
                 //time.reset();
-                park();
+                parkY();
                 break;
             case STOP:
                 stop1();
@@ -230,11 +230,11 @@ public class RedBuild extends SuperOp {
         }
     }
 
-    //park the robot in the middle of the alliance bridge
+    //parkY the robot in the middle of the alliance bridge
     //drive 1.5 seconds forward, then stop
     //switch STATUS to 'STOP'
-    private void park() {
-        // vision code to park the robot under the bridge
+    private void parkY() {
+        // vision code to parkY the robot under the bridge
         //t_drive(0, -1, 0, 1);
         targetTime = .9;
         drive(0, -0.5, 0);

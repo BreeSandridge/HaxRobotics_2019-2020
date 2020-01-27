@@ -39,8 +39,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public CRServo Extension  = null;
 
     // enums used in build/player autonomi
-    public enum BUILDSTATUS {FLIPPER, TOFOUNDATION, DRAG, AROUND, MOVE, PARKY, PARKW, STOP}
-    public enum PLAYERSTATUS {FLIPPER, TOBLOCK, AWAY, AGAIN, AWAY2, DECISION, PARKY, PARKW, STOP}
+    public enum BUILDSTATUS {FLIPPER, TOFOUNDATION, DRAG, AROUND, MOVE, PARK, STOP}
+    public enum PLAYERSTATUS {FLIPPER, TOBLOCK, AWAY, AGAIN, AWAY2, DECISION, PARK, STOP}
 
     public Accel_Drive accelDrive;
     public int startPoint = 1;

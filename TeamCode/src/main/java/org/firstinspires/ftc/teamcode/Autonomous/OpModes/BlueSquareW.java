@@ -2,10 +2,6 @@ package org.firstinspires.ftc.teamcode.Autonomous.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Autonomous.PlayerSuperOp;
-import org.firstinspires.ftc.teamcode.SuperOp;
-
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous
 public class BlueSquareW extends PlayerSuperOp {
@@ -59,8 +55,8 @@ public class BlueSquareW extends PlayerSuperOp {
                     again();
                     status = PLAYERSTATUS.AGAIN;
                 } else {
-                    parkW();
-                    status = PLAYERSTATUS.PARKW;
+                    park();
+                    status = PLAYERSTATUS.PARK;
                 }
             case AGAIN:
                 if(accelDrive.isEmpty){
@@ -69,7 +65,7 @@ public class BlueSquareW extends PlayerSuperOp {
                     updateAndDrive();
                 }
                 break;
-            case PARKW:
+            case PARK:
                 if(accelDrive.isEmpty){
                     status = PLAYERSTATUS.STOP;
                 } else {

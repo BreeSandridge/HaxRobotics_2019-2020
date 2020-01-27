@@ -55,8 +55,8 @@ public class BlueSquareY extends PlayerSuperOp {
                     again();
                     status = PLAYERSTATUS.AGAIN;
                 } else {
-                    parkW();
-                    status = PLAYERSTATUS.PARKW;
+                    park();
+                    status = PLAYERSTATUS.PARK;
                 }
             case AGAIN:
                 if(accelDrive.isEmpty){
@@ -65,7 +65,7 @@ public class BlueSquareY extends PlayerSuperOp {
                     updateAndDrive();
                 }
                 break;
-            case PARKY:
+            case PARK:
                 if(accelDrive.isEmpty){
                     status = PLAYERSTATUS.STOP;
                 } else {
