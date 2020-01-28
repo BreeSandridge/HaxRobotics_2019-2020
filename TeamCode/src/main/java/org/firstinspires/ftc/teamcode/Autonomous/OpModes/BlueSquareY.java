@@ -11,6 +11,7 @@ public class BlueSquareY extends PlayerSuperOp {
     public PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
     @Override
     public void loop() {
+        parkPos = 1;
         startPoint = -1;
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code

@@ -15,6 +15,7 @@ public class RedSquareW extends PlayerSuperOp {
     @Override
     public void loop() {
         startPoint = 1;
+        parkPos = -1;
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life

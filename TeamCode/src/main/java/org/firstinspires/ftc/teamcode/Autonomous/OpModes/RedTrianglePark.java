@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BuildSuperOp;
 
-@Autonomous
 public abstract class RedTrianglePark extends BuildSuperOp {
     public BUILDSTATUS status = BUILDSTATUS.FLIPPER;
     @Override
