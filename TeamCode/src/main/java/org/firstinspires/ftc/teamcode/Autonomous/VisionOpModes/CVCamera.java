@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.CameraParams;
 
 import java.util.List;
 
-public class CVWebcam {
+public class CVCamera {
 
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
@@ -17,14 +17,12 @@ public class CVWebcam {
 
     VuforiaLocalizer vuforia;
     TFObjectDetector tfod;
-    private int tfodMonitorViewId;
+    public int tfodMonitorViewId;
     public double blockPos;
     public float left, top, right, bottom;
     public float ww, hh;
 
-    CVWebcam(int tfodMonitorViewId) {
-        this.tfodMonitorViewId = tfodMonitorViewId;
-        cameraParams = new CameraParams(1280, 720, 1080);
+    CVCamera(){
     }
 
     boolean skystoneAligned() {

@@ -7,47 +7,39 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.teamcode.Autonomous.CameraParams;
 
 @Autonomous(name="Computer Vision Test")
 public class CVTest extends OpMode {
 
-    //private CVInternal cvCamera;
-    private CVWebcam cvCamera;
+    private CVCamera cvCamera = new CVCamera();
     private static final String VUFORIA_KEY =
             "AUAq88//////AAABmU+bO6dpUU4BreRJC5efYI1U4Fc5EvLiP5eGiT94wpCspMiACoccxAAVAgEOcCw87pTuHz671RvMDs3dtUBYrJNGI/x/bm60AsIdy3J7prt5EP8xeJuiKjWX32EoIhEsRnqZPpQOmCh11Q5vboZhsCNkNGMNWUIufrVa2g4SKwkSAjaAdOla8w/LwPKbiQBYvwbikpCb01LQg8iVYzWJHBfWLbQcXbuEBQIG9VSgGzyz4RStzgfG5mCTO4UZQbs7P3b/oJIf2rSzd7Ng1HmpHjldX8uFnLMuvIjgG/mJENP/edAw51wRui/21dV8QNdhV8KwP+KBdgpyVBMj44+OlN4ZrGGRkxYDNzd7yptjiGfe";
+    enum CamType{INTERNAL, WEBCAM};
+
+    public void initCamera(CVCamera camera, CamType type){
+        camera.tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        switch (type) {
+            case INTERNAL:
+                parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+                camera.cameraParams = new CameraParams(1280, 720, 1080);
+                break;
+            case WEBCAM:
+                parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+                camera.cameraParams = new CameraParams(800, 448, 1080);
+                break;
+        }
+        camera.vuforia = ClassFactory.getInstance().createVuforia(parameters);
+        camera.initTfod();
+        camera.tfod.activate();
+    }
 
     public void init(){
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        //cvCamera = new CVInternal(tfodMonitorViewId);
-        cvCamera = new CVWebcam(tfodMonitorViewId);
-        initVuforia(cvCamera);
-        cvCamera.initTfod();
-        cvCamera.tfod.activate();
-
-    }
-
-    private void initVuforia(CVInternal internal) {
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-        //  Instantiate the Vuforia engine
-        internal.vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
-    }
-
-    private void initVuforia(CVWebcam webcam) {
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
-
-        //  Instantiate the Vuforia engine
-        webcam.vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
+        CamType camType = CamType.WEBCAM;
+        initCamera(cvCamera, camType);
     }
 
     @Override
@@ -62,4 +54,5 @@ public class CVTest extends OpMode {
         telemetry.addData("height: ", "%f", cvCamera.hh);
         telemetry.update();
     }
+
 }

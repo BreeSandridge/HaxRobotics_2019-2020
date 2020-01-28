@@ -20,7 +20,7 @@ public class VisionBlueBuild extends SuperOp {
     private int targetPosition;
     private boolean ran = false;
     private boolean ran1 = true;
-    private CVInternal cvCamera = new CVInternal(tfodMonitorViewId);
+    private CVCamera cvCamera = new CVCamera(tfodMonitorViewId);
 
     @Override
     public void loop() {

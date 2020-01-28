@@ -5,12 +5,6 @@ import java.util.ArrayList;
 // camera location to the robot center
 //
 public class CameraParams {
-    //private double offset_x = 0;
-    //private double offset_y = 0;
-    //private double offset_z = 0;
-    //private double h = 1836; // Image height
-    //private double w = 3264; // Image width
-    //private double res = 2565; // How many pixels in a 45-degree angle
     private double h; // Image height
     private double w; // Image width
     private double res; // How many pixels in a 45-degree angle
