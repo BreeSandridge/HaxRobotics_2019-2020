@@ -41,8 +41,8 @@ public class CVCamera {
         //int i = 0;
         for (Recognition recognition : recognitions) {
             String label = recognition.getLabel();
-            //if (!label.equals("Skystone"))
-            //    continue;
+            if (!label.equals("Skystone"))
+                continue;
             left = recognition.getLeft();
             top = recognition.getTop();
             right = recognition.getRight();
