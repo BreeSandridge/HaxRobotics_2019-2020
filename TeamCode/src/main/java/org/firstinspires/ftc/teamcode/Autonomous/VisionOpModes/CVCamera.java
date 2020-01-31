@@ -5,6 +5,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Autonomous.CameraParams;
+import org.firstinspires.ftc.teamcode.Autonomous.VisionOpModes.CVTest.CamType;
 
 import java.util.List;
 
@@ -21,24 +22,27 @@ public class CVCamera {
     public double blockPos;
     public float left, top, right, bottom;
     public float ww, hh;
+    CamType type;
 
-    CVCamera(){
+    CVCamera(CamType type){
+        this.type = type;
     }
 
-    boolean skystoneAligned() {
+    //boolean skystoneAligned() {
+    void findSkystone() {
         // getUpdatedRecognitions() will return null if no new information is available since
         // the last time that call was made.
-        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-        if (updatedRecognitions == null)
-            return false;
+        List<Recognition> recognitions = tfod.getRecognitions();
+        //if (recognitions == null)
+        //    return false;
         //telemetry.addData("# Object Detected", updatedRecognitions.size());
 
         // step through the list of recognitions and display boundary info.
         //int i = 0;
-        for (Recognition recognition : updatedRecognitions) {
+        for (Recognition recognition : recognitions) {
             String label = recognition.getLabel();
-            if (!label.equals("Skystone"))
-                continue;
+            //if (!label.equals("Skystone"))
+            //    continue;
             left = recognition.getLeft();
             top = recognition.getTop();
             right = recognition.getRight();
@@ -46,9 +50,9 @@ public class CVCamera {
             ww = recognition.getImageWidth();
             hh = recognition.getImageHeight();
             blockPos = cameraParams.undoPerspective(left, top, right, bottom);
-            double armOffset = 10;
-            if (blockPos > armOffset)
-                return true;
+            //double armOffset = 10;
+            //if (blockPos > armOffset)
+            //    return true;
             /*
             telemetry.addData(String.format("label (%d)", i), label);
             telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
@@ -59,7 +63,7 @@ public class CVCamera {
                     (float) blockPos);
              */
         }
-        return false;
+        //return false;
     }
 
     /**
@@ -70,5 +74,6 @@ public class CVCamera {
         tfodParameters.minimumConfidence = 0.8;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+        //tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_SECOND_ELEMENT);
     }
 }
