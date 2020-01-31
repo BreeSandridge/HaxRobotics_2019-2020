@@ -5,6 +5,8 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.Autonomous.VisionOpModes.CVCamera;
 import org.firstinspires.ftc.teamcode.SuperOp;
 
 @Autonomous
@@ -19,9 +21,12 @@ public abstract class PlayerSuperOp extends SuperOp {
     public int targetPosition;
     public boolean ran = false;
     public boolean ran1 = true;
-
+    public CVCamera cvCamera;
     @Override
     public void init() {
+        cvCamera = new CVCamera(tfodMonitorViewId);;
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life

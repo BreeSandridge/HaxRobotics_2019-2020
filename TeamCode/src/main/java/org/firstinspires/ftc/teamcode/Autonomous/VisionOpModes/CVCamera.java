@@ -22,7 +22,7 @@ public class CVCamera {
     private TFObjectDetector tfod;
     private int tfodMonitorViewId;
 
-    CVCamera(int tfodMonitorViewId){
+    public CVCamera(int tfodMonitorViewId){
         this.tfodMonitorViewId = tfodMonitorViewId;
         initVuforia();
         initTfod();
@@ -60,7 +60,7 @@ public class CVCamera {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
 
-    boolean skystoneAligned() {
+    public boolean skystoneAligned() {
         // getUpdatedRecognitions() will return null if no new information is available since
         // the last time that call was made.
         List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
