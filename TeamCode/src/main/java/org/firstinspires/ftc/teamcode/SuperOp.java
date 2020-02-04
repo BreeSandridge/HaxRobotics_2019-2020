@@ -101,6 +101,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         auto_y_speed = .6;
         auto_w_speed = .6;
 
+        deadZone = .05;
+
         accelDrive = new Accel_Drive();
 
     }
