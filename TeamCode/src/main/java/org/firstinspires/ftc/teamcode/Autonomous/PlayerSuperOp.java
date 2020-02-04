@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.SuperOp;
 @Autonomous
 public abstract class PlayerSuperOp extends SuperOp {
     // declares elapsed time and other variables
+    public int block = 0;
     public int parkPos;
     public ElapsedTime time = new ElapsedTime();
     public ElapsedTime arm = new ElapsedTime();
@@ -24,9 +25,12 @@ public abstract class PlayerSuperOp extends SuperOp {
     public CVCamera cvCamera;
     @Override
     public void init() {
-        cvCamera = new CVCamera(tfodMonitorViewId);;
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        CamType type = CamType.WEBCAM;
+        cvCamera = new CVCamera(type);
+        initCamera(cvCamera, type);
+        //int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                //"tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        //cvCamera = new CVCamera(tfodMonitorViewId);;
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
@@ -60,14 +64,25 @@ public abstract class PlayerSuperOp extends SuperOp {
             LatchMotor.setPower(0);
             // forces statment to run once
             // strafe away from blocks
-            accelDrive.pushCommand(-0.5,0,0,1.1);
+            accelDrive.pushCommand(-0.5,0,0,0.75);
         }
     }
-
+    public void moveBackwards(){
+        accelDrive.pushCommand(0,-0.5,0,0.5);
+    }
+    public void moveForwards(){
+        accelDrive.pushCommand(0,0.5,0,0.5);
+    }
     // drive into build zone and release block
     public void away () {
         // drive into build zone
-        accelDrive.pushCommand(0, -0.5, 0, 1);
+        if(block == 0){
+            accelDrive.pushCommand(0, -0.5, 0, 1.5);
+        } else if(block == -1){
+            accelDrive.pushCommand(0,-0.5,0,1);
+        } else if(block == 1){
+            accelDrive.pushCommand(0,-0.5,0,2);
+        }
     }
     public void release(){
         // release block

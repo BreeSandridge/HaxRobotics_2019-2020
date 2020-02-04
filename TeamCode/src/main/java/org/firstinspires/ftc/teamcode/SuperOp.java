@@ -6,6 +6,12 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.teamcode.Autonomous.CameraParams;
+import org.firstinspires.ftc.teamcode.Autonomous.VisionOpModes.CVCamera;
+
 import java.util.Queue;
 
 
@@ -25,6 +31,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     //stopwatch class
     public ElapsedTime timer;
 
+    public static final String VUFORIA_KEY =
+            "AUAq88//////AAABmU+bO6dpUU4BreRJC5efYI1U4Fc5EvLiP5eGiT94wpCspMiACoccxAAVAgEOcCw87pTuHz671RvMDs3dtUBYrJNGI/x/bm60AsIdy3J7prt5EP8xeJuiKjWX32EoIhEsRnqZPpQOmCh11Q5vboZhsCNkNGMNWUIufrVa2g4SKwkSAjaAdOla8w/LwPKbiQBYvwbikpCb01LQg8iVYzWJHBfWLbQcXbuEBQIG9VSgGzyz4RStzgfG5mCTO4UZQbs7P3b/oJIf2rSzd7Ng1HmpHjldX8uFnLMuvIjgG/mJENP/edAw51wRui/21dV8QNdhV8KwP+KBdgpyVBMj44+OlN4ZrGGRkxYDNzd7yptjiGfe";
 
     public DcMotor FrontLeftDrive = null;
     public DcMotor FrontRightDrive = null;
@@ -41,7 +49,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     // enums used in build/player autonomi
     public enum BUILDSTATUS {FLIPPER, TOFOUNDATION, DRAG, AROUND, MOVE, PARK, STOP}
     public enum PLAYERSTATUS {FLIPPER, TOBLOCK, AWAY, AGAIN, AWAY2, DECISION, PARK, STOP}
-
+    public enum CamType{INTERNAL, WEBCAM}
     public Accel_Drive accelDrive;
     public int startPoint = 1;
     public double x_speed;
@@ -134,7 +142,25 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackRightDrive.setPower((y_speed * y) - (x_speed * x) - (w_speed * w));
     }
     */
-
+    public void initCamera(CVCamera camera, CamType type){
+        camera.tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        switch (type) {
+            case INTERNAL:
+                parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+                camera.cameraParams = new CameraParams(1280, 720, 1080);
+                break;
+            case WEBCAM:
+                parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+                camera.cameraParams = new CameraParams(448, 800, 1080);
+                break;
+        }
+        camera.vuforia = ClassFactory.getInstance().createVuforia(parameters);
+        camera.initTfod();
+        camera.tfod.activate();
+    }
     public void updateMotors(){
         FrontLeftDrive.setPower(accelDrive.motorPowers[0]);
         FrontRightDrive.setPower(accelDrive.motorPowers[1]);
