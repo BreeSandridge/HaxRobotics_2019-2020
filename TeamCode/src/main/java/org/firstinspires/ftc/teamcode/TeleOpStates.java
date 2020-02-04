@@ -5,12 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="New Comp")
+@TeleOp(name="TeleOpStates")
 public class TeleOpStates extends SuperOp {
 
+    private ElapsedTime slideTime = new ElapsedTime();
     // Modifier values for linear slide
-    //prolly around .9
+    // prolly around .9
     final private double positiveLinearSlideModifier = 1;
     final private double negativeLinearSlideModifier = .7;
 
@@ -18,6 +20,8 @@ public class TeleOpStates extends SuperOp {
     private boolean grabberState = false;
     private final double grabberOpenPos = 1;
     private final double grabberClosedPos = 0;
+    private final double grabberOpenPosRight = -1;
+    private final double grabberClosedPosRight = 0;
 
 
 
@@ -66,6 +70,8 @@ public class TeleOpStates extends SuperOp {
         controllerExtension();
 
         controllerGrabber();
+
+        controllerLatch();
     }
 
 
@@ -74,14 +80,14 @@ public class TeleOpStates extends SuperOp {
 
     // Controls the Block Grabber
     private void controllerGrabber() {
-        if (gamepad2.b){
+        if (gamepad2.b) {
             grabberState = true;
         } else if (gamepad2.a) {
             grabberState = false;
         }
-
         Gripper.setPosition(grabberState ? grabberOpenPos : grabberClosedPos);
     }
+
     private void controllerGrabberUnitTest() {
         Gripper.setPosition(grabberOpenPos);
         sleep_secs(3);
@@ -93,15 +99,28 @@ public class TeleOpStates extends SuperOp {
 
     // Controls Extension servo (Linear progressor)
     private void controllerExtension(){
-
-        Extension.setPower(gamepad2.right_stick_y);
+        if(gamepad2.x) {
+            if(slideTime.seconds() < .5) {
+                SlideMotor.setPower(.2);
+                slideTime.reset();
+            }
+            ExtensionLeft.setPosition(1);
+            ExtensionRight.setPosition(0);
+        } else if (gamepad2.y) {
+            ExtensionLeft.setPosition(0);
+            ExtensionRight.setPosition(1);
+            if (slideTime.seconds() < .5) {
+                SlideMotor.setPower(-.2);
+                slideTime.reset();
+            }
+        }
     }
     private void controllerExtensionUnitTest(){
-        Extension.setPower(.3);
+        ExtensionLeft.setPosition(.3);
         sleep_secs(.5);
-        Extension.setPower(-.3);
+        ExtensionLeft.setPosition(-.3);
         sleep_secs(-.5);
-        Extension.setPower(0);
+        ExtensionLeft.setPosition(0);
     }
 
     // Controls linear slide
@@ -127,11 +146,20 @@ public class TeleOpStates extends SuperOp {
     // LatchMotor for foundation
     private void controllerFoundation(){
         if (gamepad2.dpad_up) {
-            LatchMotor.setPower(.4);
-        } else {
-            LatchMotor.setPower(gamepad2.dpad_down ? .3 : 0);
+            Foundation.setPosition(1);
+        } else if(gamepad2.dpad_down){
+            Foundation.setPosition(0);
         }
     }
+
+    private void controllerLatch(){
+        if (gamepad2.dpad_left) {
+            LatchMotor.setPower(.4);
+        } else if(gamepad2.dpad_right){
+            LatchMotor.setPower(gamepad2.dpad_right ? .3 : 0);
+        }
+    }
+
 
     /*
      * Controls Intake System by given priority to driver intake, then outtake, then operator
@@ -188,9 +216,9 @@ public class TeleOpStates extends SuperOp {
     // Controls Extension servo (Linear progressor)
     private void controllerExtensionDebug(){
 
-        Extension.setPower(gamepad2.right_stick_y);
+        ExtensionLeft.setPosition(gamepad2.right_stick_y);
 
-        telemetry.addData("> Extension Power: ", Extension.getPower());
+        telemetry.addData("> Extension Power: ", ExtensionLeft.getPosition());
     }
 
     // Controls linear slide

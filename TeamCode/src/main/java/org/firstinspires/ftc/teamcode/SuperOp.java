@@ -36,7 +36,9 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor SlideMotor = null;
 
     public Servo Gripper = null;
-    public CRServo Extension  = null;
+    public Servo ExtensionRight = null;
+    public Servo ExtensionLeft  = null;
+    public Servo Foundation = null;
 
     // enums used in build/player autonomi
     public enum BUILDSTATUS {FLIPPER, TOFOUNDATION, DRAG, AROUND, MOVE, PARK, STOP}
@@ -74,9 +76,11 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         RightStoneRamp = hardwareMap.get(DcMotor.class, "RightStoneRamp");
         SlideMotor = hardwareMap.get(DcMotor.class, "SlideMotor");
 
-        Extension = hardwareMap.get(CRServo.class, "Extension");
+        ExtensionLeft = hardwareMap.get(Servo.class, "ExtensionLeft");
+        ExtensionRight = hardwareMap.get(Servo.class, "ExtensionRight");
+        Gripper = hardwareMap.get(Servo.class, "GripperLeft");
+        Foundation = hardwareMap.get(Servo.class, "Foundation");
 
-        Gripper = hardwareMap.get(Servo.class, "Gripper");
 
         tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -163,6 +167,18 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public void updateAndDrive(){
         accelDrive.update();
         updateMotors();
+    }
+
+    /**
+     * Uses gamepad1 to use
+     */
+    public void c_driveDebug(){
+        c_drive();
+
+        telemetry.addData("> x: ", gamepad1.left_stick_x);
+        telemetry.addData("> y: ", gamepad1.left_stick_y);
+        telemetry.addData("> w: ", gamepad1.right_stick_x);
+
     }
 
     /**
