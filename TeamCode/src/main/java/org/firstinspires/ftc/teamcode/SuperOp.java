@@ -50,7 +50,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public double auto_x_speed;
     public double auto_y_speed;
     public double auto_w_speed;
-
+    public double deadZone;
     public int tfodMonitorViewId;
 
     static final double COUNTS_PER_MOTOR_REV = 1440;            // eg: TETRIX Motor Encoder
