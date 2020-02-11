@@ -5,7 +5,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Autonomous.CameraParams;
-import org.firstinspires.ftc.teamcode.Autonomous.VisionOpModes.CVTest.CamType;
+import org.firstinspires.ftc.teamcode.SuperOp.CamType;
 
 import java.util.List;
 
@@ -14,17 +14,17 @@ public class CVCamera {
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
-    CameraParams cameraParams;
+    public CameraParams cameraParams;
 
-    VuforiaLocalizer vuforia;
-    TFObjectDetector tfod;
+    public VuforiaLocalizer vuforia;
+    public TFObjectDetector tfod;
     public int tfodMonitorViewId;
     public double blockPos;
     public float left, top, right, bottom;
     public float ww, hh;
     CamType type;
 
-    CVCamera(CamType type){
+    public CVCamera(CamType type){
         this.type = type;
     }
     //boolean skystoneAligned() {
@@ -68,7 +68,7 @@ public class CVCamera {
     /**
      * Initialize the TensorFlow Object Detection engine.
      */
-    void initTfod() {
+    public void initTfod() {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minimumConfidence = 0.8;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
