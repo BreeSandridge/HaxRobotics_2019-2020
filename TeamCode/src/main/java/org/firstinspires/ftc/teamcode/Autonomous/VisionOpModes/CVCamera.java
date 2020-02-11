@@ -1,28 +1,22 @@
 package org.firstinspires.ftc.teamcode.Autonomous.VisionOpModes;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.Autonomous.CameraParams;
 import org.firstinspires.ftc.teamcode.Autonomous.VisionOpModes.CVTest.CamType;
 
 import java.util.List;
 
 public class CVCamera {
 
-    private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
-    private static final String LABEL_FIRST_ELEMENT = "Stone";
-    private static final String LABEL_SECOND_ELEMENT = "Skystone";
     CameraParams cameraParams;
 
-    VuforiaLocalizer vuforia;
-    TFObjectDetector tfod;
-    public int tfodMonitorViewId;
-    public double blockPos;
+    VuforiaLocalizer vuforia; // To retrieve images
+    TFObjectDetector tfod; // To indentify objects
+    public double blockPos;  // These variables are accessed by the opmode
     public float left, top, right, bottom;
     public float ww, hh;
-    CamType type;
+    CamType type; // Internal vs webcam
 
     CVCamera(CamType type){
         this.type = type;
@@ -70,10 +64,38 @@ public class CVCamera {
      * Initialize the TensorFlow Object Detection engine.
      */
     void initTfod() {
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minimumConfidence = 0.8;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
-        //tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_SECOND_ELEMENT);
+    }
+
+    public static class CameraParams {
+        private double h; // Image height (unused for now)
+        private double w; // Image width
+        private double res; // How many pixels in a 45-degree angle
+        private double blockWidth = 7.5; // Width of the stones (inches)
+
+        // Given a rectangle, returns location in space of bottom edge
+        public double undoPerspective(float x_left, float y_top, float x_right, float y_bottom){
+            // Only uses width to calculate distance,
+            // although theoretically height might be preferable,
+            // since blocks are next to e.o. and can be hard to distinguish
+            double rectWidth = x_right-x_left;
+            // Similar triangles: an object which is as wide as it is far from the camera
+            // will occupy res pixels on the screen
+            double blockDist = blockWidth*res/rectWidth;
+            // Distance of the rectangle from the center of the screen
+            double rectOffset = (x_left+x_right)/2 - w/2;
+            // Similar triangles again: replace "width" with "offset from straight ahead"
+            double blockOffset = rectOffset*blockDist/res;
+            // pos used to be a double[] containing distance as well
+            double pos = blockOffset;
+            return pos;
+        }
+
+        // Constructor: accepts dimensions and resolution of camera
+        public CameraParams(double h, double w, double res){
+            this.h=h;
+            this.w=w;
+            this.res=res;
+        }
+
     }
 }
