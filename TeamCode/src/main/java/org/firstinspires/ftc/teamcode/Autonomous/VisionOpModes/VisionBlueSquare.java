@@ -103,5 +103,4 @@ public class VisionBlueSquare extends PlayerSuperOp {
 
         }
     }
-
 }
