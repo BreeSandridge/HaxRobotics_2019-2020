@@ -24,7 +24,7 @@ public abstract class PlayerSuperOp extends SuperOp {
     public CVCamera cvCamera;
     @Override
     public void init() {
-        cvCamera = new CVCamera(tfodMonitorViewId);;
+        cvCamera = new CVCamera(tfodMonitorViewId);
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         //declare telemetry for all motors/servos

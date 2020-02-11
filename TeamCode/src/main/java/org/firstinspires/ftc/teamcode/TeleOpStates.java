@@ -20,8 +20,6 @@ public class TeleOpStates extends SuperOp {
     private boolean grabberState = false;
     private final double grabberOpenPos = 1;
     private final double grabberClosedPos = 0;
-    private final double grabberOpenPosRight = -1;
-    private final double grabberClosedPosRight = 0;
 
 
 
@@ -99,20 +97,30 @@ public class TeleOpStates extends SuperOp {
 
     // Controls Extension servo (Linear progressor)
     private void controllerExtension(){
+
         if(gamepad2.x) {
-            if(slideTime.seconds() < .5) {
+            while(slideTime.seconds() < 0.5){
+                SlideMotor.setPower(0.2);
+            }
+            /*if(slideTime.seconds() < .5) {
                 SlideMotor.setPower(.2);
                 slideTime.reset();
-            }
+            }*/
             ExtensionLeft.setPosition(1);
             ExtensionRight.setPosition(0);
+            slideTime.reset();
         } else if (gamepad2.y) {
             ExtensionLeft.setPosition(0);
             ExtensionRight.setPosition(1);
-            if (slideTime.seconds() < .5) {
+            slideTime.reset();
+            while(slideTime.seconds() < 0.5){
+                SlideMotor.setPower(-0.2);
+            }
+            slideTime.reset();
+            /*if (slideTime.seconds() < .5) {
                 SlideMotor.setPower(-.2);
                 slideTime.reset();
-            }
+            }*/
         }
     }
     private void controllerExtensionUnitTest(){
@@ -156,7 +164,7 @@ public class TeleOpStates extends SuperOp {
         if (gamepad2.dpad_left) {
             LatchMotor.setPower(.4);
         } else if(gamepad2.dpad_right){
-            LatchMotor.setPower(gamepad2.dpad_right ? .3 : 0);
+            LatchMotor.setPower(gamepad2.dpad_right ? -.4 : 0);
         }
     }
 
