@@ -23,9 +23,11 @@ public abstract class PlayerSuperOp extends SuperOp {
     public boolean ran = false;
     public boolean ran1 = true;
     public CVCamera cvCamera;
+
     @Override
     public void init() {
-        CamType type = CamType.WEBCAM;
+        //initialize camera for vision autonomous
+        CamType type = CamType.INTERNAL;
         cvCamera = new CVCamera(type);
         initCamera(cvCamera, type);
         //int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(

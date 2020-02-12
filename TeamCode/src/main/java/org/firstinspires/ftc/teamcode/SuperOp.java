@@ -252,12 +252,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         accelDrive.pushCommand(newParams);
     }
 
-    /**
-     * This method allows forwards and backwards movement for the robot by running the motors
-     * until a certain encoder value is reached
-     * @param speed (the speed [-1, 1], at which the robot's wheels will turn)
-     * @param desired the distance the robot will travel (positive for forwards, negative for backwards)
-     */
 
 
     /*
