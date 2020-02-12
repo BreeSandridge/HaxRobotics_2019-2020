@@ -1,145 +1,91 @@
 package org.firstinspires.ftc.teamcode;
 
-
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="TeleOpStates")
 public class TeleOpStates extends SuperOp {
 
+    // used to move LinearSlide up before extending swing
+    // used in controllerExtension
     private ElapsedTime slideTime = new ElapsedTime();
+
     // Modifier values for linear slide
-    // prolly around .9
+    // probably around .9
     final private double positiveLinearSlideModifier = 1;
     final private double negativeLinearSlideModifier = .7;
 
-    // true == Open && false == Closed
-    private boolean grabberState = false;
-    private final double grabberOpenPos = 1;
-    private final double grabberClosedPos = 0;
-
-
+    // open position is 1, closed is 0
+    private final double grabberOpenPos = .4;
+    private final double grabberClosedPos = 1;
 
     @Override
     public void loop() {
+        // call controller drive
         controllerDrive();
-        //controllerDriveDebug();
-
-        //controllerExtensionDebug();
-
-        //controllerGrabberDebug();
-
-        telemetry.update();
-    }
-
-
-
-
-    // Debugging tool for TeleOp
-    private void controllerDriveDebug(){
-        c_driveDebug();
-
-        controllerIntakeDebug();
-
-        controllerFoundationDebug();
-
-        controllerLinearSlideDebug();
-
-        controllerExtensionDebug();
-
-        controllerGrabberDebug();
-
+        // update telemetry
+        telemetry.addData("Gripper Position:", Gripper.getPosition());
         telemetry.update();
     }
 
     // Controls all TeleOp Methods
     private void controllerDrive(){
+        // call c_drive (SuperOp, 213)
         c_drive();
-
+        // call controllerIntake
         controllerIntake();
-
+        // call controllerFoundation
         controllerFoundation();
-
+        // call controllerLinearSlide
         controllerLinearSlide();
-
+        // call controllerExtension
         controllerExtension();
-
+        // call controllerGrabber
         controllerGrabber();
-
+        // call controllerLatch
         controllerLatch();
     }
 
 
-
-
-
     // Controls the Block Grabber
     private void controllerGrabber() {
+        // if b button pressed, open grabber, otherwise, keep it closed
         if (gamepad2.b) {
-            grabberState = true;
-        } else if (gamepad2.a) {
-            grabberState = false;
+            Gripper.setPosition(grabberOpenPos);
         }
-        Gripper.setPosition(grabberState ? grabberOpenPos : grabberClosedPos);
-    }
-
-    private void controllerGrabberUnitTest() {
-        Gripper.setPosition(grabberOpenPos);
-        sleep_secs(3);
-        Gripper.setPosition(grabberClosedPos);
-        sleep_secs(3);
-        Gripper.setPosition(grabberOpenPos);
-        sleep_secs(3);
+        else if(gamepad2.a){
+            Gripper.setPosition(grabberClosedPos);
+        } else {
+            Gripper.setPosition(grabberClosedPos);
+        }
     }
 
     // Controls Extension servo (Linear progressor)
     private void controllerExtension(){
 
         if(gamepad2.x) {
-            while(slideTime.seconds() < 0.5){
-                SlideMotor.setPower(0.2);
+            slideTime.reset();
+            while (slideTime.seconds() < 1){
+                SlideMotor.setPower(-0.4);
             }
-            /*if(slideTime.seconds() < .5) {
-                SlideMotor.setPower(.2);
-                slideTime.reset();
-            }*/
             ExtensionLeft.setPosition(1);
-            ExtensionRight.setPosition(0);
+            ExtensionRight.setPosition(1);
             slideTime.reset();
         } else if (gamepad2.y) {
             ExtensionLeft.setPosition(0);
-            ExtensionRight.setPosition(1);
+            ExtensionRight.setPosition(0);
             slideTime.reset();
-            while(slideTime.seconds() < 0.5){
-                SlideMotor.setPower(-0.2);
+            while (slideTime.seconds() < 1) {
+                SlideMotor.setPower(0.4);
             }
             slideTime.reset();
-            /*if (slideTime.seconds() < .5) {
-                SlideMotor.setPower(-.2);
-                slideTime.reset();
-            }*/
         }
     }
-    private void controllerExtensionUnitTest(){
-        ExtensionLeft.setPosition(.3);
-        sleep_secs(.5);
-        ExtensionLeft.setPosition(-.3);
-        sleep_secs(-.5);
-        ExtensionLeft.setPosition(0);
-    }
+
 
     // Controls linear slide
     private void controllerLinearSlide(){
         SlideMotor.setPower(-linearSlidePowerConverter(gamepad2.left_stick_y));
-    }
-    private void controllerLinearSlideUnitTest(){
-        SlideMotor.setPower(linearSlidePowerConverter(1));
-        sleep_secs(1);
-        SlideMotor.setPower(linearSlidePowerConverter(0));
-        sleep_secs(1);
     }
 
     // Alters LinearSlide for correct power
@@ -162,9 +108,9 @@ public class TeleOpStates extends SuperOp {
 
     private void controllerLatch(){
         if (gamepad2.dpad_left) {
-            LatchMotor.setPower(.4);
+            LatchMotor.setPower(.3);
         } else if(gamepad2.dpad_right){
-            LatchMotor.setPower(gamepad2.dpad_right ? -.4 : 0);
+            LatchMotor.setPower(gamepad2.dpad_right ? -.3 : 0);
         }
     }
 
@@ -203,9 +149,23 @@ public class TeleOpStates extends SuperOp {
     }
 
 
+    // Debugging tool for TeleOp
+    // call all debug methods
+    /*private void controllerDriveDebug(){
+        c_driveDebug();
 
+        controllerIntakeDebug();
 
+        controllerFoundationDebug();
 
+        controllerLinearSlideDebug();
+
+        controllerExtensionDebug();
+
+        controllerGrabberDebug();
+
+        telemetry.update();
+    }
 
     // Controls the Block Grabber
     private void controllerGrabberDebug() {
@@ -246,10 +206,9 @@ public class TeleOpStates extends SuperOp {
         }
     }
 
-    /*
-     * Controls Intake System by given priority to driver intake, then outtake, then operator
-     * intake, then outtake
-     */
+      //Controls Intake System by given priority to driver intake, then outtake, then operator
+      //intake, then outtake
+
     private void controllerIntakeDebug(){
         // if only driver right trigger is pressed down
         if (gamepad1.right_trigger > 0.1 && gamepad1.left_trigger < 0.1) {
@@ -280,4 +239,28 @@ public class TeleOpStates extends SuperOp {
         telemetry.addData("> RightStoneRamp Power: ", RightStoneRamp.getPower());
         telemetry.addData("> LeftStoneRamp Power: ", LeftStoneRamp.getPower());
     }
+
+    private void controllerGrabberUnitTest() {
+        Gripper.setPosition(grabberOpenPos);
+        sleep_secs(3);
+        Gripper.setPosition(grabberClosedPos);
+        sleep_secs(3);
+        Gripper.setPosition(grabberOpenPos);
+        sleep_secs(3);
+    }
+
+    private void controllerLinearSlideUnitTest(){
+        SlideMotor.setPower(linearSlidePowerConverter(1));
+        sleep_secs(1);
+        SlideMotor.setPower(linearSlidePowerConverter(0));
+        sleep_secs(1);
+    }
+
+    private void controllerExtensionUnitTest(){
+        ExtensionLeft.setPosition(.3);
+        sleep_secs(.5);
+        ExtensionLeft.setPosition(-.3);
+        sleep_secs(-.5);
+        ExtensionLeft.setPosition(0);
+    } */
 }

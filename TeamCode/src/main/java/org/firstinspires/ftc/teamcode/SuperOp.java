@@ -86,7 +86,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
         ExtensionLeft = hardwareMap.get(Servo.class, "ExtensionLeft");
         ExtensionRight = hardwareMap.get(Servo.class, "ExtensionRight");
-        Gripper = hardwareMap.get(Servo.class, "GripperLeft");
+        Gripper = hardwareMap.get(Servo.class, "Gripper");
         Foundation = hardwareMap.get(Servo.class, "Foundation");
 
 
