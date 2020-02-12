@@ -15,9 +15,10 @@ public class TeleOpStates extends SuperOp {
     final private double positiveLinearSlideModifier = 1;
     final private double negativeLinearSlideModifier = .7;
 
+    private boolean grabberState = false;
     // open position is 1, closed is 0
-    private final double grabberOpenPos = .4;
-    private final double grabberClosedPos = 1;
+    private final double grabberOpenPos = -1;
+    private final double grabberClosedPos = .2;
 
     @Override
     public void loop() {
@@ -49,15 +50,12 @@ public class TeleOpStates extends SuperOp {
 
     // Controls the Block Grabber
     private void controllerGrabber() {
-        // if b button pressed, open grabber, otherwise, keep it closed
-        if (gamepad2.b) {
-            Gripper.setPosition(grabberOpenPos);
+        if (gamepad2.b){
+            grabberState = true;
+        } else if (gamepad2.a) {
+            grabberState = false;
         }
-        else if(gamepad2.a){
-            Gripper.setPosition(grabberClosedPos);
-        } else {
-            Gripper.setPosition(grabberClosedPos);
-        }
+            Gripper.setPosition(grabberState ? grabberOpenPos : grabberClosedPos);
     }
 
     // Controls Extension servo (Linear progressor)
@@ -65,19 +63,20 @@ public class TeleOpStates extends SuperOp {
 
         if(gamepad2.x) {
             slideTime.reset();
-            while (slideTime.seconds() < 1){
+            while (slideTime.seconds() < 1.5 ) {
+                SlideMotor.setPower(0.6);
+            }
+            Gripper.setPosition(.25);
+            ExtensionLeft.setPosition(0);
+            ExtensionRight.setPosition(0);
+            slideTime.reset();
+        } else if (gamepad2.y) {
+            slideTime.reset();
+            while (slideTime.seconds() < .5) {
                 SlideMotor.setPower(-0.4);
             }
             ExtensionLeft.setPosition(1);
             ExtensionRight.setPosition(1);
-            slideTime.reset();
-        } else if (gamepad2.y) {
-            ExtensionLeft.setPosition(0);
-            ExtensionRight.setPosition(0);
-            slideTime.reset();
-            while (slideTime.seconds() < 1) {
-                SlideMotor.setPower(0.4);
-            }
             slideTime.reset();
         }
     }
@@ -85,7 +84,7 @@ public class TeleOpStates extends SuperOp {
 
     // Controls linear slide
     private void controllerLinearSlide(){
-        SlideMotor.setPower(-linearSlidePowerConverter(gamepad2.left_stick_y));
+        SlideMotor.setPower(linearSlidePowerConverter(gamepad2.left_stick_y));
     }
 
     // Alters LinearSlide for correct power
@@ -97,12 +96,12 @@ public class TeleOpStates extends SuperOp {
         }
     }
 
-    // LatchMotor for foundation
+    // Servo for foundation
     private void controllerFoundation(){
         if (gamepad2.dpad_up) {
-            Foundation.setPosition(1);
-        } else if(gamepad2.dpad_down){
             Foundation.setPosition(0);
+        } else if(gamepad2.dpad_down){
+            Foundation.setPosition(1);
         }
     }
 

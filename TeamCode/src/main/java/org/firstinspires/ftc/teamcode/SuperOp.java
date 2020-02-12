@@ -52,8 +52,11 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public enum BUILDSTATUS {FLIPPER, TOFOUNDATION, DRAG, AROUND, MOVE, PARK, STOP}
     public enum PLAYERSTATUS {FLIPPER, TOBLOCK, AWAY, AGAIN, AWAY2, DECISION, PARK, STOP}
     public enum CamType{INTERNAL, WEBCAM}
+
     public Accel_Drive accelDrive;
+
     public int startPoint = 1;
+
     public double x_speed;
     public double y_speed;
     public double w_speed;
@@ -167,6 +170,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         camera.initTfod();
         camera.tfod.activate();
     }
+
     public void updateMotors(){
         FrontLeftDrive.setPower(accelDrive.motorPowers[0]);
         FrontRightDrive.setPower(accelDrive.motorPowers[1]);
@@ -212,8 +216,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
      */
     public void c_drive(){
         teleDrive(
-                -gamepad1.left_stick_x,
-                -gamepad1.left_stick_y,
+                gamepad1.left_stick_x,
+                gamepad1.left_stick_y,
                 gamepad1.right_stick_x
         );
     }
