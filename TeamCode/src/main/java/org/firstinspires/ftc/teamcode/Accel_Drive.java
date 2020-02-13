@@ -85,12 +85,14 @@ public class Accel_Drive{
                 if (portion < 1)
                     drive(currentState.times((1-portion)/buffer));
                 else{
+                    // Again, only need to modify motor state once
                     driveState = State.STOP;
                     drive(0, 0, 0);
                 }
                 break;
             case STOP:
                 DriveCommand nextCommand;
+                // Prepare to execute the next command if there is one
                 try {
                     nextCommand = commands.remove();
                     set(nextCommand);
@@ -101,8 +103,12 @@ public class Accel_Drive{
         }
     }
 
+    // Unpack values from DriveState for readability
     public void drive(DriveState state) { drive(state.x, state.y, state.w); }
 
+    // Since Accel_Drive can't access the motors directly,
+    // it assigns values to the public motorPowers array,
+    // which SuperOp accesses with the updateMotors method
     public void drive(double x, double y, double w) {
         motorPowers[0] = y-x+w;
         motorPowers[1] = y+x-w;

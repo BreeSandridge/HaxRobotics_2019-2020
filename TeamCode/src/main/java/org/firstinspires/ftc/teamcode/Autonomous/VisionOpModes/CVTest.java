@@ -10,12 +10,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 @Autonomous(name="Computer Vision Test")
-public class CVTest extends OpMode { // Needed to not have motors
+public class CVTest extends OpMode { // Needed to not have motors, so OpMode extended
 
-    private CVCamera cvCamera;
+    private CVCamera cvCamera; // see CVCamera.java
     private static final String VUFORIA_KEY =
             "AUAq88//////AAABmU+bO6dpUU4BreRJC5efYI1U4Fc5EvLiP5eGiT94wpCspMiACoccxAAVAgEOcCw87pTuHz671RvMDs3dtUBYrJNGI/x/bm60AsIdy3J7prt5EP8xeJuiKjWX32EoIhEsRnqZPpQOmCh11Q5vboZhsCNkNGMNWUIufrVa2g4SKwkSAjaAdOla8w/LwPKbiQBYvwbikpCb01LQg8iVYzWJHBfWLbQcXbuEBQIG9VSgGzyz4RStzgfG5mCTO4UZQbs7P3b/oJIf2rSzd7Ng1HmpHjldX8uFnLMuvIjgG/mJENP/edAw51wRui/21dV8QNdhV8KwP+KBdgpyVBMj44+OlN4ZrGGRkxYDNzd7yptjiGfe";
-    enum CamType{INTERNAL, WEBCAM} // Move to SuperOp, or create OpMode w/o motors
+    enum CamType{INTERNAL, WEBCAM} // Type of camera used: move to SuperOp or create OpMode w/o motors
 
     // Which field elements to load, need to include visual targets later
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
@@ -25,7 +25,7 @@ public class CVTest extends OpMode { // Needed to not have motors
     public void init(){
         CamType type = CamType.WEBCAM;
         cvCamera = new CVCamera(type);
-        initCamera(cvCamera, type);
+        initCamera(cvCamera, type); // Not part of CVCamera because it needs hardwareMap access
     }
 
     @Override
@@ -45,7 +45,8 @@ public class CVTest extends OpMode { // Needed to not have motors
         telemetry.addData("height: ", "%f", cvCamera.hh);
     }
 
-    public void initCamera(CVCamera camera, CamType type){ // See comment on enum
+
+    public void initCamera(CVCamera camera, CamType type){ // Also needs to be moved
 
         // Initialize Vuforia
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();

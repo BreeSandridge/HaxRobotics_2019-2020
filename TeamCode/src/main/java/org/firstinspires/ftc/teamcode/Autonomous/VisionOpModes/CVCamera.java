@@ -22,14 +22,10 @@ public class CVCamera {
         this.type = type;
     }
 
-    //boolean skystoneAligned() {
+
     void findSkystone() {
-        // getUpdatedRecognitions() will return null if no new information is available since
-        // the last time that call was made.
+
         List<Recognition> recognitions = tfod.getRecognitions();
-        //if (recognitions == null)
-        //    return false;
-        //telemetry.addData("# Object Detected", updatedRecognitions.size());
 
         // step through the list of recognitions and display boundary info.
         //int i = 0;
@@ -44,20 +40,9 @@ public class CVCamera {
             ww = recognition.getImageWidth();
             hh = recognition.getImageHeight();
             blockPos = cameraParams.undoPerspective(left, top, right, bottom);
-            //double armOffset = 10;
-            //if (blockPos > armOffset)
-            //    return true;
-            /*
-            telemetry.addData(String.format("label (%d)", i), label);
-            telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-                    left, top);
-            telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-                    right, bottom);
-            telemetry.addData(String.format("  position (%d)", i), "%.03f",
-                    (float) blockPos);
-             */
+
         }
-        //return false;
+
     }
 
     /**
@@ -72,16 +57,16 @@ public class CVCamera {
         private double res; // How many pixels in a 45-degree angle
         private double blockWidth = 7.5; // Width of the stones (inches)
 
-        // Given a rectangle, returns location in space of bottom edge
+        // Given a rectangle, returns horizontal distance of block from center of view
         public double undoPerspective(float x_left, float y_top, float x_right, float y_bottom){
-            // Only uses width to calculate distance,
+            // Only uses width to calculate distance from camera (depth),
             // although theoretically height might be preferable,
             // since blocks are next to e.o. and can be hard to distinguish
             double rectWidth = x_right-x_left;
             // Similar triangles: an object which is as wide as it is far from the camera
             // will occupy res pixels on the screen
             double blockDist = blockWidth*res/rectWidth;
-            // Distance of the rectangle from the center of the screen
+            // Distance of the rectangle from the center of the screen in pixels
             double rectOffset = (x_left+x_right)/2 - w/2;
             // Similar triangles again: replace "width" with "offset from straight ahead"
             double blockOffset = rectOffset*blockDist/res;
