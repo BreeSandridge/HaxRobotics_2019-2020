@@ -26,6 +26,10 @@ public class TeleOpStates extends SuperOp {
         controllerDrive();
         // update telemetry
         telemetry.addData("Gripper Position:", Gripper.getPosition());
+        telemetry.addData("Front Right: ", FrontRightDrive.getPower());
+        telemetry.addData("Back Left: ", BackLeftDrive.getPower());
+        telemetry.addData("Back Right: ", BackRightDrive.getPower());
+        telemetry.addData("Front Left: ", FrontLeftDrive.getPower());
         telemetry.update();
     }
 

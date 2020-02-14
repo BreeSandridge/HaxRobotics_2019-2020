@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -100,8 +101,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         // so that "forward" and "backward" are the same number for both sides
         FrontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         FrontRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        BackLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        BackLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        BackRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
 
 
@@ -144,13 +145,15 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         BackRightDrive.setPower((auto_y_speed * y) * startPoint - (auto_x_speed * x) * startPointBuild - (auto_w_speed * w));
     }
 
+
+     */
     public void teleDrive(double x, double y, double w) {
-        FrontLeftDrive.setPower((y_speed * y) - (x_speed * x)+ (w_speed* w));
-        FrontRightDrive.setPower((yb_speed * y) + (x_speed * x) - (w_speed * w));
-        BackLeftDrive.setPower((y_speed * y) + (x_speed * x) + (w_speed * w));
-        BackRightDrive.setPower((y_speed * y) - (x_speed * x) - (w_speed * w));
+        FrontLeftDrive.setPower((y_speed * y) + (x_speed * x)+ (w_speed* w));
+        FrontRightDrive.setPower((y_speed * y) - (x_speed * x) - (w_speed * w));
+        BackLeftDrive.setPower(0.92*((y_speed * y) - (x_speed * x) + (w_speed * w)));
+        BackRightDrive.setPower((y_speed * y) + (x_speed * x) - (w_speed * w));
     }
-    */
+
     public void initCamera(CVCamera camera, CamType type){
         camera.tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -185,9 +188,10 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
                 auto_w_speed*w);
     }
 
+    /*
     public void teleDrive(double x, double y, double w){
-        genericDrive(x_speed*x, y_speed*y, w_speed*w);
-    }
+        generi(x_speed*x, y_speed*y, w_speed*w);
+    }*/
 
     public void genericDrive(double x, double y, double w){
         accelDrive.drive(x, y, w);
@@ -217,7 +221,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public void c_drive(){
         teleDrive(
                 gamepad1.left_stick_x,
-                gamepad1.left_stick_y,
+                -gamepad1.left_stick_y,
                 gamepad1.right_stick_x
         );
     }
