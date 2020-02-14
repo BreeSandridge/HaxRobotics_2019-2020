@@ -74,8 +74,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
-
-
+    static final double dead_zone = 0.05;
     @Override
     public void init() {
         // Initialize the hardware variables
@@ -220,9 +219,9 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
      */
     public void c_drive(){
         teleDrive(
-                gamepad1.left_stick_x,
-                -gamepad1.left_stick_y,
-                gamepad1.right_stick_x
+                gamepad1.left_stick_x > dead_zone ? gamepad1.left_stick_x : gamepad1.left_stick_x < -dead_zone ? gamepad1.left_stick_x : 0,
+                gamepad1.left_stick_y > dead_zone ? -gamepad1.left_stick_y : gamepad1.left_stick_y < -dead_zone ? -gamepad1.left_stick_y : 0,
+                gamepad1.right_stick_x > dead_zone ? gamepad1.right_stick_x : gamepad1.right_stick_x < -dead_zone ? gamepad1.right_stick_x : 0
         );
     }
 

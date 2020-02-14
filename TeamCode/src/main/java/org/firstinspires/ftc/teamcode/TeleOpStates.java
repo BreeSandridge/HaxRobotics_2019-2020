@@ -19,17 +19,20 @@ public class TeleOpStates extends SuperOp {
     // open position is 1, closed is 0
     private final double grabberOpenPos = -1;
     private final double grabberClosedPos = .2;
+    private boolean foundationState = false;
 
     @Override
     public void loop() {
         // call controller drive
         controllerDrive();
         // update telemetry
-        telemetry.addData("Gripper Position:", Gripper.getPosition());
         telemetry.addData("Front Right: ", FrontRightDrive.getPower());
         telemetry.addData("Back Left: ", BackLeftDrive.getPower());
         telemetry.addData("Back Right: ", BackRightDrive.getPower());
         telemetry.addData("Front Left: ", FrontLeftDrive.getPower());
+        telemetry.addData("Foundation Grabber:", Foundation.getPosition());
+        telemetry.addData("Extension Left", ExtensionLeft.getPosition());
+        telemetry.addData("Extension Right", ExtensionRight.getPosition());
         telemetry.update();
     }
 
@@ -59,7 +62,7 @@ public class TeleOpStates extends SuperOp {
         } else if (gamepad2.a) {
             grabberState = false;
         }
-            Gripper.setPosition(grabberState ? grabberOpenPos : grabberClosedPos);
+        Gripper.setPosition(grabberState ? grabberOpenPos : grabberClosedPos);
     }
 
     // Controls Extension servo (Linear progressor)
@@ -68,7 +71,7 @@ public class TeleOpStates extends SuperOp {
         if(gamepad2.x) {
             slideTime.reset();
             while (slideTime.seconds() < 1.5 ) {
-                SlideMotor.setPower(0.6);
+                SlideMotor.setPower(0.4);
             }
             Gripper.setPosition(.25);
             ExtensionLeft.setPosition(0);
@@ -103,10 +106,11 @@ public class TeleOpStates extends SuperOp {
     // Servo for foundation
     private void controllerFoundation(){
         if (gamepad2.dpad_up) {
-            Foundation.setPosition(0);
+            foundationState = true;
         } else if(gamepad2.dpad_down){
-            Foundation.setPosition(1);
+            foundationState = false;
         }
+        Foundation.setPosition(foundationState ? 0 : 1);
     }
 
     private void controllerLatch(){
