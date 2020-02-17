@@ -18,8 +18,10 @@ public class TeleOpStates extends SuperOp {
     private boolean grabberState = false;
     // open position is 1, closed is 0
     private final double grabberOpenPos = -1;
-    private final double grabberClosedPos = .2;
+    private final double grabberClosedPos = 0;
     private boolean foundationState = false;
+    private boolean extensionState = false;
+
 
     @Override
     public void loop() {
@@ -52,11 +54,14 @@ public class TeleOpStates extends SuperOp {
         controllerGrabber();
         // call controllerLatch
         controllerLatch();
+
+        extensionTest();
     }
 
 
     // Controls the Block Grabber
     private void controllerGrabber() {
+
         if (gamepad2.b){
             grabberState = true;
         } else if (gamepad2.a) {
@@ -74,18 +79,18 @@ public class TeleOpStates extends SuperOp {
                 SlideMotor.setPower(0.4);
             }
             Gripper.setPosition(.25);
-            ExtensionLeft.setPosition(0);
-            ExtensionRight.setPosition(0);
+            extensionState = false;
             slideTime.reset();
         } else if (gamepad2.y) {
             slideTime.reset();
             while (slideTime.seconds() < .5) {
                 SlideMotor.setPower(-0.4);
             }
-            ExtensionLeft.setPosition(1);
-            ExtensionRight.setPosition(1);
+            extensionState = true;
             slideTime.reset();
         }
+        ExtensionLeft.setPosition(extensionState ? 0 : 0.9);
+        ExtensionRight.setPosition(extensionState ? 0.9: 0);
     }
 
 
@@ -111,6 +116,15 @@ public class TeleOpStates extends SuperOp {
             foundationState = false;
         }
         Foundation.setPosition(foundationState ? 0 : 1);
+    }
+    private void extensionTest(){
+        if (gamepad2.right_bumper) {
+            extensionState = true;
+        } else if(gamepad2.left_bumper){
+            extensionState = false;
+        }
+        ExtensionLeft.setPosition(extensionState ? 0 : 0.9);
+        ExtensionRight.setPosition(extensionState ? 0.9: 0);
     }
 
     private void controllerLatch(){
@@ -151,8 +165,8 @@ public class TeleOpStates extends SuperOp {
 
     // Intake
     private void intake(float power){
-        RightStoneRamp.setPower(-power);
-        LeftStoneRamp.setPower(power);
+        RightStoneRamp.setPower(-power*0.9);
+        LeftStoneRamp.setPower(power*0.9);
     }
 
 

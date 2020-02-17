@@ -28,12 +28,8 @@ public class VisionBlueSquare extends PlayerSuperOp {
         }
         //useful variables to help with testing
         telemetry.addData("position: ", "%f", cvCamera.blockPos);
-        telemetry.addData("left: ", "%f", cvCamera.left);
-        telemetry.addData("top: ", "%f", cvCamera.top);
-        telemetry.addData("right: ", "%f", cvCamera.right);
-        telemetry.addData("bottom: ", "%f", cvCamera.bottom);
-        telemetry.addData("width: ", "%f", cvCamera.ww);
-        telemetry.addData("height: ", "%f", cvCamera.hh);
+        telemetry.addData("Skystone", block);
+        telemetry.addData("Status", status);
         switch (status) {
             case FLIPPER:
                 //method to locate skystone
