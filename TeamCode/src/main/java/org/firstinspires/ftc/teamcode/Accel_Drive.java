@@ -16,9 +16,9 @@ The SuperOp class contains an Accel_Drive object to maintain abstraction
 public class Accel_Drive{
 
     // Variable declarations
-    private DriveCommand currentCommand;
+    private DriveCommand currentCommand = new DriveCommand(0, 0, 0, 0);
     private enum State {STOP, ACCEL, CONST, DECEL};
-    private State driveState;
+    private State driveState = State.STOP;
     private ElapsedTime elapsedTime;
     private Queue<DriveCommand> commands;
     public double[] motorPowers = {0, 0, 0, 0};

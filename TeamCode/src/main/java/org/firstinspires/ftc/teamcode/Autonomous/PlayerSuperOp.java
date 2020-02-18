@@ -26,10 +26,12 @@ public abstract class PlayerSuperOp extends SuperOp {
 
     @Override
     public void init() {
+        super.init();
         //initialize camera for vision autonomous
         CamType type = CamType.INTERNAL;
         cvCamera = new CVCamera(type);
         initCamera(cvCamera, type);
+
         //int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 //"tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         //cvCamera = new CVCamera(tfodMonitorViewId);;
