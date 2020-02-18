@@ -1,166 +1,141 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.DriveParams;
 
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
-
-@Autonomous
-public class Accel_Drive{
-  /*
+/*
 Accel_Drive class
 The Accel_Drive class implements the trapezoid drive,
 along with the ability to process multiple commands in a queue
 The SuperOp class contains an Accel_Drive object to maintain abstraction
  */
-    final double WHEEL_DIAMETER = 10.16; // centimeters, or 4 inches, mecanum wheels
-    final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER*3.14;
-    private double x, y, w, desired_rotations;    // x, y, w are desired values for speed
 
+public class Accel_Drive{
 
+    // Variable declarations
+    private DriveCommand currentCommand;
     private enum State {STOP, ACCEL, CONST, DECEL};
     private State driveState;
-    //public ElapsedTime elapsedTime;
-    DcMotor FrontLeftDrive, FrontRightDrive;
-    DcMotor  BackLeftDrive,  BackRightDrive;
-    Queue<DriveParams> commands;
-    private double x_current, y_current, w_current; // three speed to be updated and returned
+    private ElapsedTime elapsedTime;
+    private Queue<DriveCommand> commands;
+    public double[] motorPowers = {0, 0, 0, 0};
+    public boolean isEmpty = true;
 
-public Accel_Drive(DcMotor FrontLeftDrive, DcMotor FrontRightDrive,
-                       DcMotor  BackLeftDrive, DcMotor  BackRightDrive) {
-        this.FrontLeftDrive  = FrontLeftDrive;
-        this.FrontRightDrive = FrontRightDrive;
-        this.BackLeftDrive   = BackLeftDrive;
-        this.BackRightDrive  = BackRightDrive;
-       // elapsedTime = new ElapsedTime();
-       // elapsedTime.reset();
+    public Accel_Drive() {
+
+        elapsedTime = new ElapsedTime();
+        elapsedTime.reset();
         commands = new LinkedList<>();
+
     }
 
     // Called by SuperOp.t_drive()
-    // Pushes a new DriveParams object onto the queue
-    public void pushCommand(DriveParams newCommand){
+    // Pushes a new DriveState object onto the queue
+    public void pushCommand(double x, double y, double w, double t){
+        pushCommand(new DriveCommand(x, y, w, t));
+    }
+
+    public void pushCommand(DriveCommand newCommand){
         commands.add(newCommand);
+        isEmpty = false;
     }
 
     // Begin executing a new command
     // this.x, y, w, t are the values of the current command
-    // but will (probably) later be replaced by a DriveParams object
+    // but will (probably) later be replaced by a DriveState object
     // Makes sure that robot is stopped,
     // but should only be called under those circumstances anyway
-    public void set(DriveParams state){
+    public void set(DriveCommand newCommand) {
         if (driveState != State.STOP)
             return;
-        this.x = state.x;
-        this.y = state.y;
-        this.w = state.w;
-        this.desired_rotations = state.desired_rotations;
+        currentCommand = newCommand;
         driveState = State.ACCEL;
-        //elapsedTime.reset();
-
-        FrontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        FrontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        BackLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        BackRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        FrontLeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        FrontRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        BackLeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        BackRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        elapsedTime.reset();
     }
 
-
-    public String getCurrentPos(){
-        String currentPositionStr = "Path0"+"Starting at: " + FrontLeftDrive.getCurrentPosition() + ", "
-                + FrontRightDrive.getCurrentPosition() + ", " + BackRightDrive.getCurrentPosition() + ", "
-                + BackLeftDrive.getCurrentPosition();
-        return currentPositionStr;
-    }
-
-
-
-    // Copy of SuperOp.drive()
-    public void drive(double x, double y, double w) {
-        FrontLeftDrive.setPower(x+y+w);
-        FrontRightDrive.setPower(x+y-w);
-        BackLeftDrive.setPower(-x+y+w);
-        BackRightDrive.setPower(x+y-w);
-    }
-
-
-
-    // converting controller x, y, w values to power values to be set to for each motor
-    // return values to autonomous drive to set values to each motor
-    public double[] motorValues(){
-        double FrontLeftDrive_value = x+y+w;
-        double FrontRightDrive_value = x+y-w;
-        double BackLeftDrive_value = -x+y+w;
-        double BackRightDrive_value = x+y-w;
-        double[] motor_values = {FrontLeftDrive_value, FrontRightDrive_value, BackLeftDrive_value, BackRightDrive_value};
-        return motor_values;
-    }
-
-
-    // update the values of x, y, and w in relation to current rotations of wheel,
-    // (encoder, rather than using time), for acceleration drive
     // This is the bread and butter of the trapezoid drive implementation
     // driveState variable can be one of ACCEL, CONST, DECEL, or STOP
     // If accel/decel, sets the drive appropriately
     // If const, does nothing (motors set once at the end of accel period)
     // If stopped, checks the queue for the next command
-
     public void update() {
-        double portion = (FrontLeftDrive.getCurrentPosition()+FrontRightDrive.getCurrentPosition()+
-                BackRightDrive.getCurrentPosition()+BackLeftDrive.getCurrentPosition())/4*desired_rotations;
+        double buffer = 0.1;
+        double portion = elapsedTime.seconds() / currentCommand.t;
+        DriveState currentState = currentCommand.state;
         switch (driveState){
             case ACCEL:
-                if (portion < 0.1){
-                    //drive(x * portion * 10, y * portion * 10, w * portion * 10);
-                    x_current = x * portion * 10;
-                    y_current = y * portion * 10;
-                    w_current = w * portion * 10;
-                }
+                if (portion < buffer)
+                    drive(currentState.times(portion/buffer));
                 else{
-                    //drive(x, y, w);
-                    x_current = x;
-                    y_current = y;
-                    w_current = w;
+                    drive(currentState);
                     driveState = State.CONST;
                 }
                 break;
             case CONST:
-                if (portion > 0.9)
+                if (portion > 1-buffer)
                     driveState = State.DECEL;
                 break;
             case DECEL:
-                if (portion < 1) {
-                    //drive(x * (1 - portion) * 10, y * (1 - portion) * 10, w * (1 - portion) * 10);
-                    x_current = x * (1 - portion) * 10;
-                    y_current = y * (1 - portion) * 10;
-                    w_current = w * (1 - portion) * 10;
-                }
+                if (portion < 1)
+                    drive(currentState.times((1-portion)/buffer));
                 else{
                     driveState = State.STOP;
-                    x_current = 0;
-                    y_current = 0;
-                    w_current = 0;
+                    drive(0, 0, 0);
                 }
                 break;
             case STOP:
-                DriveParams nextCommand;
-                try{
+                DriveCommand nextCommand;
+                try {
                     nextCommand = commands.remove();
+                    set(nextCommand);
                 }
                 catch (NoSuchElementException e){
-                    break;
+                    isEmpty = true;
                 }
-                set(nextCommand);
+        }
+    }
+
+    public void drive(DriveState state) {
+        drive(state.x, state.y, state.w);
+    }
+
+    public void drive(double x, double y, double w) {
+        motorPowers[0] = y-x+w;
+        motorPowers[1] = y+x-w;
+        motorPowers[2] = y+x+w;
+        motorPowers[3] = y-x-w;
+    }
+
+    public static class DriveState {
+        public double x, y, w;
+        DriveState(double x, double y, double w){
+            this.x = x;
+            this.y = y;
+            this.w = w;
+        }
+        public DriveState times(double f){
+            return new DriveState(x*f, y*f, w*f);
+        }
+        public DriveState times(DriveState f){
+            return new DriveState(x*f.x, y*f.y, w*f.w);
+        }
+    }
+
+    public static class DriveCommand {
+        public DriveState state;
+        public double t;
+        DriveCommand(double x, double y, double w, double t){
+            this.state = new DriveState(x, y, w);
+            this.t = t;
+        }
+
+
+        DriveCommand(DriveCommand d){
+            this.state = d.state;
+            this.t = d.t;
         }
     }
 }

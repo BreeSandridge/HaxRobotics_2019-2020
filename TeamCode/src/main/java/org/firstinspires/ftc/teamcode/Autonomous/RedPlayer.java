@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.vuforia.TrackableResult;
+
 import org.firstinspires.ftc.teamcode.SuperOp;
 
 @Autonomous
-public class RedPlayer extends SuperOp {
+public class RedPlayer extends PlayerSuperOp {
     @Override
     public void init() {
         super.init();
@@ -13,7 +15,7 @@ public class RedPlayer extends SuperOp {
     // the 4 possible STATUSES are TOBLOCK, GETBLOCK, BUILD, and PARK
     // each case calls a method-the methods are declared below the switch statement
     public void loop() {
-        for (STATUS status : statuses) {
+        for (TrackableResult.STATUS status : statuses) {
             switch (status) {
                 case TOBLOCK: // used find a block and drive to it
                     TOBLOCK();

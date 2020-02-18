@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.Examples;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.SuperOp;
 
 @TeleOp(name="Example_ReadEncoder ", group="Test")
+@Disabled
 public class Example_ReadEncoder_TeleOp extends SuperOp {
     @Override
     public void init() {

@@ -49,7 +49,7 @@ import com.qualcomm.robotcore.util.Range;
  * It includes all the skeletal structure that all linear OpModes contain.
  */
 
-// @TeleOp is the line that will set this program up to be a part of the menu of programs
+// @DriverController is the line that will set this program up to be a part of the menu of programs
 @TeleOp(name="Basic: Linear OpMode", group="Examples")
 // @Disabled removes it from the menu, this file is just for an example
 @Disabled
