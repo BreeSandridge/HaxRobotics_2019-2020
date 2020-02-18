@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.Autonomous.CameraParams;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Autonomous.VisionOpModes.CVCamera;
 
 import java.util.Queue;
@@ -27,7 +27,6 @@ the robot can accelerate and decelerate
 in a trapezoid drive pattern.
 (See AreshPourkavoos/Accel_Drive.java)
  */
-
 public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     //stopwatch class
     public ElapsedTime timer;
@@ -75,6 +74,11 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
     static final double dead_zone = 0.05;
+
+    private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
+    private static final String LABEL_FIRST_ELEMENT = "Stone";
+    private static final String LABEL_SECOND_ELEMENT = "Skystone";
+
     @Override
     public void init() {
         // Initialize the hardware variables
@@ -154,22 +158,25 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     }
 
     public void initCamera(CVCamera camera, CamType type){
-        camera.tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         switch (type) {
             case INTERNAL:
                 parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-                camera.cameraParams = new CameraParams(1280, 720, 1080);
+                camera.cameraParams = new CVCamera.CameraParams(1280, 720, 1080);
                 break;
             case WEBCAM:
                 parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
-                camera.cameraParams = new CameraParams(448, 800, 1080);
+                camera.cameraParams = new CVCamera.CameraParams(448, 800, 1080);
                 break;
         }
         camera.vuforia = ClassFactory.getInstance().createVuforia(parameters);
-        camera.initTfod();
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minimumConfidence = 0.8;
+        camera.tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, camera.vuforia);
+        camera.tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
         camera.tfod.activate();
     }
 
