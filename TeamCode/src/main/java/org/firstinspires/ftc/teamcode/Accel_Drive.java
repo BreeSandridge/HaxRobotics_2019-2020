@@ -15,18 +15,22 @@ The SuperOp class contains an Accel_Drive object to maintain abstraction
 
 public class Accel_Drive{
 
-    private DriveCommand currentCommand; // Command being executed
+
+    // Variable declarations
+    private DriveCommand currentCommand = new DriveCommand(0, 0, 0, 0); // Command being executed
     private enum State {STOP, ACCEL, CONST, DECEL}; // 4 stages of movement
-    private State driveState; // Current stage of movement
+    private State driveState = State.STOP; // Current stage of movement
     private ElapsedTime elapsedTime; // Time since current command began execution
     private Queue<DriveCommand> commands; // Stores all commands to be run
     public double[] motorPowers = {0, 0, 0, 0}; // Accessed by opmode to drive motors
-    public boolean isEmpty = true; // Whether all commands have been executed
+    public boolean isEmpty = true;  // Whether all commands have been executed
+
 
     public Accel_Drive() {
         elapsedTime = new ElapsedTime();
         elapsedTime.reset();
         commands = new LinkedList<>();
+
     }
 
     // Called by SuperOp.t_drive()

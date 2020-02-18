@@ -82,7 +82,7 @@ public class VisionBlueBuild extends SuperOp {
 
 
                 // set movement values to go towards block
-                if(time.seconds()-targetTime > 0 || cvCamera.skystoneAligned()) {
+                if(time.seconds()-targetTime > 0 || cvCamera.findSkystone()) {
                     //stop
                     drive(0,0,0);
                     //sleep_secs(0.5);

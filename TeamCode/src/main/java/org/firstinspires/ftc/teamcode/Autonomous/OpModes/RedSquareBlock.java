@@ -6,12 +6,11 @@ public class RedSquareBlock extends PlayerSuperOp {
     public PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
     @Override
     public void loop() {
-        startPointPlayer = -1;
+        startPoint = 1;
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
         telemetry.addData("Arm", arm.seconds());
-        telemetry.addData("Power", LatchMotor.getPower());
         telemetry.addData("LatchMotor Position: ", LatchMotor.getCurrentPosition());
         telemetry.addData("Time: ", time.seconds());
         telemetry.addData("Front Right: ", FrontRightDrive.getCurrentPosition());
@@ -19,7 +18,6 @@ public class RedSquareBlock extends PlayerSuperOp {
         telemetry.addData("Back Right: ", BackRightDrive.getCurrentPosition());
         telemetry.addData("Front Left: ", FrontLeftDrive.getCurrentPosition());
         telemetry.addData("Status: ", status);
-        telemetry.addData("Latch Position: ", Latch.getPosition());
 
         currPosition = LatchMotor.getCurrentPosition();
         //switch statements for changing the status of the robot
@@ -27,20 +25,33 @@ public class RedSquareBlock extends PlayerSuperOp {
         //there are methods created below the switch statement for easier reading
         switch (status) {
             case FLIPPER:
-                flipper();
+                toBlock();
                 status = PLAYERSTATUS.TOBLOCK;
                 break;
             case TOBLOCK:
-                toBlock();
-                status = PLAYERSTATUS.AWAY;
+                if(accelDrive.isEmpty){
+                    grab();
+                    away();
+                    status = PLAYERSTATUS.AWAY;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case AWAY:
-                away();
-                status = PLAYERSTATUS.AWAY2;
+                if(accelDrive.isEmpty){
+                    release();
+                    away2();
+                    status = PLAYERSTATUS.AWAY2;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case AWAY2:
-                away2();
-                status = PLAYERSTATUS.STOP;
+                if(accelDrive.isEmpty){
+                    status = PLAYERSTATUS.STOP;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case STOP:
                 stop1();

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomous.VisionOpModes;
 
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -9,8 +10,13 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
+
+import org.firstinspires.ftc.teamcode.Autonomous.CameraParams;
+import org.firstinspires.ftc.teamcode.Autonomous.PlayerSuperOp;
+import org.firstinspires.ftc.teamcode.SuperOp;
+
 @Autonomous(name="Computer Vision Test")
-public class CVTest extends OpMode { // Needed to not have motors, so OpMode extended
+public class CVTest extends PlayerSuperOp {
 
     private CVCamera cvCamera; // see CVCamera.java
     private static final String VUFORIA_KEY =
@@ -28,6 +34,7 @@ public class CVTest extends OpMode { // Needed to not have motors, so OpMode ext
         initCamera(cvCamera, type); // Not part of CVCamera because it needs hardwareMap access
     }
 
+
     @Override
     public void loop(){
         cvCamera.findSkystone(); // Stores values like position as variables within cvCamera
@@ -44,6 +51,7 @@ public class CVTest extends OpMode { // Needed to not have motors, so OpMode ext
         telemetry.addData("width: ", "%f", cvCamera.ww);
         telemetry.addData("height: ", "%f", cvCamera.hh);
     }
+
 
 
     public void initCamera(CVCamera camera, CamType type){ // Also needs to be moved

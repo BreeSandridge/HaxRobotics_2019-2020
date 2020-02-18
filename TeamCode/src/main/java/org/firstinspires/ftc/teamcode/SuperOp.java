@@ -1,9 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.teamcode.Autonomous.CameraParams;
+import org.firstinspires.ftc.teamcode.Autonomous.VisionOpModes.CVCamera;
+
+import java.util.Queue;
 
 
 // extend OpMode so future classes will extend SuperOp Instead
@@ -19,9 +29,11 @@ in a trapezoid drive pattern.
  */
 
 public abstract class SuperOp extends OpMode implements SuperOp_Interface {
-
+    //stopwatch class
     public ElapsedTime timer;
 
+    public static final String VUFORIA_KEY =
+            "AUAq88//////AAABmU+bO6dpUU4BreRJC5efYI1U4Fc5EvLiP5eGiT94wpCspMiACoccxAAVAgEOcCw87pTuHz671RvMDs3dtUBYrJNGI/x/bm60AsIdy3J7prt5EP8xeJuiKjWX32EoIhEsRnqZPpQOmCh11Q5vboZhsCNkNGMNWUIufrVa2g4SKwkSAjaAdOla8w/LwPKbiQBYvwbikpCb01LQg8iVYzWJHBfWLbQcXbuEBQIG9VSgGzyz4RStzgfG5mCTO4UZQbs7P3b/oJIf2rSzd7Ng1HmpHjldX8uFnLMuvIjgG/mJENP/edAw51wRui/21dV8QNdhV8KwP+KBdgpyVBMj44+OlN4ZrGGRkxYDNzd7yptjiGfe";
 
     public DcMotor FrontLeftDrive = null;
     public DcMotor FrontRightDrive = null;
@@ -30,28 +42,29 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public DcMotor LeftStoneRamp = null;
     public DcMotor RightStoneRamp = null;
     public DcMotor LatchMotor = null;
-    public DcMotor FlipperMotor = null;
+    public DcMotor SlideMotor = null;
 
-    //public Servo Flipper = null;
-    public Servo Trapdoor = null;
-    public Servo Latch = null;
+    public Servo Gripper = null;
+    public Servo ExtensionRight = null;
+    public Servo ExtensionLeft  = null;
+    public Servo Foundation = null;
 
     // enums used in build/player autonomi
-    public enum BUILDSTATUS {FLIPPER, TOFOUNDATION, DRAG, AROUND, MOVE, PARKY, PARKW, STOP}
-    public enum PLAYERSTATUS {FLIPPER, TOBLOCK, AWAY, AGAIN, AWAY2, PARKY, PARKW, STOP}
+    public enum BUILDSTATUS {FLIPPER, TOFOUNDATION, DRAG, AROUND, MOVE, PARK, STOP}
+    public enum PLAYERSTATUS {FLIPPER, TOBLOCK, AWAY, AGAIN, AWAY2, DECISION, PARK, STOP}
+    public enum CamType{INTERNAL, WEBCAM}
 
-    protected Accel_Drive accelDrive;
-    public int startPointBuild = 1;
-    public int startPointPlayer = 1;
+    public Accel_Drive accelDrive;
+
+    public int startPoint = 1;
+
     public double x_speed;
     public double y_speed;
     public double w_speed;
     public double auto_x_speed;
     public double auto_y_speed;
     public double auto_w_speed;
-
-    public double leftSpeedMultiplier = 1;
-    public double rightSpeedMultiplier = 1;
+    public double deadZone;
     public int tfodMonitorViewId;
 
     static final double COUNTS_PER_MOTOR_REV = 1440;            // eg: TETRIX Motor Encoder
@@ -61,9 +74,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
-
-    public boolean isRunning = true;
-
+    static final double dead_zone = 0.05;
     @Override
     public void init() {
         // Initialize the hardware variables
@@ -74,10 +85,13 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         LatchMotor = hardwareMap.get(DcMotor.class, "LatchMotor");
         LeftStoneRamp = hardwareMap.get(DcMotor.class, "LeftStoneRamp");
         RightStoneRamp = hardwareMap.get(DcMotor.class, "RightStoneRamp");
-        FlipperMotor = hardwareMap.get (DcMotor.class, "FlipperMotor");
+        SlideMotor = hardwareMap.get(DcMotor.class, "SlideMotor");
 
-        //Flipper = hardwareMap.get(Servo.class, "Flipper");
-        Trapdoor = hardwareMap.get(Servo.class, "Trapdoor");
+        ExtensionLeft = hardwareMap.get(Servo.class, "ExtensionLeft");
+        ExtensionRight = hardwareMap.get(Servo.class, "ExtensionRight");
+        Gripper = hardwareMap.get(Servo.class, "Gripper");
+        Foundation = hardwareMap.get(Servo.class, "Foundation");
+
 
         tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -86,8 +100,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         // so that "forward" and "backward" are the same number for both sides
         FrontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         FrontRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        BackLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        BackLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        BackRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
 
 
@@ -102,7 +116,10 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         auto_y_speed = .6;
         auto_w_speed = .6;
 
+        deadZone = .05;
+
         accelDrive = new Accel_Drive();
+
     }
 
     public void setMode(DcMotor.RunMode mode){
@@ -121,19 +138,40 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     // Accepts amount to move left/right (x), move up/down (y), and rotate (w)
     /*
     public void drive(double x, double y, double w) {
-        FrontLeftDrive.setPower((auto_y_speed * y) * startPointPlayer - (auto_x_speed * x) * startPointBuild + (auto_w_speed* w));
-        FrontRightDrive.setPower((auto_y_speed * y) * startPointPlayer + (auto_x_speed * x) * startPointBuild - (auto_w_speed * w));
-        BackLeftDrive.setPower((auto_y_speed * y) * startPointPlayer + (auto_x_speed * x) * startPointBuild + (auto_w_speed * w));
-        BackRightDrive.setPower((auto_y_speed * y) * startPointPlayer - (auto_x_speed * x) * startPointBuild - (auto_w_speed * w));
+        FrontLeftDrive.setPower((auto_y_speed * y) * startPoint - (auto_x_speed * x) * startPointBuild + (auto_w_speed* w));
+        FrontRightDrive.setPower((auto_y_speed * y) * startPoint + (auto_x_speed * x) * startPointBuild - (auto_w_speed * w));
+        BackLeftDrive.setPower((auto_y_speed * y) * startPoint + (auto_x_speed * x) * startPointBuild + (auto_w_speed * w));
+        BackRightDrive.setPower((auto_y_speed * y) * startPoint - (auto_x_speed * x) * startPointBuild - (auto_w_speed * w));
     }
 
+
+     */
     public void teleDrive(double x, double y, double w) {
-        FrontLeftDrive.setPower((y_speed * y) - (x_speed * x)+ (w_speed* w));
-        FrontRightDrive.setPower((yb_speed * y) + (x_speed * x) - (w_speed * w));
-        BackLeftDrive.setPower((y_speed * y) + (x_speed * x) + (w_speed * w));
-        BackRightDrive.setPower((y_speed * y) - (x_speed * x) - (w_speed * w));
+        FrontLeftDrive.setPower((y_speed * y) + (x_speed * x)+ (w_speed* w));
+        FrontRightDrive.setPower((y_speed * y) - (x_speed * x) - (w_speed * w));
+        BackLeftDrive.setPower(0.92*((y_speed * y) - (x_speed * x) + (w_speed * w)));
+        BackRightDrive.setPower((y_speed * y) + (x_speed * x) - (w_speed * w));
     }
-    */
+
+    public void initCamera(CVCamera camera, CamType type){
+        camera.tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        switch (type) {
+            case INTERNAL:
+                parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+                camera.cameraParams = new CameraParams(1280, 720, 1080);
+                break;
+            case WEBCAM:
+                parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+                camera.cameraParams = new CameraParams(448, 800, 1080);
+                break;
+        }
+        camera.vuforia = ClassFactory.getInstance().createVuforia(parameters);
+        camera.initTfod();
+        camera.tfod.activate();
+    }
 
     public void updateMotors(){
         FrontLeftDrive.setPower(accelDrive.motorPowers[0]);
@@ -144,14 +182,15 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
     public void drive(double x, double y, double w){
         genericDrive(
-                auto_x_speed*x*startPointBuild,
-                auto_y_speed*y*startPointPlayer,
+                auto_x_speed*x,
+                auto_y_speed*y*startPoint,
                 auto_w_speed*w);
     }
 
+    /*
     public void teleDrive(double x, double y, double w){
-        genericDrive(x_speed*x, y_speed*y, w_speed*w);
-    }
+        generi(x_speed*x, y_speed*y, w_speed*w);
+    }*/
 
     public void genericDrive(double x, double y, double w){
         accelDrive.drive(x, y, w);
@@ -166,11 +205,23 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     /**
      * Uses gamepad1 to use
      */
+    public void c_driveDebug(){
+        c_drive();
+
+        telemetry.addData("> x: ", gamepad1.left_stick_x);
+        telemetry.addData("> y: ", gamepad1.left_stick_y);
+        telemetry.addData("> w: ", gamepad1.right_stick_x);
+
+    }
+
+    /**
+     * Uses gamepad1 to use
+     */
     public void c_drive(){
         teleDrive(
-                -gamepad1.left_stick_x,
-                -gamepad1.left_stick_y,
-                gamepad1.right_stick_x
+                gamepad1.left_stick_x > dead_zone ? gamepad1.left_stick_x : gamepad1.left_stick_x < -dead_zone ? gamepad1.left_stick_x : 0,
+                gamepad1.left_stick_y > dead_zone ? -gamepad1.left_stick_y : gamepad1.left_stick_y < -dead_zone ? -gamepad1.left_stick_y : 0,
+                gamepad1.right_stick_x > dead_zone ? gamepad1.right_stick_x : gamepad1.right_stick_x < -dead_zone ? gamepad1.right_stick_x : 0
         );
     }
 
@@ -204,12 +255,6 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         accelDrive.pushCommand(newParams);
     }
 
-    /**
-     * This method allows forwards and backwards movement for the robot by running the motors
-     * until a certain encoder value is reached
-     * @param speed (the speed [-1, 1], at which the robot's wheels will turn)
-     * @param desired the distance the robot will travel (positive for forwards, negative for backwards)
-     */
 
 
     /*

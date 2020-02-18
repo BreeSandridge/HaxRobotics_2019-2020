@@ -4,16 +4,20 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Autonomous.PlayerSuperOp;
 @Autonomous
-public class BlueSquareParkW extends PlayerSuperOp {
-    public PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
+public class BlueSquareParkW extends BlueSquarePark {
+    @Override
+    public void init() {
+        super.init();
+        parkPos = -1;
+    }
+    /*public PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
     @Override
     public void loop() {
-        startPointPlayer = 1;
+        startPoint = -1;
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
         telemetry.addData("Arm", arm.seconds());
-        telemetry.addData("Power", LatchMotor.getPower());
         telemetry.addData("LatchMotor Position: ", LatchMotor.getCurrentPosition());
         telemetry.addData("Time: ", time.seconds());
         telemetry.addData("Front Right: ", FrontRightDrive.getCurrentPosition());
@@ -21,7 +25,6 @@ public class BlueSquareParkW extends PlayerSuperOp {
         telemetry.addData("Back Right: ", BackRightDrive.getCurrentPosition());
         telemetry.addData("Front Left: ", FrontLeftDrive.getCurrentPosition());
         telemetry.addData("Status: ", status);
-        telemetry.addData("Latch Position: ", Latch.getPosition());
 
         currPosition = LatchMotor.getCurrentPosition();
         //switch statements for changing the status of the robot
@@ -29,17 +32,20 @@ public class BlueSquareParkW extends PlayerSuperOp {
         //there are methods created below the switch statement for easier reading
         switch (status) {
             case FLIPPER:
-                flipper();
-                status = PLAYERSTATUS.PARKW;
-                break;
-            case PARKW:
                 park();
-                status = PLAYERSTATUS.STOP;
+                status = PLAYERSTATUS.PARK;
+                break;
+            case PARK:
+                if(accelDrive.isEmpty){
+                    status = PLAYERSTATUS.STOP;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case STOP:
                 stop1();
                 break;
         }
-    }
+    }*/
 }
 

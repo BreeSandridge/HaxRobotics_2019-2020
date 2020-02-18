@@ -55,30 +55,17 @@ public class TeleOpMotor extends SuperOp {
 //           timer.reset();
 //       }
 
-        if (gamepad2.a) {
-            Trapdoor.setPosition(1);
-        } else {
-            Trapdoor.setPosition(0);
-        }
-
-        if (gamepad2.b && timer.milliseconds() > latch_cd) {
-            // sets to 1 if trapdoor state is == to true
-            // otherwise set to 0
-            Latch.setPosition(latchState ? 1 : 0);
-            latchState = !latchState;
-            timer.reset();
-        }
 
 
         //telemetry.addData("> Flipper pos: ", Flipper.getPosition());
         telemetry.addData("> gamepad2 pos: ", gamepad2.left_stick_y);
-        if (gamepad2.left_stick_y > .05) {
+        /*if (gamepad2.left_stick_y > .05) {
             FlipperMotor.setPower(-.3);
         } else if (gamepad2.left_stick_y < - .05) {
             FlipperMotor.setPower(.35);
         } else {
             FlipperMotor.setPower(0);
-        }
+        }*/
 
        /* Flipper.setPosition(gamepad2.left_stick_y > .01 ?
                 Flipper.getPosition() + .02 < .8 ? Flipper.getPosition() + .02 : .8

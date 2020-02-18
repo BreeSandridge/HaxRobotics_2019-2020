@@ -3,7 +3,11 @@ package org.firstinspires.ftc.teamcode.Autonomous.VisionOpModes;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.Autonomous.CameraParams;
+import org.firstinspires.ftc.teamcode.SuperOp.CamType;
+
 import org.firstinspires.ftc.teamcode.Autonomous.VisionOpModes.CVTest.CamType;
+
 
 import java.util.List;
 
@@ -14,14 +18,14 @@ public class CVCamera {
     VuforiaLocalizer vuforia; // To retrieve images
     TFObjectDetector tfod; // To indentify objects
     public double blockPos;  // These variables are accessed by the opmode
+
     public float left, top, right, bottom;
     public float ww, hh;
     CamType type; // Internal vs webcam
 
-    CVCamera(CamType type){
+    public CVCamera(CamType type){
         this.type = type;
     }
-
 
     void findSkystone() {
 
@@ -48,6 +52,7 @@ public class CVCamera {
     /**
      * Initialize the TensorFlow Object Detection engine.
      */
+
     void initTfod() {
     }
 
@@ -81,6 +86,7 @@ public class CVCamera {
             this.w=w;
             this.res=res;
         }
+
 
     }
 }

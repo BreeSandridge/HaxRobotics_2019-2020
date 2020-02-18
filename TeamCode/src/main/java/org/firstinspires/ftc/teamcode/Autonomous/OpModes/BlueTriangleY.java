@@ -13,42 +13,62 @@ public class BlueTriangleY extends BuildSuperOp {
 
     @Override
     public void loop() {
-        startPointBuild = 1;
+        startPoint = 1;
+        parkPos = 1;
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
-        telemetry.addData("Power", LatchMotor.getPower());
         telemetry.addData("LatchMotor Position: ", LatchMotor.getCurrentPosition());
         telemetry.addData("Front Right: ", FrontRightDrive.getCurrentPosition());
         telemetry.addData("Back Left: ", BackLeftDrive.getCurrentPosition());
         telemetry.addData("Back Right: ", BackRightDrive.getCurrentPosition());
         telemetry.addData("Front Left: ", FrontLeftDrive.getCurrentPosition());
         telemetry.addData("Status: ", status);
-        telemetry.addData("Latch Position: ", Latch.getPosition());
 
         //switch statements for changing the status of the robot
         //this allows us to use different code for each status
         //there are methods created below the switch statement for easier reading
         switch (status) {
             case FLIPPER:
-                flipper();
+                toFoundation();
                 status = BUILDSTATUS.TOFOUNDATION;
                 break;
             case TOFOUNDATION:
-                toFoundation();
-                status = BUILDSTATUS.DRAG;
+                if(accelDrive.isEmpty) {
+                    LatchMotor.setPower(0.3);
+                    sleep_secs(0.5);
+                    LatchMotor.setPower(0);
+                    drag();
+                    status = BUILDSTATUS.DRAG;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case DRAG:
-                drag();
-                status = BUILDSTATUS.AROUND;
+                if(accelDrive.isEmpty) {
+                    LatchMotor.setPower(-0.3);
+                    sleep_secs(0.5);
+                    LatchMotor.setPower(0);
+                    around();
+                    status = BUILDSTATUS.AROUND;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case AROUND:
-                around();
-                status = BUILDSTATUS.PARKY;
+                if(accelDrive.isEmpty) {
+                    park();
+                    status = BUILDSTATUS.PARK;
+                } else {
+                    updateAndDrive();
+                }
                 break;
-            case PARKY:
-                park();
-                status = BUILDSTATUS.STOP;
+            case PARK:
+                if(accelDrive.isEmpty) {
+                    status = BUILDSTATUS.STOP;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case STOP:
                 stop1();
