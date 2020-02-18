@@ -19,11 +19,7 @@ public abstract class BuildSuperOp extends SuperOp {
 
     @Override
     public void init() {
-        // declare telemetry for all motors/servos
-        // this allows us to see how the motors are behaving in the code
-        // and then compare it to how they perform in real life
-
-        //currPosition = LatchMotor.getCurrentPosition();
+        super.init();
     }
 
     // this is the first method run
@@ -33,14 +29,14 @@ public abstract class BuildSuperOp extends SuperOp {
     // move towards foundation
     public void toFoundation(){
         // strafe towards foundation
-        accelDrive.pushCommand(0.5,0,0,1.5);
+        accelDrive.pushCommand(0.5,0,0,2);
     }
 
 
     // attach to foundation and drag to triangle
     public void drag(){
         //and move as far as possible into triangle
-        accelDrive.pushCommand(0.5,0,0, 1.5);
+        accelDrive.pushCommand(-0.5,0,0, 2);
     }
 
     // this allows us to simply move out of the way of a partner
@@ -56,10 +52,10 @@ public abstract class BuildSuperOp extends SuperOp {
     // moves farther into the build zone and pushes the foundation
     // farther into the build zone
     public void around(){
-        accelDrive.pushCommand(0,-0.5,0,0.5);
-        accelDrive.pushCommand(-0.5,0,0,1);
         accelDrive.pushCommand(0,0.5,0,0.5);
-        accelDrive.pushCommand(0.5,0,0,0.5);
+        accelDrive.pushCommand(0.5,0,0,1);
+        accelDrive.pushCommand(0,-0.5,0,0.5);
+        accelDrive.pushCommand(-0.5,0,0,0.5);
         accelDrive.pushCommand(0,0,-0.5,0.5);
     }
 

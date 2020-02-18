@@ -45,27 +45,21 @@ public class VisionBlueSquare extends PlayerSuperOp {
                     if (cvCamera.blockPos < midpoint12) {
                         //if skystone is the first stone, align in front of it
                         block = -1;
-                        moveBackwards();
-                        status = PLAYERSTATUS.AWAY2;
+                        grab();
+                        away();
+                        status = PLAYERSTATUS.AWAY;
                     }
                     //if skystone is the second stone, grab skystone and move to build zone
                     else if (cvCamera.blockPos < midpoint23) {
-                        grab();
-                        away();
-                        status = PLAYERSTATUS.AWAY;
-                    }
-                    //if skystone is the third stone, align in front of it
-                    else if (cvCamera.blockPos < pos3 + (pos3 - midpoint23)) {
-                        block = 1;
                         moveForwards();
                         status = PLAYERSTATUS.AWAY2;
                     }
+                    //if skystone is the third stone, align in front of it
                     else {
                         //grab skystone and move to build zone
-                        telemetry.addLine("Block Position not in range, defaulting to middle block");
-                        grab();
-                        away();
-                        status = PLAYERSTATUS.AWAY;
+                        block = 1;
+                        moveForwards2();
+                        status = PLAYERSTATUS.AWAY2;
                     }
                 }
                 //cycle through drive commands

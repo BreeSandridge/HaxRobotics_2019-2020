@@ -7,8 +7,9 @@ import org.firstinspires.ftc.teamcode.Autonomous.BuildSuperOp;
 public class BlueTriangleParkW extends BlueTrianglePark {
     @Override
     public void init() {
-        super.init();
         parkPos = -1;
+        super.loop();
+
     }
     /*public BUILDSTATUS status = BUILDSTATUS.FLIPPER;
     @Override
