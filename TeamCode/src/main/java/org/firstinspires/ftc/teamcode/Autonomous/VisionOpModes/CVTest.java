@@ -23,7 +23,7 @@ public class CVTest extends OpMode { // Needed to not have motors, so OpMode ext
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
 
     public void init(){
-        CamType type = CamType.WEBCAM;
+        CamType type = CamType.INTERNAL;
         cvCamera = new CVCamera(type);
         initCamera(cvCamera, type); // Not part of CVCamera because it needs hardwareMap access
     }
