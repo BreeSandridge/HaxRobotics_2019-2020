@@ -180,6 +180,8 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         tfodParameters.minimumConfidence = 0.8; // May need to experiment with this value
         camera.tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, camera.vuforia);
         camera.tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+        camera.tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_SECOND_ELEMENT);
+        camera.tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT);
         camera.tfod.activate();
     }
 

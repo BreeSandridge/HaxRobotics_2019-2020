@@ -27,13 +27,13 @@ public class VisionBlueSquare extends PlayerSuperOp {
 
     @Override
     public void loop() {
+        cvCamera.findSkystone();
         if (!ran) {
             time.reset();
             ran = !ran;
         }
-        if(ran1){
-            telemetry.addData("Block Position",cvCamera.blockPos);
-        }
+        telemetry.addData("Block Position",cvCamera.blockPos);
+        /*
         //useful variables to help with testing
         telemetry.addData("Skystone", block);
         telemetry.addData("Status", status);
@@ -103,6 +103,6 @@ public class VisionBlueSquare extends PlayerSuperOp {
                     updateAndDrive();
                 }
 
-        }
+        }*/
     }
 }

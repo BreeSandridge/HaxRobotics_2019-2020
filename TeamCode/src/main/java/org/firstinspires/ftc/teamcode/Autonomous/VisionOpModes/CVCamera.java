@@ -14,10 +14,10 @@ public class CVCamera {
 
     public VuforiaLocalizer vuforia; // To retrieve images
     public TFObjectDetector tfod; // To indentify objects
-    public double blockPos;  // These variables are accessed by the opmode
+    public double blockPos = 0;  // These variables are accessed by the opmode
 
-    public float left, top, right, bottom;
-    public float ww, hh;
+    public float left = 0, top = 0, right = 0, bottom = 0;
+    public float ww = 0, hh = 0;
     CamType type; // Internal vs webcam
 
     public CVCamera(CamType type){

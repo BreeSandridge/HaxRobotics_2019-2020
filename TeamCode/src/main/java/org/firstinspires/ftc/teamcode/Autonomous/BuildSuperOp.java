@@ -57,7 +57,6 @@ public abstract class BuildSuperOp extends SuperOp {
         accelDrive.pushCommand(0.5,0,0,1);
         accelDrive.pushCommand(0,-0.5,0,0.5);
         accelDrive.pushCommand(-0.5,0,0,0.5);
-        accelDrive.pushCommand(0,0,-0.5,0.5);
     }
 
     // parkY over midline close to neutral bridge

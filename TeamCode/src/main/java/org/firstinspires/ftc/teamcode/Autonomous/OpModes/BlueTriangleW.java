@@ -9,7 +9,7 @@ public class BlueTriangleW extends BuildSuperOp {
     //It declares the first STATUS as "START"
     public BUILDSTATUS status = BUILDSTATUS.FLIPPER;
     //create new stopwatch
-    public boolean foundationState = false;
+    public boolean foundationState = true;
     @Override
     public void loop() {
         startPoint = 1;
@@ -24,7 +24,7 @@ public class BlueTriangleW extends BuildSuperOp {
         //switch statements for changing the status of the robot
         //this allows us to use different code for each status
         //there are methods created below the switch statement for easier reading
-        Foundation.setPosition(foundationState? 0 : 1);
+        Foundation.setPosition(0);
         switch (status) {
             case FLIPPER:
                 toFoundation();
@@ -32,7 +32,10 @@ public class BlueTriangleW extends BuildSuperOp {
                 break;
             case TOFOUNDATION:
                 if(accelDrive.isEmpty) {
-                    foundationState = true;
+                    time.reset();
+                    while(time.seconds() < 1.5){
+                        Foundation.setPosition(1);
+                    }
                     drag();
                     status = BUILDSTATUS.DRAG;
                 } else {
@@ -41,11 +44,10 @@ public class BlueTriangleW extends BuildSuperOp {
                 break;
             case DRAG:
                 if(accelDrive.isEmpty) {
-                    foundationState = false;
+                    Foundation.setPosition(1);
                     around();
                     status = BUILDSTATUS.AROUND;
                 } else {
-                    Foundation.setPosition(0);
                     updateAndDrive();
                 }
                 break;
