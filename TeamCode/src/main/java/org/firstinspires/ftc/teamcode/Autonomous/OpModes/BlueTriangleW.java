@@ -18,6 +18,8 @@ public class BlueTriangleW extends BuildSuperOp {
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
         telemetry.addData("Status: ", status);
+        telemetry.addData("Foundation",Foundation.getPosition());
+
 
         //switch statements for changing the status of the robot
         //this allows us to use different code for each status
@@ -31,7 +33,6 @@ public class BlueTriangleW extends BuildSuperOp {
             case TOFOUNDATION:
                 if(accelDrive.isEmpty) {
                     foundationState = true;
-                    sleep_secs(0.5);
                     drag();
                     status = BUILDSTATUS.DRAG;
                 } else {
@@ -44,6 +45,7 @@ public class BlueTriangleW extends BuildSuperOp {
                     around();
                     status = BUILDSTATUS.AROUND;
                 } else {
+                    Foundation.setPosition(0);
                     updateAndDrive();
                 }
                 break;

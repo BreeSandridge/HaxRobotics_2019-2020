@@ -16,9 +16,14 @@ public class VisionBlueSquare extends PlayerSuperOp {
     public boolean ran = false;
     ElapsedTime time = new ElapsedTime();
     PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
-    private CVCamera cvCamera;
+    private boolean ran1 = false;
     private static final String VUFORIA_KEY =
             "AUAq88//////AAABmU+bO6dpUU4BreRJC5efYI1U4Fc5EvLiP5eGiT94wpCspMiACoccxAAVAgEOcCw87pTuHz671RvMDs3dtUBYrJNGI/x/bm60AsIdy3J7prt5EP8xeJuiKjWX32EoIhEsRnqZPpQOmCh11Q5vboZhsCNkNGMNWUIufrVa2g4SKwkSAjaAdOla8w/LwPKbiQBYvwbikpCb01LQg8iVYzWJHBfWLbQcXbuEBQIG9VSgGzyz4RStzgfG5mCTO4UZQbs7P3b/oJIf2rSzd7Ng1HmpHjldX8uFnLMuvIjgG/mJENP/edAw51wRui/21dV8QNdhV8KwP+KBdgpyVBMj44+OlN4ZrGGRkxYDNzd7yptjiGfe";
+
+    @Override
+    public void init() {
+        super.init();
+    }
 
     @Override
     public void loop() {
@@ -26,8 +31,10 @@ public class VisionBlueSquare extends PlayerSuperOp {
             time.reset();
             ran = !ran;
         }
+        if(ran1){
+            telemetry.addData("Block Position",cvCamera.blockPos);
+        }
         //useful variables to help with testing
-        telemetry.addData("position: ", "%f", cvCamera.blockPos);
         telemetry.addData("Skystone", block);
         telemetry.addData("Status", status);
         switch (status) {
@@ -35,6 +42,7 @@ public class VisionBlueSquare extends PlayerSuperOp {
                 //method to locate skystone
                 cvCamera.findSkystone();
                 if (time.seconds() > 1) {
+                    ran1 = true;
                     toBlock();
                     status = PLAYERSTATUS.TOBLOCK;
                 }

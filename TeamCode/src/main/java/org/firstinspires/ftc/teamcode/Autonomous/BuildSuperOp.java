@@ -29,14 +29,15 @@ public abstract class BuildSuperOp extends SuperOp {
     // move towards foundation
     public void toFoundation(){
         // strafe towards foundation
-        accelDrive.pushCommand(0.5,0,0,2);
+        accelDrive.pushCommand(0.5,0,0,1.8);
     }
 
 
     // attach to foundation and drag to triangle
     public void drag(){
         //and move as far as possible into triangle
-        accelDrive.pushCommand(-0.5,0,0, 2);
+
+        accelDrive.pushCommand(-0.5,0,0, 1.8);
     }
 
     // this allows us to simply move out of the way of a partner

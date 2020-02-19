@@ -18,7 +18,7 @@ public class TeleOpStates extends SuperOp {
     private boolean grabberState = false;
     // open position is 1, closed is 0
     private final double grabberOpenPos = -1;
-    private final double grabberClosedPos = 0;
+    private final double grabberClosedPos = 0.2;
     private boolean foundationState = false;
     private boolean extensionState = false;
 

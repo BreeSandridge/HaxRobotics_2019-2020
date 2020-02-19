@@ -50,7 +50,7 @@ public abstract class PlayerSuperOp extends SuperOp {
     // strafe towards blocks, deploy latchMotor
     public void toBlock() {
         // strafe towards blocks for targetTime
-        accelDrive.pushCommand(0.5, 0, 0, 2.5);
+        accelDrive.pushCommand(0.5, 0, 0, 2);
 
         // forces method to only run once
     }
@@ -68,7 +68,7 @@ public abstract class PlayerSuperOp extends SuperOp {
             LatchMotor.setPower(0);
             // forces statment to run once
             // strafe away from blocks
-            accelDrive.pushCommand(-0.5,0,0,0.75);
+            accelDrive.pushCommand(-0.5,0,0,1);
         }
     }
     public void moveForwards2(){
@@ -81,11 +81,11 @@ public abstract class PlayerSuperOp extends SuperOp {
     public void away () {
         // drive into build zone
         if(block == 0){
-            accelDrive.pushCommand(0, -0.5, 0, 1.5);
+            accelDrive.pushCommand(0, -0.5, 0, 2.5);
         } else if(block == -1){
-            accelDrive.pushCommand(0,-0.5,0,1);
-        } else if(block == 1){
             accelDrive.pushCommand(0,-0.5,0,2);
+        } else if(block == 1){
+            accelDrive.pushCommand(0,-0.5,0,3);
         }
     }
     public void release(){

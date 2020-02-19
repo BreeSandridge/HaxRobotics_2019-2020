@@ -11,7 +11,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 
-import org.firstinspires.ftc.teamcode.Autonomous.CameraParams;
 import org.firstinspires.ftc.teamcode.Autonomous.PlayerSuperOp;
 import org.firstinspires.ftc.teamcode.SuperOp;
 
@@ -21,7 +20,7 @@ public class CVTest extends PlayerSuperOp {
     private CVCamera cvCamera; // see CVCamera.java
     private static final String VUFORIA_KEY =
             "AUAq88//////AAABmU+bO6dpUU4BreRJC5efYI1U4Fc5EvLiP5eGiT94wpCspMiACoccxAAVAgEOcCw87pTuHz671RvMDs3dtUBYrJNGI/x/bm60AsIdy3J7prt5EP8xeJuiKjWX32EoIhEsRnqZPpQOmCh11Q5vboZhsCNkNGMNWUIufrVa2g4SKwkSAjaAdOla8w/LwPKbiQBYvwbikpCb01LQg8iVYzWJHBfWLbQcXbuEBQIG9VSgGzyz4RStzgfG5mCTO4UZQbs7P3b/oJIf2rSzd7Ng1HmpHjldX8uFnLMuvIjgG/mJENP/edAw51wRui/21dV8QNdhV8KwP+KBdgpyVBMj44+OlN4ZrGGRkxYDNzd7yptjiGfe";
-    enum CamType{INTERNAL, WEBCAM} // Type of camera used: move to SuperOp or create OpMode w/o motors
+    public enum CamType{INTERNAL, WEBCAM} // Type of camera used: move to SuperOp or create OpMode w/o motors
 
     // Which field elements to load, need to include visual targets later
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
@@ -29,9 +28,9 @@ public class CVTest extends PlayerSuperOp {
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
 
     public void init(){
-        CamType type = CamType.INTERNAL;
-        cvCamera = new CVCamera(type);
-        initCamera(cvCamera, type); // Not part of CVCamera because it needs hardwareMap access
+        //CamType type = CamType.INTERNAL;
+        //cvCamera = new CVCamera(type);
+        //initCamera(cvCamera, type); // Not part of CVCamera because it needs hardwareMap access
     }
 
 
@@ -54,7 +53,7 @@ public class CVTest extends PlayerSuperOp {
 
 
 
-    public void initCamera(CVCamera camera, CamType type){ // Also needs to be moved
+    /*public void initCamera(CVCamera camera, CamType type){ // Also needs to be moved
 
         // Initialize Vuforia
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
@@ -80,6 +79,6 @@ public class CVTest extends PlayerSuperOp {
         camera.tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, camera.vuforia);
         camera.tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
         camera.tfod.activate();
-    }
+    }*/
 
 }
