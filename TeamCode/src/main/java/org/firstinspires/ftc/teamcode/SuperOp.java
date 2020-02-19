@@ -61,6 +61,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
+    public double multi = 1;
     public double x_speed;
     public double y_speed;
     public double w_speed;
@@ -186,10 +187,10 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     }
 
     public void updateMotors(){
-        FrontLeftDrive.setPower(accelDrive.motorPowers[0]);
+        FrontLeftDrive.setPower(multi*accelDrive.motorPowers[0]);
         FrontRightDrive.setPower(accelDrive.motorPowers[1]);
         BackLeftDrive.setPower(accelDrive.motorPowers[2]);
-        BackRightDrive.setPower(accelDrive.motorPowers[3]);
+        BackRightDrive.setPower(multi*accelDrive.motorPowers[3]);
     }
 
     public void drive(double x, double y, double w){
