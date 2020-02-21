@@ -28,22 +28,36 @@ public class RedSquareW extends PlayerSuperOp {
         switch (status) {
             case FLIPPER:
                 toBlock();
-                status = PLAYERSTATUS.TOBLOCK;
+                status = PLAYERSTATUS.GRAB;
                 break;
-            case TOBLOCK:
-                if(accelDrive.isEmpty){
+            case GRAB:
+                if(accelDrive.isEmpty) {
                     grab();
-                    away();
-                    status = PLAYERSTATUS.AWAY;
+                    status = PLAYERSTATUS.TOBLOCK;
                 } else {
                     updateAndDrive();
+                }
+                break;
+            case TOBLOCK:
+                if(time.seconds() < 3.6){
+                    teleDrive(0.5,0,0);
+                } else {
+                    teleDrive(0,0,0);
+                    time.reset();
+                    status = PLAYERSTATUS.TOBLOCK2;
+                }
+                break;
+            case TOBLOCK2:
+                if(time.seconds() < 1.6){
+                    drive1(0,-0.5,0);
+                } else {
+                    drive1(0,0,0);
+                    status = PLAYERSTATUS.AWAY;
                 }
                 break;
             case AWAY:
                 if(accelDrive.isEmpty){
                     release();
-                    multi = 1;
-
                     status = PLAYERSTATUS.DECISION;
                 } else {
                     updateAndDrive();
@@ -51,7 +65,7 @@ public class RedSquareW extends PlayerSuperOp {
                 break;
             case DECISION:
                 if (repeat.seconds() < 15) {
-                    again();
+                    park();
                     status = PLAYERSTATUS.PARK;
                 } else {
                     park();

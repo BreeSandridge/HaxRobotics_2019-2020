@@ -50,8 +50,7 @@ public abstract class PlayerSuperOp extends SuperOp {
     // strafe towards blocks, deploy latchMotor
     public void toBlock() {
         // strafe towards blocks for targetTime
-        accelDrive.pushCommand(0.5, 0, 0, 1.9);
-
+        accelDrive.pushCommand(0.5, 0, 0, 2.3);
         // forces method to only run once
     }
     public void grab(){
@@ -62,10 +61,10 @@ public abstract class PlayerSuperOp extends SuperOp {
         // deploy latch motor to pick up block
         targetTime = 0.5;
         LatchMotor.setPower(0.3);
-        sleep_secs(0.3);
+        sleep_secs(0.7);
         // make sure latch motor is is in right position and stop its movement
         if (time.seconds() >= targetTime) {
-            LatchMotor.setPower(0);
+            LatchMotor.setPower(0.15);
             // forces statment to run once
             // strafe away from block
         }
@@ -79,9 +78,9 @@ public abstract class PlayerSuperOp extends SuperOp {
     // drive into build zone and release block
     public void away () {
         // drive into build zone
-        accelDrive.pushCommand(-0.5,0,0,1.3);
+        accelDrive.pushCommand(-0.7,0,0,4);
         if(block == 0){
-            accelDrive.pushCommand(0, -0.5, 0, 1.6);
+            accelDrive.pushCommand(0, -0.5, 0, 1.2);
         } else if(block == -1){
             accelDrive.pushCommand(0,-0.5,0,2);
         } else if(block == 1){
@@ -119,8 +118,8 @@ public abstract class PlayerSuperOp extends SuperOp {
     // parkY over midline against wall
     // move forward then strafe left
     public void park() {
-        accelDrive.pushCommand(0,0.5,0,1.4);
-        accelDrive.pushCommand(parkPos*0.5,0,0,0.3);
+        accelDrive.pushCommand(0,0.5,0,1);
+        accelDrive.pushCommand(parkPos*0.5,0,0,1);
     }
 
     // move backwards
@@ -136,5 +135,11 @@ public abstract class PlayerSuperOp extends SuperOp {
         // stop
         drive(0,0,0);
         telemetry.addData("Emotion: ", "I hate everything!");
+    }
+    public void drive1(double x, double y, double w) {
+        FrontLeftDrive.setPower((y-x+w) * 0.95);
+        FrontRightDrive.setPower((y+x-w) * 0.8);
+        BackLeftDrive.setPower((y+x+w) * 0.95);
+        BackRightDrive.setPower((y-x-w)*0.8);
     }
 }
