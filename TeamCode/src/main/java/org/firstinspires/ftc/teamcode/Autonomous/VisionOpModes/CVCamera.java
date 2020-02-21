@@ -40,7 +40,9 @@ public class CVCamera {
             bottom = recognition.getBottom();
             ww = recognition.getImageWidth();
             hh = recognition.getImageHeight();
-            blockPos = cameraParams.undoPerspective(left, top, right, bottom);
+            double newBlockPos = cameraParams.undoPerspective(left, top, right, bottom);
+            if (newBlockPos < blockPos)
+                blockPos = newBlockPos;
 
         }
 

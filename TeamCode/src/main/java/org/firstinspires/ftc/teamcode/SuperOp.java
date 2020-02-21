@@ -52,7 +52,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
 
     // enums used in build/player autonomi
     public enum BUILDSTATUS {FLIPPER, TOFOUNDATION, LOWER, DRAG, AROUND, MOVE, PARK, STOP}
-    public enum PLAYERSTATUS {FLIPPER, TOBLOCK, AWAY, AGAIN, AWAY2, DECISION, PARK, STOP}
+    public enum PLAYERSTATUS {FLIPPER, GRAB, TOBLOCK, TOBLOCK2, AWAY, AGAIN, AWAY2, DECISION, PARK, STOP}
     public enum CamType{INTERNAL, WEBCAM}
 
     public Accel_Drive accelDrive;
@@ -61,6 +61,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
+    public double multi = 1;
     public double x_speed;
     public double y_speed;
     public double w_speed;
@@ -152,7 +153,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public void teleDrive(double x, double y, double w) {
         FrontLeftDrive.setPower((y_speed * y) + (x_speed * x)+ (w_speed* w));
         FrontRightDrive.setPower((y_speed * y) - (x_speed * x) - (w_speed * w));
-        BackLeftDrive.setPower(0.92*((y_speed * y) - (x_speed * x) + (w_speed * w)));
+        BackLeftDrive.setPower(((y_speed * y) - (x_speed * x) + (w_speed * w)));
         BackRightDrive.setPower((y_speed * y) + (x_speed * x) - (w_speed * w));
     }
     public void initCamera(CVCamera camera, CamType type){ // Also needs to be moved
@@ -179,17 +180,17 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minimumConfidence = 0.8; // May need to experiment with this value
         camera.tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, camera.vuforia);
-        camera.tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+        //camera.tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
         camera.tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_SECOND_ELEMENT);
-        camera.tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT);
+        //camera.tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT);
         camera.tfod.activate();
     }
 
     public void updateMotors(){
-        FrontLeftDrive.setPower(accelDrive.motorPowers[0]);
+        FrontLeftDrive.setPower(multi*accelDrive.motorPowers[0]);
         FrontRightDrive.setPower(accelDrive.motorPowers[1]);
         BackLeftDrive.setPower(accelDrive.motorPowers[2]);
-        BackRightDrive.setPower(accelDrive.motorPowers[3]);
+        BackRightDrive.setPower(multi*accelDrive.motorPowers[3]);
     }
 
     public void drive(double x, double y, double w){
