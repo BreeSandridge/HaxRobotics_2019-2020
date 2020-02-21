@@ -9,11 +9,12 @@ public class RedSquareW extends PlayerSuperOp {
     //This uses an enum declared in SuperOp
     //It declares the first STATUS as "START"
     private PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
-
+    public boolean parkWall;
     //create new stopwatch
 
     @Override
     public void loop() {
+        parkWall = false;
         startPoint = 1;
         parkPos = -1;
         //declare telemetry for all motors/servos
@@ -39,7 +40,7 @@ public class RedSquareW extends PlayerSuperOp {
                 }
                 break;
             case TOBLOCK:
-                if(time.seconds() < 3.6){
+                if(time.seconds() < (parkWall? 4.8 : 3.6)){
                     teleDrive(0.5,0,0);
                 } else {
                     teleDrive(0,0,0);
@@ -48,7 +49,7 @@ public class RedSquareW extends PlayerSuperOp {
                 }
                 break;
             case TOBLOCK2:
-                if(time.seconds() < 1.6){
+                if(time.seconds() < (1.7)){
                     drive1(0,-0.5,0);
                 } else {
                     drive1(0,0,0);

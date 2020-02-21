@@ -61,13 +61,11 @@ public abstract class PlayerSuperOp extends SuperOp {
         // deploy latch motor to pick up block
         targetTime = 0.5;
         LatchMotor.setPower(0.3);
-        sleep_secs(0.7);
+        sleep_secs(1);
         // make sure latch motor is is in right position and stop its movement
-        if (time.seconds() >= targetTime) {
-            LatchMotor.setPower(0.15);
+        LatchMotor.setPower(0.15);
             // forces statment to run once
             // strafe away from block
-        }
     }
     public void moveForwards2(){
         accelDrive.pushCommand(0,0.5,0,1);
@@ -118,8 +116,8 @@ public abstract class PlayerSuperOp extends SuperOp {
     // parkY over midline against wall
     // move forward then strafe left
     public void park() {
-        accelDrive.pushCommand(0,0.5,0,1);
-        accelDrive.pushCommand(parkPos*0.5,0,0,1);
+        accelDrive.pushCommand(0,0.5,0,0.6);
+        accelDrive.pushCommand(parkPos*0.5,0,0,0.5);
     }
 
     // move backwards
@@ -138,8 +136,8 @@ public abstract class PlayerSuperOp extends SuperOp {
     }
     public void drive1(double x, double y, double w) {
         FrontLeftDrive.setPower((y-x+w) * 0.95);
-        FrontRightDrive.setPower((y+x-w) * 0.8);
+        FrontRightDrive.setPower((y+x-w) * 0.6);
         BackLeftDrive.setPower((y+x+w) * 0.95);
-        BackRightDrive.setPower((y-x-w)*0.8);
+        BackRightDrive.setPower((y-x-w)*0.6);
     }
 }
