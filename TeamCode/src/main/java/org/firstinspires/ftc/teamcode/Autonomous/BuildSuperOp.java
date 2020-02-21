@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.SuperOp;
 @Autonomous
 public abstract class BuildSuperOp extends SuperOp {
     // declares elapsed time and other variables
-    public int parkPos;
+    public int parkPos = 0; // Will be changed to 1 or -1 by extensions
     public ElapsedTime time = new ElapsedTime();
     public ElapsedTime arm = new ElapsedTime();
     public double targetTime;
