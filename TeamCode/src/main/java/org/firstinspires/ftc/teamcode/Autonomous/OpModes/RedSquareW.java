@@ -9,7 +9,6 @@ public class RedSquareW extends PlayerSuperOp {
     //This uses an enum declared in SuperOp
     //It declares the first STATUS as "START"
     private PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
-    public boolean parkWall;
     //create new stopwatch
 
     @Override

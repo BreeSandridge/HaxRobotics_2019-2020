@@ -8,39 +8,51 @@ public class BlueSquareW extends PlayerSuperOp {
 
     //This uses an enum declared in SuperOp
     //It declares the first STATUS as "START"
-    public PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
+    private PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
+    //create new stopwatch
+
     @Override
     public void loop() {
+        parkWall = true;
         startPoint = -1;
         parkPos = -1;
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
         telemetry.addData("Arm", arm.seconds());
-        telemetry.addData("LatchMotor Position: ", LatchMotor.getCurrentPosition());
         telemetry.addData("Time: ", time.seconds());
-        telemetry.addData("Front Right: ", FrontRightDrive.getCurrentPosition());
-        telemetry.addData("Back Left: ", BackLeftDrive.getCurrentPosition());
-        telemetry.addData("Back Right: ", BackRightDrive.getCurrentPosition());
-        telemetry.addData("Front Left: ", FrontLeftDrive.getCurrentPosition());
         telemetry.addData("Status: ", status);
-
-        currPosition = LatchMotor.getCurrentPosition();
         //switch statements for changing the status of the robot
         //this allows us to use different code for each status
         //there are methods created below the switch statement for easier reading
         switch (status) {
             case FLIPPER:
                 toBlock();
-                status = PLAYERSTATUS.TOBLOCK;
+                status = PLAYERSTATUS.GRAB;
                 break;
-            case TOBLOCK:
-                if(accelDrive.isEmpty){
+            case GRAB:
+                if(accelDrive.isEmpty) {
                     grab();
-                    away();
-                    status = PLAYERSTATUS.AWAY;
+                    status = PLAYERSTATUS.TOBLOCK;
                 } else {
                     updateAndDrive();
+                }
+                break;
+            case TOBLOCK:
+                if(time.seconds() < (parkWall? 4.8 : 3.6)){
+                    teleDrive(0.5,0,0);
+                } else {
+                    teleDrive(0,0,0);
+                    time.reset();
+                    status = PLAYERSTATUS.TOBLOCK2;
+                }
+                break;
+            case TOBLOCK2:
+                if(time.seconds() < (2.3)){
+                    drive1(0,0.5,0);
+                } else {
+                    drive1(0,0,0);
+                    status = PLAYERSTATUS.AWAY;
                 }
                 break;
             case AWAY:
@@ -53,10 +65,10 @@ public class BlueSquareW extends PlayerSuperOp {
                 break;
             case DECISION:
                 if (repeat.seconds() < 15) {
-                    again();
-                    status = PLAYERSTATUS.AGAIN;
+                    parkBlue();
+                    status = PLAYERSTATUS.PARK;
                 } else {
-                    park();
+                    parkBlue();
                     status = PLAYERSTATUS.PARK;
                 }
             case AGAIN:
@@ -79,3 +91,4 @@ public class BlueSquareW extends PlayerSuperOp {
         }
     }
 }
+
