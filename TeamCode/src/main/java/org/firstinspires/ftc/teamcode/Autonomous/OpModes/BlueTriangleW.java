@@ -33,13 +33,17 @@ public class BlueTriangleW extends BuildSuperOp {
             case TOFOUNDATION:
                 if(accelDrive.isEmpty) {
                     time.reset();
-                    while(time.seconds() < 1.5){
-                        Foundation.setPosition(1);
-                    }
+                    status = BUILDSTATUS.LOWER;
+                } else {
+                    Foundation.setPosition(1);
+                    updateAndDrive();
+                }
+                break;
+            case LOWER:
+                if (time.seconds() < 1.5){
+                } else {
                     drag();
                     status = BUILDSTATUS.DRAG;
-                } else {
-                    updateAndDrive();
                 }
                 break;
             case DRAG:

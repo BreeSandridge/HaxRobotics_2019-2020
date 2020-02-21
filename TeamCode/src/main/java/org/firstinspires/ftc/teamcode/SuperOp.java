@@ -51,7 +51,7 @@ public abstract class SuperOp extends OpMode implements SuperOp_Interface {
     public Servo Foundation = null;
 
     // enums used in build/player autonomi
-    public enum BUILDSTATUS {FLIPPER, TOFOUNDATION, DRAG, AROUND, MOVE, PARK, STOP}
+    public enum BUILDSTATUS {FLIPPER, TOFOUNDATION, LOWER, DRAG, AROUND, MOVE, PARK, STOP}
     public enum PLAYERSTATUS {FLIPPER, TOBLOCK, AWAY, AGAIN, AWAY2, DECISION, PARK, STOP}
     public enum CamType{INTERNAL, WEBCAM}
 
