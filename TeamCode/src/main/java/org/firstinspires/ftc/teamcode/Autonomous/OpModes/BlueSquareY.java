@@ -1,16 +1,24 @@
 package org.firstinspires.ftc.teamcode.Autonomous.OpModes;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Autonomous.PlayerSuperOp;
 
 @Autonomous
-public class BlueSquareY extends PlayerSuperOp {
+public class BlueSquareY extends BlueSquare {
+
 
     //This uses an enum declared in SuperOp
     //It declares the first STATUS as "START"
     private PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
     //create new stopwatch
 
+      @Override
+    public void init() {
+        super.init();
+        parkPos = 1;
+    }
+  
     @Override
     public void loop() {
         noInterference = true;

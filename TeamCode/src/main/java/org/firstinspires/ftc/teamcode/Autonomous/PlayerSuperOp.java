@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.SuperOp;
 public abstract class PlayerSuperOp extends SuperOp {
     // declares elapsed time and other variables
     public int block = 0;
-    public int parkPos;
+    public int parkPos = 0; // Will be changed to 1 or -1 by extensions
     public ElapsedTime time = new ElapsedTime();
     public ElapsedTime arm = new ElapsedTime();
     public ElapsedTime repeat = new ElapsedTime();

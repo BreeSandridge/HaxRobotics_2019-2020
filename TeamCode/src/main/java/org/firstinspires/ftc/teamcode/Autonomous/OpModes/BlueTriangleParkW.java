@@ -3,13 +3,13 @@ package org.firstinspires.ftc.teamcode.Autonomous.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BuildSuperOp;
+
 @Autonomous
 public class BlueTriangleParkW extends BlueTrianglePark {
     @Override
     public void init() {
+        super.init();
         parkPos = -1;
-        super.loop();
-
     }
     /*public BUILDSTATUS status = BUILDSTATUS.FLIPPER;
     @Override
