@@ -24,7 +24,6 @@ public class BlueSquareW extends BlueSquare {
     public void loop() {
         parkWall = true;
         startPoint = -1;
-        parkPos = -1;
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
@@ -40,7 +39,7 @@ public class BlueSquareW extends BlueSquare {
                 status = PLAYERSTATUS.GRAB;
                 break;
             case GRAB:
-                if(accelDrive.isEmpty) {
+                if (accelDrive.isEmpty) {
                     grab();
                     status = PLAYERSTATUS.TOBLOCK;
                 } else {
@@ -48,24 +47,24 @@ public class BlueSquareW extends BlueSquare {
                 }
                 break;
             case TOBLOCK:
-                if(time.seconds() < (parkWall? 4.8 : 3.6)){
-                    teleDrive(0.5,0,0);
+                if (time.seconds() < (parkWall ? 4.8 : 3.6)) {
+                    teleDrive(0.5, 0, 0);
                 } else {
-                    teleDrive(0,0,0);
+                    teleDrive(0, 0, 0);
                     time.reset();
                     status = PLAYERSTATUS.TOBLOCK2;
                 }
                 break;
             case TOBLOCK2:
-                if(time.seconds() < (2.3)){
-                    drive1(0,0.5,0);
+                if (time.seconds() < (2.3)) {
+                    drive1(0, 0.5, 0);
                 } else {
-                    drive1(0,0,0);
+                    drive1(0, 0, 0);
                     status = PLAYERSTATUS.AWAY;
                 }
                 break;
             case AWAY:
-                if(accelDrive.isEmpty){
+                if (accelDrive.isEmpty) {
                     release();
                     status = PLAYERSTATUS.DECISION;
                 } else {
@@ -81,14 +80,14 @@ public class BlueSquareW extends BlueSquare {
                     status = PLAYERSTATUS.PARK;
                 }
             case AGAIN:
-                if(accelDrive.isEmpty){
+                if (accelDrive.isEmpty) {
                     status = PLAYERSTATUS.FLIPPER;
                 } else {
                     updateAndDrive();
                 }
                 break;
             case PARK:
-                if(accelDrive.isEmpty){
+                if (accelDrive.isEmpty) {
                     status = PLAYERSTATUS.STOP;
                 } else {
                     updateAndDrive();
@@ -98,5 +97,6 @@ public class BlueSquareW extends BlueSquare {
                 stop1();
                 break;
         }
+    }
 }
 
