@@ -1,80 +1,73 @@
-package org.firstinspires.ftc.teamcode.Autonomous.OpModes;
+package org.firstinspires.ftc.teamcode.Autonomous.OpModes.AutoSupers;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import org.firstinspires.ftc.teamcode.Autonomous.BuildSuperOp;
 
-import org.firstinspires.ftc.teamcode.Autonomous.PlayerSuperOp;
-
-@Autonomous
-public abstract class BlueSquare extends PlayerSuperOp {
+public abstract class RedTriangle extends BuildSuperOp {
 
     //This uses an enum declared in SuperOp
     //It declares the first STATUS as "START"
-    public PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
+    private BUILDSTATUS status = BUILDSTATUS.FLIPPER;
+    //create new stopwatch
 
-    @Override
-    public void init() {
+    public void init(){
         super.init();
         startPoint = -1;
     }
 
     @Override
     public void loop() {
+        parkPos = 1;
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
-        telemetry.addData("Arm", arm.seconds());
         telemetry.addData("LatchMotor Position: ", LatchMotor.getCurrentPosition());
-        telemetry.addData("Time: ", time.seconds());
         telemetry.addData("Front Right: ", FrontRightDrive.getCurrentPosition());
         telemetry.addData("Back Left: ", BackLeftDrive.getCurrentPosition());
         telemetry.addData("Back Right: ", BackRightDrive.getCurrentPosition());
         telemetry.addData("Front Left: ", FrontLeftDrive.getCurrentPosition());
         telemetry.addData("Status: ", status);
 
-        currPosition = LatchMotor.getCurrentPosition();
         //switch statements for changing the status of the robot
         //this allows us to use different code for each status
         //there are methods created below the switch statement for easier reading
         switch (status) {
             case FLIPPER:
-                toBlock();
-                status = PLAYERSTATUS.TOBLOCK;
+                toFoundation();
+                status = BUILDSTATUS.TOFOUNDATION;
                 break;
-            case TOBLOCK:
-                if (accelDrive.isEmpty) {
-                    grab();
-                    away();
-                    status = PLAYERSTATUS.AWAY;
+            case TOFOUNDATION:
+                if(accelDrive.isEmpty) {
+                    LatchMotor.setPower(0.3);
+                    sleep_secs(0.5);
+                    LatchMotor.setPower(0);
+                    drag();
+                    status = BUILDSTATUS.DRAG;
                 } else {
                     updateAndDrive();
                 }
                 break;
-            case AWAY:
-                if (accelDrive.isEmpty) {
-                    release();
-                    status = PLAYERSTATUS.DECISION;
+            case DRAG:
+                if(accelDrive.isEmpty) {
+                    LatchMotor.setPower(-0.3);
+                    sleep_secs(0.5);
+                    LatchMotor.setPower(0);
+                    around();
+                    status = BUILDSTATUS.AROUND;
                 } else {
                     updateAndDrive();
                 }
                 break;
-            case DECISION:
-                if (repeat.seconds() < 15) {
-                    again();
-                    status = PLAYERSTATUS.AGAIN;
-                } else {
+            case AROUND:
+                if(accelDrive.isEmpty) {
                     park();
-                    status = PLAYERSTATUS.PARK;
-                }
-            case AGAIN:
-                if (accelDrive.isEmpty) {
-                    status = PLAYERSTATUS.FLIPPER;
+                    status = BUILDSTATUS.PARK;
                 } else {
                     updateAndDrive();
                 }
                 break;
             case PARK:
-                if (accelDrive.isEmpty) {
-                    status = PLAYERSTATUS.STOP;
+                if(accelDrive.isEmpty) {
+                    status = BUILDSTATUS.STOP;
                 } else {
                     updateAndDrive();
                 }

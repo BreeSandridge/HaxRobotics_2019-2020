@@ -1,14 +1,24 @@
-package org.firstinspires.ftc.teamcode.Autonomous.OpModes;
+package org.firstinspires.ftc.teamcode.Autonomous.OpModes.AutoSupers;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Autonomous.PlayerSuperOp;
 
-public abstract class RedSquarePark extends PlayerSuperOp {
+@Autonomous
+public abstract class BlueSquare extends PlayerSuperOp {
+
+    //This uses an enum declared in SuperOp
+    //It declares the first STATUS as "START"
     public PLAYERSTATUS status = PLAYERSTATUS.FLIPPER;
+
+    @Override
+    public void init() {
+        super.init();
+        startPoint = -1;
+    }
+
     @Override
     public void loop() {
-        startPoint = 1;
         //declare telemetry for all motors/servos
         //this allows us to see how the motors are behaving in the code
         //and then compare it to how they perform in real life
@@ -27,11 +37,43 @@ public abstract class RedSquarePark extends PlayerSuperOp {
         //there are methods created below the switch statement for easier reading
         switch (status) {
             case FLIPPER:
-                park();
-                status = PLAYERSTATUS.PARK;
+                toBlock();
+                status = PLAYERSTATUS.TOBLOCK;
+                break;
+            case TOBLOCK:
+                if (accelDrive.isEmpty) {
+                    grab();
+                    away();
+                    status = PLAYERSTATUS.AWAY;
+                } else {
+                    updateAndDrive();
+                }
+                break;
+            case AWAY:
+                if (accelDrive.isEmpty) {
+                    release();
+                    status = PLAYERSTATUS.DECISION;
+                } else {
+                    updateAndDrive();
+                }
+                break;
+            case DECISION:
+                if (repeat.seconds() < 15) {
+                    again();
+                    status = PLAYERSTATUS.AGAIN;
+                } else {
+                    park();
+                    status = PLAYERSTATUS.PARK;
+                }
+            case AGAIN:
+                if (accelDrive.isEmpty) {
+                    status = PLAYERSTATUS.FLIPPER;
+                } else {
+                    updateAndDrive();
+                }
                 break;
             case PARK:
-                if(accelDrive.isEmpty){
+                if (accelDrive.isEmpty) {
                     status = PLAYERSTATUS.STOP;
                 } else {
                     updateAndDrive();

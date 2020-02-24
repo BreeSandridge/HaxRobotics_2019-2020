@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomous.OpModes;
+package org.firstinspires.ftc.teamcode.Autonomous.OpModes.AutoSupers;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
