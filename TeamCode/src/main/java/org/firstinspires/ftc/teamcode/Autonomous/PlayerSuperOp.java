@@ -23,7 +23,8 @@ public abstract class PlayerSuperOp extends SuperOp {
     public boolean ran = false;
     public boolean ran1 = true;
     public CVCamera cvCamera;
-
+    public boolean parkWall;
+    public boolean noInterference = false;
     @Override
     public void init() {
         super.init();
@@ -116,10 +117,21 @@ public abstract class PlayerSuperOp extends SuperOp {
     // parkY over midline against wall
     // move forward then strafe left
     public void park() {
-        accelDrive.pushCommand(0,0.5,0,0.6);
+        if(noInterference) {
+            accelDrive.pushCommand(0, 0.5, 0, 0.45);
+        } else {
+            accelDrive.pushCommand(0,0.5,0,0.6);
+        }
         accelDrive.pushCommand(parkPos*0.5,0,0,0.5);
     }
-
+    public void parkBlue() {
+        if(noInterference) {
+            accelDrive.pushCommand(0, -0.5, 0, 0.45);
+        } else {
+            accelDrive.pushCommand(0,0-.5,0,0.6);
+        }
+        accelDrive.pushCommand(parkPos*0.5,0,0,0.5);
+    }
     // move backwards
     //needs to be changed dont know to what yet
     public void away2() {
